@@ -132,3 +132,12 @@ Residual risks of this backend (accepted for local testing only):
 ### Container hardening not applied
 
 `security_opt: no-new-privileges` and `init: true` are deliberately not used in `compose.yaml`: the dev machine runs snap-packaged Docker, whose AppArmor profile makes exec fail with `no-new-privileges`, and node is PID 1 without child processes. Add both on a regular (non-snap) Docker host if wanted.
+
+## Response compression (BREACH, request bodies)
+
+The Fastify app compresses responses itself (the container is also reachable directly on its port, bypassing any proxy `encode`):
+text assets are served from `.br` / `.gz` siblings written at image build (`apps/server/scripts/precompress.mjs`, `@fastify/static` `preCompressed`; `Vary: Accept-Encoding`, `Cache-Control: immutable` for hashed `/assets`), and JSON / HTML without a sibling is compressed on the fly by `@fastify/compress` (brotli quality 4 or gzip, bodies of 1 KiB and above only; woff2 and other already-compressed types are skipped).
+
+- **BREACH.** The attack needs a secret in the response body and attacker-controlled text reflected next to it, observable over many requests. API responses carry no session token, CSRF token, cookie, API key or any other secret (there are no accounts or cookies; the LLM key never leaves the server and is not part of any body), and error envelopes never echo request text. Compression is therefore not an oracle for anything confidential. Keep it that way: never put a secret in a JSON/HTML body, and revisit this note if sessions or CSRF tokens are ever added.
+- **Request bodies are never decompressed** (`globalDecompression: false`): a request with `Content-Encoding` is rejected like any unsupported body, so a compression bomb cannot slip past the 16 KB body limit.
+- Range requests are off for static files (a partial compressed body is meaningless); small bodies and error envelopes are sent uncompressed and unchanged.

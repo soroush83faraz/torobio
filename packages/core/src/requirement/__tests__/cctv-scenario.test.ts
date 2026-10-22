@@ -102,6 +102,7 @@ describe('CCTV scenario', () => {
       recorder_hdd_internal: 'assumed',
       hdd_surveillance: 'unknown', // 302 does not say purple/surveillance
       camera_adapter_12v: 'assumed', // 402 states 12 V; 12 V for cameras is the general assumption
+      camera_adapter_current: 'unknown', // 4 cameras on the adapter(s): total current never verified
     });
     expect(COMPAT_STATUS_LABEL[findings[0]!.status]).toBe('طبق عنوان آگهی');
     expect(findings.filter((f) => f.status !== 'listing_stated').every((f) => !!f.askSeller)).toBe(true);

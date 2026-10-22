@@ -125,7 +125,7 @@ export class Catalog {
       if (l) l.push(o);
       else byProduct.set(o.product_id, [o]);
     }
-    let cands = prods.map((p) => toCandidate(p, (byProduct.get(p.id) ?? []).map(toOffer)));
+    let cands = prods.map((p) => toCandidate(p, (byProduct.get(p.id) ?? []).map((o) => toOffer(o, p.domain))));
     // wire: an offer whose price contradicts its listing's sale unit (roll vs metre) loses its price (core plausibility)
     if (this.categories().get(categoryId)?.domain === 'wire') cands = withWireUnitCheck(cands);
     const entry = { cands, truncated };
@@ -155,7 +155,7 @@ export class Catalog {
         const pooled = this.categoryPool(p.category_id).cands.find((c) => c.product.id === p.id);
         if (pooled) return pooled;
       }
-      return toCandidate(p, (byProduct.get(p.id) ?? []).map(toOffer));
+      return toCandidate(p, (byProduct.get(p.id) ?? []).map((o) => toOffer(o, p.domain)));
     });
   }
 

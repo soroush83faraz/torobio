@@ -9,7 +9,7 @@
  *    listing_stated (read from the listing) · assumed (general rule we encode, never verified) ·
  *    unknown (attribute missing) · conflict (the listing contradicts the requirement or the general rule).
  */
-import { compatCopy } from '../copy/fa';
+import { askCompatWith, compatCopy } from '../copy/fa';
 import { deviceModelsMatch } from '../requirement/evaluate';
 import {
   ANALOG_SIGNALS,
@@ -250,16 +250,25 @@ export const COMPAT_RULES: readonly CompatRule[] = [
           const k = rec.attrs?.recorder_kind;
           const ids = [cam.item.id, rec.item.id];
           const rel = this.relationship;
-          if (!s && !k) out.push(finding(this.id, rel, ids, 'unknown', 'missing', compatCopy.signalBothUnknown(), compatCopy.signalBothUnknownAsk()));
-          else if (!s && k) out.push(finding(this.id, rel, ids, 'unknown', 'missing', compatCopy.signalCameraUnknown(k), compatCopy.signalCameraUnknownAsk(k)));
-          else if (s && !k) out.push(finding(this.id, rel, ids, 'unknown', 'missing', compatCopy.signalRecorderUnknown(s), compatCopy.signalAsk(s)));
+          // asked at both sellers, each phrased for the item bought there
+          const byItem = {
+            [cam.item.id]: askCompatWith('camera', 'recorder', k ? compatCopy.recorderKindDesc(k) : undefined),
+            [rec.item.id]: askCompatWith('recorder', 'camera', s ? compatCopy.cameraSignalDesc(s) : undefined),
+          };
+          const f = (status: CompatStatus, basis: CompatBasis, sentence: string, ask: string) => ({
+            ...finding(this.id, rel, ids, status, basis, sentence, ask),
+            askSellerByItem: byItem,
+          });
+          if (!s && !k) out.push(f('unknown', 'missing', compatCopy.signalBothUnknown(), compatCopy.signalBothUnknownAsk()));
+          else if (!s && k) out.push(f('unknown', 'missing', compatCopy.signalCameraUnknown(k), compatCopy.signalCameraUnknownAsk(k)));
+          else if (s && !k) out.push(f('unknown', 'missing', compatCopy.signalRecorderUnknown(s), compatCopy.signalAsk(s)));
           else if (s && k) {
             const analog = isAnalog(s);
             if ((analog && (k === 'xvr' || k === 'dvr')) || (s === 'ip' && k === 'nvr'))
-              out.push(finding(this.id, rel, ids, 'assumed', 'general_rule', compatCopy.signalAssumed(s, k), compatCopy.signalAsk(s)));
+              out.push(f('assumed', 'general_rule', compatCopy.signalAssumed(s, k), compatCopy.signalAsk(s)));
             else if (s === 'ip' && k === 'xvr')
-              out.push(finding(this.id, rel, ids, 'assumed', 'general_rule', compatCopy.signalIpOnXvr(), compatCopy.signalAsk(s)));
-            else out.push(finding(this.id, rel, ids, 'conflict', 'general_rule', compatCopy.signalConflict(s, k), compatCopy.signalAsk(s)));
+              out.push(f('assumed', 'general_rule', compatCopy.signalIpOnXvr(), compatCopy.signalAsk(s)));
+            else out.push(f('conflict', 'general_rule', compatCopy.signalConflict(s, k), compatCopy.signalAsk(s)));
           }
         }
       }
@@ -293,11 +302,19 @@ export const COMPAT_RULES: readonly CompatRule[] = [
     description: 'General rule (assumed): a recorder needs an internal SATA drive to store footage.',
     evaluate(chosen) {
       const hasHdd = chosen.some((c) => c.item.kind === 'hdd');
+      const hdds = chosenOfKind(chosen, 'hdd');
       return chosenOfKind(chosen, 'recorder')
         .filter((r) => r.attrs)
-        .map((r) =>
-          finding(this.id, this.relationship, [r.item.id, ...chosenOfKind(chosen, 'hdd').map((h) => h.item.id)], 'assumed', 'general_rule', compatCopy.hddInternal(hasHdd), compatCopy.hddInternalAsk()),
-        );
+        .map((r) => {
+          const k = r.attrs?.recorder_kind;
+          // the recorder's seller is asked about the drive; each drive's seller about the recorder
+          const byItem: Record<string, string> = { [r.item.id]: compatCopy.hddInternalAsk() };
+          for (const h of hdds) byItem[h.item.id] = askCompatWith('hdd', 'recorder', k ? compatCopy.recorderKindDesc(k) : undefined);
+          return {
+            ...finding(this.id, this.relationship, [r.item.id, ...hdds.map((h) => h.item.id)], 'assumed', 'general_rule', compatCopy.hddInternal(hasHdd), compatCopy.hddInternalAsk()),
+            askSellerByItem: byItem,
+          };
+        });
     },
   },
   {
@@ -351,23 +368,60 @@ export const COMPAT_RULES: readonly CompatRule[] = [
         .map((a) => {
           const v = a.attrs?.voltage_v;
           const ids = [a.item.id, ...camIds];
-          if (typeof v !== 'number') return finding(this.id, this.relationship, ids, 'unknown', 'missing', compatCopy.adapterUnknown(), compatCopy.adapterAsk());
-          if (Math.abs(v - 12) < 1e-9) return finding(this.id, this.relationship, ids, 'assumed', 'general_rule', compatCopy.adapter12Assumed(), compatCopy.adapterAsk());
+          // the adapter's seller: is it right for these cameras; each camera's seller: does the camera take this adapter
+          const byItem: Record<string, string> = { [a.item.id]: compatCopy.adapterAsk() };
+          for (const id of camIds) byItem[id] = askCompatWith('camera', 'adapter', typeof v === 'number' ? compatCopy.voltageDesc(v) : undefined);
+          const f = (status: CompatStatus, basis: CompatBasis, sentence: string): CompatFinding => ({
+            ...finding(this.id, this.relationship, ids, status, basis, sentence, compatCopy.adapterAsk()),
+            askSellerByItem: byItem,
+          });
+          if (typeof v !== 'number') return f('unknown', 'missing', compatCopy.adapterUnknown());
+          if (Math.abs(v - 12) < 1e-9) return f('assumed', 'general_rule', compatCopy.adapter12Assumed());
           // the user chose (or allowed) another voltage: the 12 V rule is only an assumption, so this is not a conflict;
           // the finding says the assumption was lifted (the plan carries «بدون تأیید سازگاری», never a verified feel)
-          const lifted = (sentence: string): CompatFinding => ({
-            ...finding(this.id, this.relationship, ids, 'unknown', 'general_rule', sentence, compatCopy.adapterAsk()),
-            lifted: true,
-          });
+          const lifted = (sentence: string): CompatFinding => ({ ...f('unknown', 'general_rule', sentence), lifted: true });
           if (statedVoltage(a.item).length > 0) return lifted(compatCopy.adapterUserVoltage(v));
           if (voltageRelaxed(a.item)) return lifted(compatCopy.adapterRelaxed(v));
-          return finding(this.id, this.relationship, ids, 'conflict', 'general_rule', compatCopy.adapterConflict(v), compatCopy.adapterAsk());
+          return f('conflict', 'general_rule', compatCopy.adapterConflict(v));
         });
     },
     linkAttr: { adapter: 'voltage_v' },
     repair(f, _chosen, canChange) {
       const ad = f.itemIds[0]!;
       return canChange(ad) ? [guard(ad, { attr: 'voltage_v', op: 'eq', value: 12 }, 'camera_adapter_12v', f.itemIds[1])] : [];
+    },
+  },
+  {
+    id: 'camera_adapter_current',
+    domain: 'cctv',
+    relationship: 'sum(adapter.current)>=sum(camera.current)',
+    kinds: ['adapter', 'camera'],
+    description:
+      'Several cameras on adapter(s): the adapters must supply the cameras\' total current. Never verified and never a conflict: no listing states a camera\'s current, so the status is always unknown (an adapter\'s own stated current is quoted, a camera\'s is never invented). Not derived, not critical: it never blocks a pick or asks a question; the item note (compatItemNotes) says when the adapter quantity was not written.',
+    evaluate(chosen) {
+      const cams = chosenOfKind(chosen, 'camera');
+      const q = cams.reduce((s, c) => s + c.item.qty, 0);
+      if (q < 2) return [];
+      const camIds = cams.map((c) => c.item.id);
+      const adapters = chosenOfKind(chosen, 'adapter').filter((a) => a.attrs);
+      const units = chosenOfKind(chosen, 'adapter').reduce((s, a) => s + a.item.qty, 0);
+      return adapters.map((a) => {
+        const amps = a.attrs?.current_a;
+        const byItem: Record<string, string> = { [a.item.id]: compatCopy.adapterCurrentAsk(q) };
+        for (const id of camIds) byItem[id] = compatCopy.cameraCurrentAsk(q);
+        return {
+          ...finding(
+            this.id,
+            this.relationship,
+            [a.item.id, ...camIds],
+            'unknown',
+            'missing',
+            compatCopy.adapterCurrent(q, units, typeof amps === 'number' ? amps : undefined),
+            compatCopy.adapterCurrentAsk(q),
+          ),
+          askSellerByItem: byItem,
+        };
+      });
     },
   },
   {

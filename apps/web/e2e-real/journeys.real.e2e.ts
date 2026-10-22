@@ -59,8 +59,13 @@ test.describe('J1 CCTV project, end to end', () => {
     expectCompatLevel(compat, /HDCVI.*DVR|AHD.*DVR/, 'assumed'); // analog answer: signal type is our rule
     expectCompatLevel(compat, /SATA/, 'assumed');
     expectCompatLevel(compat, /آداپتور ۱۲ ولت/, 'assumed');
-    expect(compat.filter((c) => c.level === 'unknown' || c.level === 'conflict')).toEqual([]);
-    await expect(page.locator('[data-compat="unknown"]')).toHaveCount(0);
+    // The one allowed «unknown» is the adapter-current rule (no listing states a camera's current, so «not
+    // verified» is the honest status for several cameras on one adapter); every other row is stated / assumed.
+    const ADAPTER_CURRENT = 'camera_adapter_current';
+    expect(compat.filter((c) => c.level === 'conflict')).toEqual([]);
+    expect(compat.filter((c) => c.level === 'unknown' && c.rule !== ADAPTER_CURRENT)).toEqual([]);
+    expect(compat.filter((c) => c.rule === ADAPTER_CURRENT).every((c) => c.level === 'unknown')).toBe(true);
+    await expect(page.locator(`[data-testid="compat-block"] li:not([data-rule="${ADAPTER_CURRENT}"]) [data-compat="unknown"]`)).toHaveCount(0);
     await expect(page.locator('[data-compat="conflict"]')).toHaveCount(0);
     await expect(page.locator('bdi[dir="ltr"]').first()).toBeVisible();
     await expect(page.locator('[data-testid="stop-line"][data-state="exact"]')).toHaveCount(0);

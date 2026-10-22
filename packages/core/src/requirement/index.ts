@@ -4,6 +4,7 @@ export {
   evaluateCandidates,
   compareEvals,
   conditionIssue,
+  conditionIssueFor,
   deviceModelKey,
   deviceModelsMatch,
   isPricedOffer,
@@ -13,6 +14,7 @@ export {
   priceWithinBudget,
 } from './evaluate';
 export { classifyItem, INCOMPLETE_SPECS_LABEL, saleUnitOpen } from './classify';
+export { mergeListingFlags, offerAccepted, offerOwnFlags, withOfferConditions, withOfferConditionsAll } from './offers';
 export { noMatchCauses, noMatchSummary } from './nomatch';
 export type { NoMatchCause, NoMatchSummary } from './nomatch';
 export { compatScope, resolveItem, resolveItems } from './resolve';

@@ -3,6 +3,7 @@ import {
   describeConstraintEval,
   describeModelCodeMismatch,
   describeOutOfBudget,
+  offerConditionIssueText,
 } from '../copy/fa';
 import { deviceModelBase } from '../extract/device-models';
 import type {
@@ -12,7 +13,9 @@ import type {
   Candidate,
   CandidateEval,
   ConditionIssue,
+  ConditionMode,
   CandidateFit,
+  ListingFlags,
   Constraint,
   ConstraintEval,
   Offer,
@@ -147,9 +150,14 @@ export function modelCodeMatches(productCodes: readonly string[], code: string):
  * a listing without a flag is "not stated as used", which passes the default policy.
  */
 export function conditionIssue(item: Requirement, cand: Candidate): ConditionIssue | undefined {
-  const used = cand.listing?.condition;
-  const replica = cand.listing?.replica === true;
-  switch (item.condition ?? 'new') {
+  return conditionIssueFor(item.condition ?? 'new', cand.listing);
+}
+
+/** The same rule on bare flags (also applied per offer, requirement/offers.ts). */
+export function conditionIssueFor(mode: ConditionMode, flags: ListingFlags | undefined): ConditionIssue | undefined {
+  const used = flags?.condition;
+  const replica = flags?.replica === true;
+  switch (mode) {
     case 'any':
       return replica ? 'replica' : undefined;
     case 'used':
@@ -184,7 +192,10 @@ export function evaluateCandidate(item: Requirement, cand: Candidate): Candidate
   else fit = 'eligible';
 
   const differences: string[] = [];
-  if (condIssue) differences.push(CONDITION_ISSUE_TEXT[condIssue]);
+  if (condIssue) {
+    const fromSellers = cand.listing?.fromOffers && (condIssue === 'used' || condIssue === 'refurbished' || condIssue === 'replica');
+    differences.push(fromSellers ? offerConditionIssueText(condIssue, cand.listing?.evidence) : CONDITION_ISSUE_TEXT[condIssue]);
+  }
   for (const i of issues) differences.push(i.text);
   if (modelMismatch && item.modelCode) differences.push(describeModelCodeMismatch(item.modelCode));
   for (const f of failed) differences.push(describeConstraintEval(f));

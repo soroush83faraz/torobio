@@ -45,7 +45,7 @@ export function CompatRow({ line }: { line: CompatLine }) {
   // The engine ends a user-caused conflict's sentence with «(از انتخاب‌های خودت)»; the tag below says it once.
   const sentence = line.fromUserChoice ? line.text.replace(/\s*[(（]\s*از انتخاب‌های خودت\s*[)）]\s*$/u, '') : line.text;
   return (
-    <li className="flex flex-col gap-1.5 border-t border-line py-3 first:border-t-0 first:pt-0 last:pb-0">
+    <li data-rule={line.ruleId} className="flex flex-col gap-1.5 border-t border-line py-3 first:border-t-0 first:pt-0 last:pb-0">
       <p className="text-sm">
         <BidiText text={sentence} />
       </p>

@@ -115,19 +115,67 @@ const TARH_DOMAINS: ReadonlySet<string> = new Set(['phone', 'headphones', 'charg
  * (in cases / adapters it names a style or a housing).
  */
 export function extractReplica(t: string, domain: string | null): boolean {
-  if (!domain || domain === 'switch_socket' || domain === 'lighting') return false;
-  if (REPLICA_RE.test(t) || LOOKALIKE_RE.test(t)) return true;
-  if (!TARH_DOMAINS.has(domain)) return false;
-  return TARH_BRAND_RE.test(t) || (domain === 'phone' && TARH_MODEL_RE.test(t));
+  return domainReplicaMatch(t, domain) !== null;
+}
+
+function matchOf(re: RegExp, t: string): string | null {
+  const m = re.exec(t);
+  return m ? m[0].trim() : null;
+}
+
+function domainReplicaMatch(t: string, domain: string | null): string | null {
+  if (!domain || domain === 'switch_socket' || domain === 'lighting') return null;
+  const m = matchOf(REPLICA_RE, t) ?? matchOf(LOOKALIKE_RE, t);
+  if (m) return m;
+  if (!TARH_DOMAINS.has(domain)) return null;
+  return matchOf(TARH_BRAND_RE, t) ?? (domain === 'phone' ? matchOf(TARH_MODEL_RE, t) : null);
+}
+
+/**
+ * Copy claims that hold on ANY listing, the generic path included (listing text only: product titles and seller
+ * titles; the parser keeps the domain-gated rule). Each phrase only ever states a copy: «های کپی» / «هایکپی»,
+ * «فول کپی», «کپی درجه یک», «(کپی)» as a bracketed tag, «high copy», «replica». Measured on the 2026-10 snapshot
+ * (product and seller titles of every category, photocopier / copy-paper / anti-copy remote categories included):
+ * none of these appears in a copier, copy-paper («کپی مکس»), «کپی خور» console or «ضد کپی» listing.
+ */
+const STRONG_REPLICA_RE = word('های ?کپی|هایکپی|فول کپی|کپی درجه (?:یک|1)|high copy|replica');
+const BRACKET_COPY_RE = /\(\s*کپی\s*\)/;
+
+function listingReplicaMatch(t: string, domain: string | null): string | null {
+  return domainReplicaMatch(t, domain) ?? matchOf(STRONG_REPLICA_RE, t) ?? matchOf(BRACKET_COPY_RE, t);
+}
+
+export interface ListingFlagsHit {
+  condition?: 'used' | 'refurbished';
+  replica?: true;
+  /** The words of the text that state each flag (prep()ed form), e.g. ['های کپی']. */
+  evidence: string[];
+}
+
+/**
+ * Listing condition flags of a listing text (prep()ed product title or seller title) with the words that state
+ * them. Absent = not stated in the listing.
+ */
+export function detectListingFlags(t: string, domain: string | null): ListingFlagsHit {
+  const out: ListingFlagsHit = { evidence: [] };
+  const c = extractCondition(t);
+  if (c === 'used' || c === 'refurbished') {
+    out.condition = c;
+    const m = c === 'refurbished' ? matchOf(REFURB_RE, t) : matchOf(USED_RE, t);
+    if (m) out.evidence.push(m);
+  }
+  const r = listingReplicaMatch(t, domain);
+  if (r !== null) {
+    out.replica = true;
+    out.evidence.push(r);
+  }
+  return out;
 }
 
 /** Listing condition flags of a title (prep()ed text). Absent = not stated in the listing. */
 export function extractListingFlags(t: string, domain: string | null): { condition?: 'used' | 'refurbished'; replica?: true } {
-  const out: { condition?: 'used' | 'refurbished'; replica?: true } = {};
-  const c = extractCondition(t);
-  if (c === 'used' || c === 'refurbished') out.condition = c;
-  if (extractReplica(t, domain)) out.replica = true;
-  return out;
+  const { evidence: _e, ...flags } = detectListingFlags(t, domain);
+  return flags;
 }
 
 // ---------------------------------------------------------------- CCTV camera

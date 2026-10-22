@@ -5,7 +5,7 @@
  * Every id and value is validated here against the facts of THIS call (defence in depth: the keyword matcher and
  * the LLM decoder validate too). The plan is never edited: the client recomputes it with /api/plan.
  */
-import { Api, ATTR_SCHEMA } from '@app/core';
+import { Api, ATTR_SCHEMA, constraintText } from '@app/core';
 import type { ParsedItem } from '../parse/index.js';
 import type { AssistFacts } from './facts.js';
 import { msg } from './messages.js';
@@ -26,7 +26,7 @@ import {
   stripBrandMentions,
   toClientState,
 } from './state.js';
-import { MAX_BUDGET_TOMAN, type AssistAction, type AssistChoice } from './types.js';
+import { MAX_BUDGET_TOMAN, SPEC_ATTR_KINDS, SPEC_ATTRS, type AssistAction, type AssistChoice } from './types.js';
 
 type State = Api.RequirementState;
 
@@ -47,6 +47,8 @@ export type Rejection =
   | 'unknown_brand'
   | 'not_stated'
   | 'invalid_budget'
+  | 'invalid_spec'
+  | 'spec_not_for_item'
   | 'too_many_items'
   | 'too_many_exclusions'
   | 'mall_too_big'
@@ -92,6 +94,8 @@ function excludeAll(s: State, shopIds: readonly string[]): boolean {
   for (const [itemId, pinned] of Object.entries(s.shopPins)) if (shopIds.includes(pinned)) delete s.shopPins[itemId];
   return true;
 }
+
+const MAX_SPEC_VALUE = 1e6;
 
 export function applyAction(state: State, action: AssistAction, env: ApplyEnv): ApplyResult {
   const f = env.facts;
@@ -217,6 +221,38 @@ export function applyAction(state: State, action: AssistAction, env: ApplyEnv): 
       const answers = s.answers[req.id];
       if (answers) delete answers.budget; // an answered budget band would override the new one
       return done(action, state, s, msg.setBudget(req.text, min, max));
+    }
+
+    case 'set_spec': {
+      const req = findItem(s, action.itemId);
+      if (!req) return reject('unknown_item', msg.unknownItem);
+      if (!(SPEC_ATTRS as readonly string[]).includes(action.attr) || !Number.isFinite(action.value) || action.value <= 0 || action.value > MAX_SPEC_VALUE) {
+        return reject('invalid_spec', msg.invalidSpec);
+      }
+      const stated = statedAttrs(req, state).find((x) => x.attr === action.attr);
+      const kind = req.kind ?? f.items.find((i) => i.id === req.id)?.kind;
+      if (!stated && !(kind && SPEC_ATTR_KINDS[action.attr].includes(kind))) return reject('spec_not_for_item', msg.specNotForItem(req.text));
+      const dto: Api.ConstraintDto = { attr: action.attr, op: 'eq', value: action.value, source: 'user' };
+      const engine = Api.toEngineConstraint(dto, 'user');
+      if (!engine) return reject('invalid_spec', msg.invalidSpec);
+      const label = constraintText(engine);
+      if (stated?.value === action.value) return done(action, state, s, msg.specAlready(req.text, label));
+      removeStatedAttr(req, action.attr);
+      const answers = s.answers[req.id];
+      if (answers) delete answers[action.attr];
+      addStated(req, dto, label);
+      if (stated) {
+        // the old number's words give way to the new ones (word-aligned; a text that never spelled it stays as typed)
+        const swap = (t: string): string => {
+          const base = removeLabelWords(t, stated.label);
+          return base === t ? t : `${base} ${label}`;
+        };
+        req.text = swap(req.text).slice(0, Api.API_LIMITS.maxTextLen);
+        if (req.rawText !== undefined) req.rawText = swap(req.rawText).slice(0, Api.API_LIMITS.maxTextLen);
+      }
+      // a product picked under the old value no longer applies
+      delete s.pins[req.id];
+      return done(action, state, s, msg.setSpec(req.text, label));
     }
 
     case 'add_item': {

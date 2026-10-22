@@ -25,6 +25,8 @@ export interface FactItem {
   text: string;
   qty: number;
   kind?: string;
+  /** Category name of a chip-form item (parser items have none). */
+  categoryLabel?: string;
   state?: Api.ItemState;
   /** Brand key the user stated (chip or answer). */
   brand?: string;
@@ -138,6 +140,7 @@ export function dbFactsProvider(db: Db, now: () => Date): FactsProvider {
         text: r.text,
         qty: r.qty,
         ...(kind ? { kind } : {}),
+        ...(r.categoryLabel ? { categoryLabel: r.categoryLabel } : {}),
         ...(res ? { state: res.state } : {}),
         ...(brand ? { brand } : {}),
         stated: statedAttrs(r, state),

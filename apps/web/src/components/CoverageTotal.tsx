@@ -30,6 +30,11 @@ export function stripMarker(line: string, marker: string): string {
   return /\s*[\u2014\u2013]\s*$/u.test(head) ? head.replace(/\s*[\u2014\u2013]\s*$/u, '') || line : line;
 }
 
+/** «جمع» is already the label's word: «جمع طبق فهرست · ۴ مورد» (never «جمع طبق فهرست · جمع ۴ مورد»). */
+export function dropLeadingTotalWord(text: string): string {
+  return text.replace(/^جمع\s+/u, '');
+}
+
 function MarkerChip({ text }: { text: string }) {
   return (
     <span
@@ -65,7 +70,7 @@ export function CoverageTotal({ covered, total, amount, usesSuggestions, missing
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-lg font-bold">
           {label && <span>{label} ·</span>}
           <span data-testid="total-line">
-            <BidiText text={stripMarker(line, marker)} />
+            <BidiText text={label ? dropLeadingTotalWord(stripMarker(line, marker)) : stripMarker(line, marker)} />
           </span>
           <MarkerChip text={marker} />
         </p>
@@ -87,8 +92,7 @@ export function CoverageTotal({ covered, total, amount, usesSuggestions, missing
       <div className={className} data-total="complete" data-conflict={marker ? 'true' : undefined}>
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-lg font-bold">
           <span>
-            {label ? `${label} · ` : ''}
-            {t.total.complete(total)}
+            {label ? `${label} · ${dropLeadingTotalWord(t.total.complete(total))}` : t.total.complete(total)}
             <span className="text-accent-ink">{`: ${money}`}</span>
           </span>
           {marker && <MarkerChip text={marker} />}

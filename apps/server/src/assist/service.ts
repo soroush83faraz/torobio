@@ -19,7 +19,16 @@ import { ASSIST_MAX_TOKENS, ASSIST_OUTPUT_SCHEMA, ASSIST_SYSTEM, buildAssistProm
 import { matchKeywords, shopChoices, type KeywordMatch } from './keywords.js';
 import { msg } from './messages.js';
 import { toClientState } from './state.js';
-import { MAX_ASSIST_TEXT, type AssistAction, type AssistChoice, type AssistContext, type AssistRequest, type AssistResponse, type AssistSource } from './types.js';
+import {
+  MAX_ASSIST_TEXT,
+  type AssistAction,
+  type AssistChoice,
+  type AssistContext,
+  type AssistRequest,
+  type AssistResponse,
+  type AssistSource,
+  type DegradedReason,
+} from './types.js';
 
 export interface AssistDeps {
   llm: LlmClient;
@@ -37,9 +46,23 @@ type State = Api.RequirementState;
 
 const RACE_MARGIN_MS = 100;
 
+/** Why the free-text path was not used for this request (undefined = it was not needed). */
+type Why = DegradedReason | undefined;
+const flags = (why: Why) => ({ degraded: why === 'failed' || why === 'budget', degradedReason: why });
+
 function reply(
   state: State,
-  o: { action?: AssistAction; newState?: State; changed?: boolean; supported: boolean; messageFa: string; source: AssistSource; degraded?: boolean; choices?: AssistChoice[] },
+  o: {
+    action?: AssistAction;
+    newState?: State;
+    changed?: boolean;
+    supported: boolean;
+    messageFa: string;
+    source: AssistSource;
+    degraded?: boolean;
+    degradedReason?: DegradedReason | undefined;
+    choices?: AssistChoice[];
+  },
 ): AssistResponse {
   return {
     action: o.action ?? { type: 'none' },
@@ -50,16 +73,17 @@ function reply(
     message: o.messageFa,
     source: o.source,
     ...(o.degraded ? { degraded: true as const } : {}),
+    ...(o.degradedReason ? { degradedReason: o.degradedReason } : {}),
     ...(o.choices && o.choices.length ? { choices: o.choices } : {}),
   };
 }
 
-function fromApply(state: State, r: ApplyResult, source: AssistSource, degraded: boolean, messageOverride?: string): AssistResponse {
+function fromApply(state: State, r: ApplyResult, source: AssistSource, why: Why, messageOverride?: string): AssistResponse {
   if (r.ok) {
     const supported = r.action.type !== 'none';
-    return reply(state, { action: r.action, newState: r.newState, changed: r.changed, supported, messageFa: messageOverride ?? r.messageFa, source, degraded });
+    return reply(state, { action: r.action, newState: r.newState, changed: r.changed, supported, messageFa: messageOverride ?? r.messageFa, source, ...flags(why) });
   }
-  return reply(state, { supported: false, messageFa: r.messageFa, source, degraded, ...(r.choices ? { choices: r.choices } : {}) });
+  return reply(state, { supported: false, messageFa: r.messageFa, source, ...flags(why), ...(r.choices ? { choices: r.choices } : {}) });
 }
 
 /** «نزدیک‌تر به هم» is the fewest-stops plan, said in its own words (when the plan really changed). */
@@ -69,10 +93,10 @@ function closerMessage(r: ApplyResult, facts: AssistFacts): string | undefined {
   return fewer ? msg.fewest(true, -fewer.deltaStops, fewer.deltaToman) : undefined;
 }
 
-function fromKeyword(state: State, kw: KeywordMatch, env: ApplyEnv, degraded: boolean): AssistResponse {
-  if (kw.kind === 'clarify') return reply(state, { supported: false, messageFa: kw.messageFa, source: 'keywords', degraded, choices: kw.choices });
+function fromKeyword(state: State, kw: KeywordMatch, env: ApplyEnv, why: Why): AssistResponse {
+  if (kw.kind === 'clarify') return reply(state, { supported: false, messageFa: kw.messageFa, source: 'keywords', ...flags(why), choices: kw.choices });
   const r = applyAction(state, kw.action, env);
-  return fromApply(state, r, 'keywords', degraded, kw.intent === 'closer' ? closerMessage(r, env.facts) : undefined);
+  return fromApply(state, r, 'keywords', why, kw.intent === 'closer' ? closerMessage(r, env.facts) : undefined);
 }
 
 function chipAction(req: AssistRequest, facts: AssistFacts): AssistAction | KeywordMatch {
@@ -126,20 +150,21 @@ export function proseEnv(facts: AssistFacts, userText: string): ProseEnv {
   return { numbers, latinWords, secrets: [ASSIST_SYSTEM] };
 }
 
-type Interpretation = { status: 'decided'; decision: LlmDecision } | { status: 'failed' };
+type Interpretation = { status: 'decided'; decision: LlmDecision } | { status: 'failed'; reason: 'failed' | 'budget' };
 
 /** One LLM call raced against the budget. The late result of a timed-out call is aborted and never used. */
 async function interpret(text: string, deps: AssistDeps, ctx: AssistContext): Promise<Interpretation> {
-  if (!llmUsable(deps.llm) || !deps.gate) return { status: 'failed' };
+  if (!llmUsable(deps.llm)) return { status: 'failed', reason: 'failed' };
+  if (!deps.gate) return { status: 'failed', reason: 'budget' };
   const ticket = deps.gate.acquire(deps.clientKey);
-  if (!ticket.ok) return { status: 'failed' };
+  if (!ticket.ok) return { status: 'failed', reason: 'budget' };
   const ac = new AbortController();
   let user: string;
   try {
     user = buildAssistPrompt(text, deps.facts, ctx);
   } catch {
     ticket.release();
-    return { status: 'failed' };
+    return { status: 'failed', reason: 'failed' };
   }
   const work = (async () => {
     try {
@@ -167,20 +192,20 @@ async function interpret(text: string, deps: AssistDeps, ctx: AssistContext): Pr
   clearTimeout(timer);
   if (winner === 'timeout') {
     ac.abort();
-    return { status: 'failed' };
+    return { status: 'failed', reason: 'failed' };
   }
-  if (!winner.ok) return { status: 'failed' };
+  if (!winner.ok) return { status: 'failed', reason: 'failed' };
   let decision: LlmDecision | null;
   try {
     decision = decodeDecision(winner.raw, text, deps.facts);
   } catch {
     decision = null;
   }
-  return decision ? { status: 'decided', decision } : { status: 'failed' };
+  return decision ? { status: 'decided', decision } : { status: 'failed', reason: 'failed' };
 }
 
 function fromDecision(state: State, d: LlmDecision, env: ApplyEnv, text: string): AssistResponse {
-  if (d.kind === 'action') return fromApply(state, applyAction(state, d.action, env), 'llm', false);
+  if (d.kind === 'action') return fromApply(state, applyAction(state, d.action, env), 'llm', undefined);
   const checked = checkProse(d.prose, proseEnv(env.facts, text));
   if (d.kind === 'explain') {
     return reply(state, { action: { type: 'explain' }, supported: true, messageFa: checked ?? msg.explain(env.facts), source: 'llm' });
@@ -195,23 +220,25 @@ export async function runAssist(req: AssistRequest, deps: AssistDeps): Promise<A
 
   if (req.chip) {
     const a = chipAction(req, deps.facts);
-    if ('kind' in a) return fromKeyword(state, a, env, false);
+    if ('kind' in a) return fromKeyword(state, a, env, undefined);
     const r = applyAction(state, a, env);
-    return fromApply(state, r, 'chip', false, req.chip === 'closer' ? closerMessage(r, deps.facts) : undefined);
+    return fromApply(state, r, 'chip', undefined, req.chip === 'closer' ? closerMessage(r, deps.facts) : undefined);
   }
 
   const text = untrustedText(req.text ?? '', MAX_ASSIST_TEXT);
   if (!text) return reply(state, { supported: false, messageFa: msg.empty, source: 'none' });
 
   const kw = matchKeywords(text, deps.facts, ctx);
-  if (kw?.exact) return fromKeyword(state, kw, env, false);
+  if (kw?.exact) return fromKeyword(state, kw, env, undefined);
 
-  let degraded = false;
+  let why: Why;
   if (deps.llm.configured) {
     const it = await interpret(text, deps, ctx);
     if (it.status === 'decided') return fromDecision(state, it.decision, env, text);
-    degraded = true;
+    why = it.reason;
   }
-  if (kw) return fromKeyword(state, kw, env, degraded);
-  return reply(state, { supported: false, messageFa: degraded ? msg.llmUnavailable : msg.unsupported, source: 'none', degraded });
+  if (kw) return fromKeyword(state, kw, env, why);
+  // no keyword understood it: say honestly why the free-text path did not help (no key vs. a failed / spent call)
+  if (!deps.llm.configured) return reply(state, { supported: false, messageFa: msg.unsupported, source: 'none', degradedReason: 'not_configured' });
+  return reply(state, { supported: false, messageFa: msg.llmUnavailable, source: 'none', ...flags(why) });
 }

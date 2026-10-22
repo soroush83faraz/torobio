@@ -26,7 +26,8 @@ const child = spawn('node', [path.join(root, 'apps/server/dist/server.mjs')], {
   env: {
     ...process.env,
     PORT: port,
-    HOST: '127.0.0.1',
+    // all interfaces: the insecure-origin suite opens the app through the machine's LAN IP (127.0.0.1 is a secure context)
+    HOST: process.env.E2E_HOST ?? '0.0.0.0',
     NODE_ENV: 'production',
     DATABASE_PATH: db,
     WEB_DIST: path.join(root, 'apps/web/dist'),

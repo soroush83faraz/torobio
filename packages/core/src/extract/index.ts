@@ -27,7 +27,7 @@ export { extractDeviceModels, deviceModelBase } from './device-models';
 export { extractModelCodes, modelCodeKeys, type ModelCode } from './model-codes';
 export { BRANDS, findBrandsInTokens, lookupBrandField, brandByKey, type BrandEntry } from './brands';
 export { domainForCategory, titleBrandAllowed, DOMAIN_CATEGORIES, type Domain } from './domains';
-export { extractPhoneMemory, voltsOf, ampsOf, wattsOf, STANDARD_SECTIONS, extractCondition, extractReplica, extractListingFlags } from './domain-extractors';
+export { extractPhoneMemory, voltsOf, ampsOf, wattsOf, STANDARD_SECTIONS, extractCondition, extractReplica, extractListingFlags, detectListingFlags, type ListingFlagsHit } from './domain-extractors';
 export { prep as prepTitle } from './numbers';
 export { screenInchOf } from './screen';
 export type { Attrs, AttrSource } from './domain-extractors'; // AttrValue is exported by ./types (identical definition)

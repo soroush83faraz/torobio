@@ -36,6 +36,8 @@ RUN if node -e "process.exit(require('./apps/web/package.json').scripts?.build ?
       echo "apps/web has no build script yet - skipping web build"; \
     fi \
     && mkdir -p apps/web/dist
+# Pre-compress text assets (.br/.gz next to each file): @fastify/static serves them with zero per-request CPU.
+RUN node apps/server/scripts/precompress.mjs apps/web/dist
 # Single-file server bundle; @app/core (TypeScript source) is compiled into it by esbuild.
 RUN npm run build -w @app/server
 

@@ -13,11 +13,11 @@
 import { ATTR_LABEL, findBrandsInTokens, FA_STOPWORDS, tokenizeForSearch, type AttrKey } from '@app/core';
 import { untrustedText } from '../llm/sanitize.js';
 import { extractBudget, perUnit } from '../parse/budget.js';
-import { align, QTY_MARKER_WORDS, SPEC_UNIT_WORDS } from '../parse/text.js';
+import { align, FA_LETTERS, QTY_MARKER_WORDS, SPEC_UNIT_WORDS } from '../parse/text.js';
 import type { AssistFacts, FactItem, FactStop } from './facts.js';
 import { msg } from './messages.js';
 import { brandLabel, brandRanges } from './state.js';
-import type { AssistAction, AssistChoice, AssistContext, RelaxableAttr } from './types.js';
+import { SPEC_ATTR_KINDS, type AssistAction, type AssistChoice, type AssistContext, type RelaxableAttr, type SpecAttr } from './types.js';
 
 export type KeywordIntent =
   | 'cheaper'
@@ -33,6 +33,7 @@ export type KeywordIntent =
   | 'relax'
   | 'swap_brand'
   | 'remove_item'
+  | 'set_spec'
   | 'explain';
 
 export type KeywordMatch =
@@ -73,14 +74,14 @@ const P = (...phrases: string[]): Toks[] => phrases.map(T).filter((t) => t.lengt
 const CHEAP_PHRASES = P('کم هزینه', 'کمترین قیمت', 'قیمت کمتر', 'قیمت پایین', 'قیمت پایین تر', 'اقتصادی', 'اقتصادی تر', 'پول کمتر', 'هزینه کمتر');
 const CHEAP_STEM = /^(?:ارزان|ارزون)/;
 const FEW_PHRASES = P(
-  'کمتر توقف', 'کم توقف', 'توقف کمتر', 'توقف کم', 'کمترین توقف', 'کمترین تعداد توقف', 'یک جا', 'یکجا', 'همه از یک',
+  'کمتر توقف', 'کم توقف', 'توقف کمتر', 'توقف کم', 'کمترین توقف', 'کمترین تعداد توقف', 'کم تر توقف', 'یک جا', 'یکجا', 'همه از یک',
   'جای کمتر', 'جاهای کمتر', 'مغازه کمتر', 'مغازه های کمتر', 'پاساژ کمتر', 'کمتر بگردم', 'راه کمتر', 'کمتر راه',
 );
 const NEAR_STEM = /^نزدیک/;
 const OPEN_PHRASES = P(
   'فقط مغازه های باز', 'مغازه های باز', 'مغازه ها باز', 'فقط باز', 'باز باشن', 'باز باشند', 'باز باشد', 'باز باشه',
   'باز هستن', 'باز هستند', 'بازن', 'الان باز', 'هنوز باز', 'بسته نباشن', 'بسته نباشند', 'بسته نباشه', 'بسته ها نه',
-  'بسته ها رو حذف', 'بسته ها را حذف', 'بسته ها رو نشون نده', 'فقط بازها',
+  'بسته ها رو حذف', 'بسته ها را حذف', 'بسته ها رو نشون نده', 'فقط بازها', 'فقط بازا', 'بازا رو',
 );
 const OPEN_OFF_PHRASES = P(
   'ساعت مهم نیست', 'ساعت کاری مهم نیست', 'ساعت فرقی نمی کنه', 'ساعت فرقی نمیکنه', 'ساعت کاری فرقی نمی کنه',
@@ -107,8 +108,9 @@ const BRAND_WORDS = new Set(T('برند مارک'));
 const CHANGE_PHRASES = P('عوض', 'تغییر', 'جایگزین', 'دیگه', 'دیگر', 'عوضش', 'بدل');
 const REMOVE_TRIGGERS = P(
   'حذف', 'حذفش', 'پاک', 'پاکش', 'از فهرست', 'از لیست', 'نمی خوام', 'نمیخوام', 'نمی خواهم', 'لازم ندارم', 'نیاز ندارم',
-  'بیخیال', 'بی خیال', 'لازم نیست',
+  'بیخیال', 'بی خیال', 'لازم نیست', 'بدون',
 );
+const REMOVE_OTHER = REMOVE_TRIGGERS.filter((seq) => seq.join(' ') !== T('بدون').join(' '));
 const BUDGET_TRIGGERS = P('بودجه', 'قیمت', 'زیر', 'حداکثر', 'تا', 'کمتر از', 'حدود', 'نهایتا', 'سقف', 'نزدیک', 'بین', 'حداقل', 'بالای');
 const NEGATIONS = new Set(['نه', 'نمی', 'نمیخوام', 'نمیخواهم', 'نخوام', 'نکن', 'نباشه', 'نباشد', 'نشه']);
 const EXPLAIN_FIRST = new Set(['چرا', 'چطور', 'چطوری', 'چگونه', 'توضیح', 'یعنی', 'دلیل', 'چه']);
@@ -189,13 +191,35 @@ function identifyingTokens(text: string): string[] {
   );
 }
 
-/** Items the text names (best score only). */
-function mentionedItems(toks: Toks, items: readonly FactItem[]): FactItem[] {
+/** Persian words that name an item kind (the user says «آداپتور», the item text may say «منبع تغذیه ۱۲ ولت»). */
+const KIND_WORDS: Readonly<Record<string, string>> = {
+  camera: 'دوربین',
+  recorder: 'ضبط رکوردر دی وی آر ان وی آر',
+  hdd: 'هارد',
+  adapter: 'آداپتور ادپتور آداپتر منبع',
+  wire: 'سیم کابل',
+  phone: 'گوشی موبایل',
+};
+
+/** Tokens of the user's text plus their colloquial stems («هاردو» -> «هارد», «آداپتورها» -> «آداپتور»). */
+function withStems(toks: Toks): Set<string> {
   const set = new Set(toks);
+  for (const t of toks) {
+    if (t.length >= 4 && t.endsWith('و')) set.add(t.slice(0, -1));
+    if (t.length >= 5 && t.endsWith('رو')) set.add(t.slice(0, -2));
+    if (t.length >= 5 && t.endsWith('ها')) set.add(t.slice(0, -2));
+  }
+  return set;
+}
+
+/** Items the text names (best score only): words of the item's text, its category and its kind. */
+function mentionedItems(toks: Toks, items: readonly FactItem[]): FactItem[] {
+  const set = withStems(toks);
   let best = 0;
   let out: FactItem[] = [];
   for (const it of items) {
-    const score = [...new Set(identifyingTokens(it.text))].filter((t) => set.has(t)).length;
+    const words = [...identifyingTokens(it.text), ...(it.categoryLabel ? identifyingTokens(it.categoryLabel) : []), ...(it.kind && KIND_WORDS[it.kind] ? T(KIND_WORDS[it.kind]!) : [])];
+    const score = [...new Set(words)].filter((t) => set.has(t)).length;
     if (score === 0) continue;
     if (score > best) {
       best = score;
@@ -267,6 +291,112 @@ function targetItem(toks: Toks, ctx: AssistContext, items: readonly FactItem[], 
   return named.length > 1 ? named : [...pool];
 }
 
+
+// --- changing a stated number (capacity / megapixels / channels / watts / wire section) ----------------------------
+
+const NUM_WORDS: Readonly<Record<string, number>> = {
+  یک: 1, دو: 2, سه: 3, چهار: 4, پنج: 5, شش: 6, شیش: 6, هفت: 7, هشت: 8, ده: 10, دوازده: 12, شانزده: 16, بیست: 20,
+};
+const SPEC_UNIT_RE: Readonly<Record<SpecAttr, string>> = {
+  capacity_tb: 'ترابایت|ترا ?بایت|ترا|تی ?بی|tb',
+  resolution_mp: 'مگا ?پیکسل|مگ|mp',
+  channels: 'کانال|چنل|ch',
+  power_w: 'وات|w',
+  wire_section_mm2: 'میلی ?متر مربع|میلی ?متر|mm2|mm',
+};
+const SPEC_NUM = `(\\d+(?:\\.\\d+)?|${Object.keys(NUM_WORDS).join('|')})`;
+const SPEC_VERBS = P(
+  'بگیر', 'بخر', 'بذار', 'بزار', 'بگذار', 'بشه', 'باشه', 'باشد', 'بشود', 'عوض', 'تغییر', 'بده', 'کن', 'بکن', 'میخوام', 'می خوام',
+  'می خواهم', 'میخواهم', 'بزن', 'انتخاب', 'بهتره', 'بهتر',
+);
+/** Standard sizes a «بزرگ‌تر / کوچک‌تر» request steps along. */
+const STEP_LADDER: Partial<Record<SpecAttr, readonly number[]>> = {
+  capacity_tb: [0.5, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
+  resolution_mp: [1, 2, 3, 4, 5, 6, 8, 12],
+  channels: [1, 2, 4, 8, 16, 32, 64],
+};
+const SIZE_UP = P('بزرگتر', 'بزرگ تر', 'بزرگترش');
+const SIZE_DOWN = P('کوچکتر', 'کوچک تر', 'کوچکترش');
+const MORE = P('بیشتر', 'بالاتر', 'بالا تر', 'بیشترش');
+const LESS = P('کمتر', 'پایین تر', 'پایینتر', 'کمترش');
+const STEP_WORDS: Partial<Record<SpecAttr, Toks>> = {
+  capacity_tb: T('ظرفیت حجم ترابایت'),
+  resolution_mp: T('وضوح رزولوشن مگاپیکسل کیفیت'),
+  channels: T('کانال'),
+};
+
+function eligibleFor(it: FactItem, attr: SpecAttr): boolean {
+  return it.stated.some((s) => s.attr === attr) || (it.kind !== undefined && SPEC_ATTR_KINDS[attr].includes(it.kind));
+}
+
+/** Pick the item a spec change targets: the context item, the one the text names, or the only candidate. */
+function specTarget(toks: Toks, ctx: AssistContext, pool: readonly FactItem[]): FactItem | FactItem[] {
+  const c = contextItem(ctx, pool);
+  if (c) return c;
+  const named = mentionedItems(toks, pool);
+  if (named.length === 1) return named[0]!;
+  if (pool.length === 1) return pool[0]!;
+  return named.length > 1 ? named : [...pool];
+}
+
+function matchSpecChange(rawText: string, toks: Toks, facts: AssistFacts, ctx: AssistContext): KeywordMatch | null {
+  if (hasNegation(toks) || findAny(toks, RELAX_TRIGGERS) || findAny(toks, REMOVE_OTHER)) return null;
+  const items = facts.items;
+
+  // a) an explicit number + unit: «هارد ۴ ترابایت بگیر»
+  const text = align(rawText);
+  const found = new Map<SpecAttr, number>();
+  for (const attr of Object.keys(SPEC_UNIT_RE) as SpecAttr[]) {
+    const re = new RegExp(`(?<![\\w.])${SPEC_NUM}\\s*(?:${SPEC_UNIT_RE[attr]})(?:ی|ه)?(?![${FA_LETTERS}\\w])`, 'giu');
+    for (const m of text.matchAll(re)) {
+      const raw = m[1]!;
+      const v = NUM_WORDS[raw] ?? Number(raw);
+      if (Number.isFinite(v) && v > 0 && !found.has(attr)) found.set(attr, v);
+    }
+  }
+  if (found.size === 1 && findAny(toks, SPEC_VERBS)) {
+    const [attr, value] = [...found.entries()][0]!;
+    const pool = items.filter((i) => eligibleFor(i, attr));
+    if (pool.length === 0) return null;
+    const target = specTarget(toks, ctx, pool);
+    if (Array.isArray(target)) return clarify('set_spec', msg.needsItem, itemChoices(target, rawText));
+    return act('set_spec', { type: 'set_spec', itemId: target.id, attr, value }, false);
+  }
+  if (found.size > 0) return null;
+
+  // b) «هارد بزرگ‌تر» / «ظرفیت بیشتر»: the next standard size up or down from the stated one
+  const sizeUp = findAny(toks, SIZE_UP);
+  const sizeDown = findAny(toks, SIZE_DOWN);
+  let attr: SpecAttr | undefined;
+  let dir: 1 | -1 | undefined;
+  if (sizeUp || sizeDown) {
+    attr = 'capacity_tb';
+    dir = sizeUp ? 1 : -1;
+  } else if (!toks.some((t) => t === 'توقف' || t === 'قیمت' || t === 'هزینه')) {
+    for (const a of Object.keys(STEP_WORDS) as SpecAttr[]) {
+      if (!STEP_WORDS[a]!.some((w) => toks.includes(w))) continue;
+      if (findAny(toks, MORE)) dir = 1;
+      else if (findAny(toks, LESS)) dir = -1;
+      if (dir) {
+        attr = a;
+        break;
+      }
+    }
+  }
+  if (!attr || !dir) return null;
+  const ladder = STEP_LADDER[attr];
+  if (!ladder) return null;
+  const pool = items.filter((i) => eligibleFor(i, attr!));
+  if (pool.length === 0) return null;
+  const target = specTarget(toks, ctx, pool);
+  if (Array.isArray(target)) return clarify('set_spec', msg.needsItem, itemChoices(target, rawText));
+  const cur = target.stated.find((s) => s.attr === attr)?.value;
+  if (cur === undefined) return clarify('set_spec', msg.needsSpecValue);
+  const next = dir > 0 ? ladder.find((v) => v > cur) : [...ladder].reverse().find((v) => v < cur);
+  if (next === undefined) return clarify('set_spec', dir > 0 ? msg.noBiggerStep(target.text) : msg.noSmallerStep(target.text));
+  return act('set_spec', { type: 'set_spec', itemId: target.id, attr, value: next }, false);
+}
+
 // --- the matcher -----------------------------------------------------------------------------------------------------
 
 export function matchKeywords(rawText: string, facts: AssistFacts, ctx: AssistContext = {}): KeywordMatch | null {
@@ -327,6 +457,10 @@ export function matchKeywords(rawText: string, facts: AssistFacts, ctx: AssistCo
     if (!text) return clarify('add_item', msg.nothingParsed);
     return act('add_item', { type: 'add_item', text }, false);
   }
+
+  // 4b. change a stated number of an item («هارد ۴ ترابایت بگیر», «هارد بزرگ‌تر»)
+  const spec = matchSpecChange(rawText, toks, facts, ctx);
+  if (spec) return spec;
 
   // 5. a budget for an item
   const hit = extractBudget(align(rawText));
@@ -428,9 +562,11 @@ export function matchKeywords(rawText: string, facts: AssistFacts, ctx: AssistCo
     }
   }
 
-  // 8. remove an item
+  // 8. remove an item («آداپتور رو حذف کن», «هارد رو نمی‌خوام», «بدون آداپتور»). After a bare «بدون» only the words
+  //    that follow it name the item («دوربین بدون آداپتور» drops the adapter, not the camera).
   if (findAny(toks, REMOVE_TRIGGERS)) {
-    const named = mentionedItems(toks, items);
+    const bareWithout = withoutAt >= 0 && !findAny(toks, REMOVE_OTHER);
+    const named = mentionedItems(bareWithout ? toks.slice(withoutAt + without.length) : toks, items);
     const ctxItem = contextItem(ctx, items);
     if (ctxItem && (named.length === 0 || named.includes(ctxItem))) return act('remove_item', { type: 'remove_item', itemId: ctxItem.id }, false);
     if (named.length === 1) return act('remove_item', { type: 'remove_item', itemId: named[0]!.id }, false);

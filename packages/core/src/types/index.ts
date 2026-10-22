@@ -145,6 +145,8 @@ export type CompatRuleId =
   | 'recorder_hdd_internal'
   | 'hdd_surveillance'
   | 'camera_adapter_12v'
+  /** The adapter(s) must supply the cameras' total current: never verified (no listing gives a camera's current). */
+  | 'camera_adapter_current'
   | 'phone_accessory_fit'
   /** Unit guard (not a sibling rule): a wire price is only usable when the sale unit is known and fixed. */
   | 'wire_sale_unit';
@@ -225,6 +227,11 @@ export interface Offer {
   warrantyCode?: string | null;
   warrantyMonths?: number | null;
   changedAt?: string | null;
+  /**
+   * Listing condition stated by THIS seller's own listing title (offers.seller_title), e.g. «… های کپی» on a product
+   * whose catalogue title says nothing. Absent = not stated. See requirement/offers.ts for how it is applied.
+   */
+  listing?: ListingFlags;
 }
 
 export interface ProductInfo {
@@ -245,6 +252,13 @@ export interface ProductInfo {
 export interface ListingFlags {
   condition?: 'used' | 'refurbished';
   replica?: boolean;
+  /** The words of the listing text that state the flags (normalised form), e.g. ['های کپی']. */
+  evidence?: string[];
+  /**
+   * Product-level flags taken from the sellers' own listing titles: every offer of the product states them,
+   * although the product title does not (requirement/offers.ts).
+   */
+  fromOffers?: true;
 }
 
 /**
@@ -274,6 +288,12 @@ export interface Candidate {
    * goods, or its price contradicts its sale unit. Set by the server per request; absent = none found.
    */
   issues?: ListingIssue[];
+  /**
+   * Offers set aside for this requirement because their own listing title states a condition the requirement does
+   * not accept (requirement/offers.ts): never in `offers`, so never priced, counted, auto-picked or planned; kept
+   * for display (options sellers list, with the flag and the reason).
+   */
+  conditionExcludedOffers?: Offer[];
 }
 
 /**
@@ -407,6 +427,11 @@ export interface CompatFinding {
   sentence: string;
   /** «از فروشنده بپرس» line; present for assumed / unknown / conflict. */
   askSeller?: string;
+  /**
+   * Per-seller wording (item id -> question phrased for the item bought at that seller, copy/fa.ts askCompatWith).
+   * When present, it decides which sellers ask and what; `askSeller` stays the line's general question.
+   */
+  askSellerByItem?: Record<string, string>;
   /**
    * The user lifted the general assumption behind this rule (e.g. chose or allowed an adapter voltage other than
    * 12 V next to cameras): the pairing is neither a conflict nor checked; the plan must not read as verified.

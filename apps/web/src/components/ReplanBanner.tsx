@@ -1,3 +1,5 @@
+import { degradedKind, degradedText, useLlmConfigured } from '../api/health';
+import type { DegradedReason } from '../api/types';
 import { t } from '../copy/fa';
 import { formatTomanCompact } from '../lib/format';
 import type { LineChange } from '../lib/planDiff';
@@ -16,6 +18,9 @@ export interface ReplanInfo {
   message?: string;
   /** The server-side assistant was not used for this change (assist): a calm line says so. */
   degraded?: boolean;
+  degradedReason?: DegradedReason;
+  /** A newer assistant answer changed nothing: this banner shows the LAST change, not the latest answer. */
+  superseded?: boolean;
   /** Number of stops before / after (shown when it changed). */
   stopsBefore?: number;
   stopsAfter?: number | null;
@@ -52,6 +57,7 @@ function describe(c: LineChange): ReactNode {
 export function ReplanBanner({ info, onUndo, onDismiss, onOthers }: Props) {
   const { changes } = info;
   const assist = info.kind === 'assist';
+  const llm = useLlmConfigured();
   return (
     <Card as="section" tone="accent" role="status" aria-live="polite" data-testid="replan-diff" className="space-y-2">
       <h3 className="flex items-center gap-2 text-base">
@@ -62,13 +68,14 @@ export function ReplanBanner({ info, onUndo, onDismiss, onOthers }: Props) {
         <>
           {info.degraded && (
             <p data-testid="assist-degraded" className="rounded-xl bg-amber-soft px-3 py-2 text-sm text-amber-ink">
-              {t.assistant.degraded}
+              {degradedText(degradedKind(info.degradedReason, llm))}
             </p>
           )}
           {info.message && (
             <p data-testid="assist-message" className="flex items-start gap-2 rounded-xl bg-canvas px-3 py-2 text-sm font-semibold">
               <Icon name="spark" size={16} className="mt-1 shrink-0 text-ink-soft" />
               <span className="min-w-0 [overflow-wrap:anywhere]">
+                {info.superseded && <span data-testid="assist-last-change" className="font-bold">{t.assistant.lastChange}{': '}</span>}
                 <BidiText text={info.message} />
               </span>
             </p>

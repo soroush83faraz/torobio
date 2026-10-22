@@ -307,6 +307,22 @@ export const CONDITION_ISSUE_TEXT = {
   not_replica: 'در عنوان آگهی کپی یا طرح بودن نوشته نشده',
 } as const;
 
+/**
+ * Why a seller's offer is set aside / flagged: the words of that seller's own listing title,
+ * e.g. «در عنوان آگهی فروشنده: های کپی». Without words: the flag label.
+ */
+export function offerFlagReason(evidence: readonly string[] | undefined, flags: ReadonlyArray<keyof typeof CONDITION_FLAG_LABEL> = []): string {
+  const words = (evidence ?? []).filter((w) => w.trim() !== '');
+  const what = words.length ? words.join('، ') : flags.map((f) => CONDITION_FLAG_LABEL[f]).join('، ');
+  return `در عنوان آگهی فروشنده: ${what}`;
+}
+
+/** CONDITION_ISSUE_TEXT when the condition is stated only by the sellers' own listing titles (not the product title). */
+export function offerConditionIssueText(issue: 'used' | 'refurbished' | 'replica', evidence?: readonly string[]): string {
+  const words = (evidence ?? []).filter((w) => w.trim() !== '');
+  return `${CONDITION_FLAG_LABEL[issue]} طبق عنوان آگهی فروشنده${words.length ? ` («${words.join('، ')}»)` : ''}؛ خودکار انتخاب نمی‌شود`;
+}
+
 /** Condition the user asked for (chip label). 'new' is the default and has no chip. */
 export const CONDITION_MODE_LABEL = {
   new: 'فقط نو',
@@ -508,6 +524,24 @@ export const ASK_SELLER_PREFIX = 'از فروشنده بپرس';
 const sig = (s: string) => formatAttrValue('camera_signal', s);
 const kindLabel = (k: string) => formatAttrValue('recorder_kind', k);
 
+/** Roles of a CCTV list whose sellers get «از فروشنده بپرس» lines. */
+export type CompatRole = 'camera' | 'recorder' | 'hdd' | 'adapter';
+export const COMPAT_ROLES: readonly CompatRole[] = ['camera', 'recorder', 'hdd', 'adapter'];
+/** The item being bought at this seller («این …»). */
+const ROLE_THIS: Readonly<Record<CompatRole, string>> = { camera: 'این دوربین', recorder: 'این ضبط‌کننده', hdd: 'این هارد', adapter: 'این آداپتور' };
+/** The other item of the pair, bought elsewhere in the list («… که می‌خرم»). */
+const ROLE_OTHER: Readonly<Record<CompatRole, string>> = { camera: 'دوربین‌هایی', recorder: 'ضبط‌کننده‌ای', hdd: 'هاردی', adapter: 'آداپتوری' };
+
+/**
+ * «از فروشنده بپرس» phrased for the item bought at THIS seller (`buying`) about the other item of the pair:
+ * «آیا این دوربین با ضبط‌کننده‌ای که می‌خرم (DVR) سازگار است؟». `otherDesc` = what is known of the other item
+ * (its kind / signal / voltage, else the user's own words); omitted when nothing is known.
+ */
+export function askCompatWith(buying: CompatRole, other: CompatRole, otherDesc?: string): string {
+  const d = otherDesc?.trim();
+  return `آیا ${ROLE_THIS[buying]} با ${ROLE_OTHER[other]} که می‌خرم${d ? ` (${d})` : ''} سازگار است؟`;
+}
+
 export const compatCopy = {
   channelsOk: (ch: number, q: number) => `ضبط‌کنندهٔ ${faNum(ch, 0)} کاناله برای ${faNum(q, 0)} دوربین`,
   channelsTooFew: (ch: number, q: number) =>
@@ -529,6 +563,10 @@ export const compatCopy = {
   signalRecorderUnknown: (s: string) => `نوع ضبط‌کننده در آگهی مشخص نیست؛ دوربین‌ها ${sig(s)} هستند`,
   signalBothUnknown: () => 'نوع دوربین و نوع ضبط‌کننده در آگهی‌ها مشخص نیست',
   signalBothUnknownAsk: () => 'این ضبط‌کننده با این دوربین‌ها سازگار است؟',
+  /** Short descriptors of the other item in a per-seller question (askCompatWith). */
+  recorderKindDesc: (k: string) => kindLabel(k),
+  cameraSignalDesc: (s: string) => sig(s),
+  voltageDesc: (v: number) => `${faNum(v)} ولت`,
 
   hddInternal: (hasHddItem: boolean) =>
     hasHddItem
@@ -550,6 +588,25 @@ export const compatCopy = {
   /** The user lifted the 12 V assumption («فرقی نمی‌کند» on the voltage question). */
   adapterRelaxed: (v: number) =>
     `این آداپتور ${faNum(v)} ولت است؛ ولتاژ را آزاد گذاشتی، ولی دوربین‌ها معمولاً ۱۲ ولت می‌خواهند (فرض عمومی)`,
+  /**
+   * Adapter current for several cameras (camera_adapter_current, never verified: no listing states a camera's current).
+   * `adapters` = adapter units in the list; `amps` = the adapter listing's current when it states one (never invented).
+   */
+  adapterCurrent: (cams: number, adapters: number, amps?: number) => {
+    const known = amps !== undefined ? `؛ آگهی این آداپتور ${faNum(amps)} آمپر نوشته (${faNum(adapters, 0)} عدد)` : '';
+    return adapters >= cams
+      ? `برای ${faNum(cams, 0)} دوربین ${faNum(adapters, 0)} آداپتور در فهرست است؛ جریان هر آداپتور باید برای دوربینش کافی باشد${known}؛ تأیید نشده`
+      : `برای ${faNum(cams, 0)} دوربین، جریان کل آداپتور (یا تعداد آداپتورها) باید کافی باشد${known}؛ تأیید نشده`;
+  },
+  adapterCurrentAsk: (cams: number) => `جمع جریان مورد نیاز ${faNum(cams, 0)} دوربین چقدر است و این آداپتور کافی است؟`,
+  /** The same relationship asked at a camera's seller. */
+  cameraCurrentAsk: (cams: number) => `هر دوربین چند آمپر جریان می‌کشد؟ (برای انتخاب آداپتور ${faNum(cams, 0)} دوربین)`,
+  /**
+   * Adapter item note: the user did not write how many adapters while there are several cameras. Not a blocking
+   * question; the plan buys the quantity shown.
+   */
+  adapterQtyNote: (cams: number, adapters: number) =>
+    `تعداد آداپتور را ننوشتی؛ ${faNum(adapters, 0)} عدد برای ${faNum(cams, 0)} دوربین در نظر گرفته شد. یک آداپتور پرقدرت یا یک آداپتور برای هر دوربین؟ جریان کافی را از فروشنده بپرس.`,
   /** A conflict line that comes from what the user chose themselves (typed, answered or pinned on both sides). */
   fromUserChoice: (sentence: string) => `${sentence} (از انتخاب‌های خودت)`,
   /**
@@ -671,6 +728,15 @@ export const planCopy = {
   markerConflict: 'ناسازگاری دارد',
   /** Marker when the user lifted a general compat assumption (e.g. a non-12 V adapter next to cameras). */
   markerUnverified: 'بدون تأیید سازگاری',
+  /**
+   * The market view's total by the listed prices, worded once: «جمع طبق فهرست برای ۴ مورد: ۲۰٫۳ میلیون تومان»,
+   * «جمع طبق فهرست، فقط ۳ از ۵ مورد: …», plus « — <marker>». Replaces «جمع طبق فهرست · جمع ۴ مورد: …».
+   */
+  datasetTotal: (covered: number, n: number, total: number, marker?: string): string => {
+    const head = covered >= n ? `جمع طبق فهرست برای ${faNum(n, 0)} مورد` : `جمع طبق فهرست، فقط ${faNum(covered, 0)} از ${faNum(n, 0)} مورد`;
+    const line = `${head}: ${formatTomanCompact(total)}`;
+    return marker ? `${line} — ${marker}` : line;
+  },
   /** «جمع ۴ مورد: ۵ میلیون تومان — ناسازگاری دارد». */
   withMarker: (line: string, marker: string) => `${line} — ${marker}`,
   /** Reason of a flagged plan: no superlative («ارزان‌ترین…» / «کم‌توقف‌ترین…»), the marker instead. */
@@ -692,6 +758,14 @@ export const planCopy = {
   onlyOne: () => 'ترکیب دیگری با هزینه یا تعداد توقف کمتر وجود ندارد.',
   nothingPlannable: () => 'هنوز هیچ موردی قیمت و فروشنده ندارد؛ برنامه‌ای ساخته نشد.',
   closedExcluded: (n: number) => `${faNum(n, 0)} مغازه در زمانی که انتخاب کردی بسته است و کنار گذاشته شد.`,
+  /**
+   * Label of one alternative plan: its own stop count and its price delta vs the shown plan, so every
+   * non-dominated alternative reads differently («۱ توقف · ۴٫۷ میلیون تومان بیشتر», «۲ توقف · ۱٫۸ میلیون تومان بیشتر»).
+   */
+  altLabel: (stopCount: number, cost: number): string => {
+    const money = cost > 0 ? `${formatTomanCompact(cost)} بیشتر` : cost < 0 ? `${formatTomanCompact(-cost)} ارزان‌تر` : 'همان قیمت';
+    return `${faNum(stopCount, 0)} توقف · ${money}`;
+  },
   /** Delta of an alternative vs the default plan. */
   delta: (cost: number, stops: number): string => {
     const parts: string[] = [];

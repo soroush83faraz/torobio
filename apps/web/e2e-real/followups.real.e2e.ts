@@ -70,12 +70,14 @@ test.describe('F1 multi-shop stops', () => {
 });
 
 /**
- * The «کم‌توقف‌تر» alternative that removes the most stops: the server lists them by stop count, the first one is the
- * single-building plan («N توقف کمتر» with N = stops - 1). The result is asserted: exactly one stop.
+ * The alternative that removes the most stops (the label is the server's or derived from the stop count, so it is
+ * picked by its `data-delta-stops`, not by wording). The result is asserted: exactly one stop.
  */
 async function chooseFewestStops(page: Page) {
-  const radio = page.getByRole('radio', { name: /کم‌توقف‌تر/ }).first();
-  await expect(radio).toBeVisible();
+  const options = page.getByTestId('alt-option');
+  await expect(options.first()).toBeVisible();
+  const deltas = await options.evaluateAll((els) => els.map((e) => Number(e.getAttribute('data-delta-stops'))));
+  const radio = options.nth(deltas.indexOf(Math.min(...deltas)));
   await radio.click();
   await settled(page);
   await expect(page.getByTestId('stop')).toHaveCount(1);
@@ -268,13 +270,14 @@ test.describe('F3 assistant applies the server newState', () => {
     await expect(page.locator(`[data-testid="stop-shop"][data-shop="${shopId}"]`)).toHaveCount(0);
   });
 
-  test('degraded server answer: the calm line shows, in the sheet and on the banner', async ({ page }) => {
+  test('degraded server answer: a real failure keeps the outage line, in the sheet and on the banner', async ({ page }) => {
     await cctvPlan(page);
-    // the server's own answer, marked degraded (as it does when the LLM is configured but unusable)
+    // the server's own answer, marked degraded because the model failed (degradedReason 'failed')
     await page.route('**/api/assist', async (route) => {
       const res = await route.fetch();
       const body = await res.json();
       body.data.degraded = true;
+      body.data.degradedReason = 'failed';
       await route.fulfill({ response: res, json: body });
     });
     await page.getByTestId('open-assistant').click();
@@ -292,6 +295,59 @@ test.describe('F3 assistant applies the server newState', () => {
     await page.getByRole('button', { name: 'بفرست' }).click();
     await expect(page.getByTestId('assist-result')).toBeVisible();
     await expect(page.getByTestId('assist-degraded')).toBeVisible();
+  });
+
+  test('no language model on the server: the sheet says «حالت ساده» up front (a mode, not an outage)', async ({ page, request }) => {
+    expect((await (await request.get('/api/health')).json()).llm, 'the real-data server runs without a model').toBe(false);
+    await cctvPlan(page);
+    await page.getByTestId('open-assistant').click();
+    const simple = page.getByTestId('assist-simple-mode');
+    await expect(simple).toHaveText('دستیار در حالت ساده است: فقط درخواست‌های کوتاه مثل «ارزان‌تر» یا «بدون این مغازه» را می‌فهمد');
+    await expect(page.getByTestId('assist-cheaper')).toBeVisible();
+    await expect(page.locator('body')).not.toContainText('در دسترس نیست');
+    await expectNoOverflow(page);
+    await expectTouchTargets(page);
+    await shot(page, '66-assist-simple-mode');
+
+    // a degraded answer WITHOUT a reason reads as the same mode (health says llm:false)
+    await page.route('**/api/assist', async (route) => {
+      const res = await route.fetch();
+      const body = await res.json();
+      body.data.degraded = true;
+      await route.fulfill({ response: res, json: body });
+    });
+    await page.getByRole('textbox', { name: 'تغییر برنامه' }).fill('یک چیز عجیب');
+    await page.getByRole('button', { name: 'بفرست' }).click();
+    await expect(page.getByTestId('assist-result')).toBeVisible();
+    await expect(page.getByTestId('assist-degraded')).toHaveCount(0);
+    await expect(simple).toBeVisible();
+    await expect(page.locator('body')).not.toContainText('در دسترس نیست');
+  });
+
+  test('a newer answer that changes nothing is never hidden behind an older change banner', async ({ page }) => {
+    await cctvPlan(page);
+    await page.getByTestId('open-assistant').click();
+    await page.getByTestId('assist-fewer_stops').click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    const banner = page.getByTestId('replan-diff');
+    await expect(banner).toBeVisible();
+    await expect(page.getByTestId('assist-last-change')).toHaveCount(0);
+    const older = await page.getByTestId('assist-message').innerText();
+
+    // the plan is already the fewest-stop one: asking again changes nothing and the sheet shows that new answer
+    await page.getByTestId('open-assistant').click();
+    await page.getByRole('textbox', { name: 'تغییر برنامه' }).fill('کمتر توقف');
+    await page.getByRole('button', { name: 'بفرست' }).click();
+    const fresh = page.getByTestId('assist-result');
+    await expect(fresh).toBeVisible();
+    const newer = await fresh.innerText();
+    expect(newer).not.toBe(older);
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    // the banner now says it shows the LAST change; it still carries the diff and the undo
+    await expect(page.getByTestId('assist-last-change')).toBeVisible();
+    await expect(page.getByTestId('replan-undo')).toBeVisible();
+    await expectNoOverflow(page);
   });
 
   test('server unreachable: the chips-only fallback is marked degraded and still applies', async ({ page }) => {

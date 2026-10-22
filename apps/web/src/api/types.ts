@@ -150,7 +150,10 @@ export type AssistResponse = Pick<CoreAssistResponse, 'message' | 'supported'> &
   Partial<Pick<CoreAssistResponse, 'changed' | 'messageFa' | 'source' | 'degraded' | 'choices'>> & {
     action: AssistAction;
     newState?: RequirementState;
+    /** Why the smart assistant was not used (additive, server-side): not set up / failed just now / usage budget spent. */
+    degradedReason?: DegradedReason;
   };
+export type DegradedReason = 'not_configured' | 'failed' | 'budget';
 export type AssistRequest = Omit<CoreAssistRequest, 'state'> & { state: RequirementState };
 export type { AssistChoice, AssistChip } from '@app/core/src/api/dto';
 /** What `api.assist` resolves to: always carries the state after the action (the server's, or a local one for the chips fallback). */

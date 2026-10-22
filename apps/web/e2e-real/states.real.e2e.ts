@@ -49,7 +49,7 @@ test('assistant: a chip changes the plan (diff banner), free text it cannot act 
   await expect(page.getByTestId('replan-diff')).toBeVisible();
   await expect(page.getByTestId('assist-message')).toContainText('توقف');
   await settled(page);
-  await expect(page.getByTestId('plan-view')).not.toContainText('۴ توقف');
+  await expect(page.getByTestId('stop')).not.toHaveCount(4); // (the switcher lists «۴ توقف» as an option)
   // free text the deterministic assistant does not understand: a calm Persian line listing what it can do, no crash
   await page.getByTestId('open-assistant').click();
   await page.getByRole('textbox', { name: 'تغییر برنامه' }).fill('یک چیز عجیب');

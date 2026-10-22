@@ -1,6 +1,8 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import fastifyCompress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
+import { constants as zlibConstants } from 'node:zlib';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { sendError } from './http.js';
 
@@ -26,6 +28,27 @@ const PLACEHOLDER_HTML = `<!doctype html>
 </html>`;
 
 /**
+ * Response compression for dynamic output (JSON API, SPA fallback, uncompressed static files).
+ * Must be registered BEFORE the routes and before @fastify/static (its global hook only covers routes added after it).
+ *  - brotli (quality 4: cheap per request) preferred over gzip; deflate is not offered.
+ *  - bodies under 1 KiB are sent as is (error envelopes, /api/health); already-compressed types (woff2, png, ...)
+ *    are skipped by the plugin's mime-db check; a response that already carries Content-Encoding (the precompressed
+ *    .br/.gz static files) is never compressed twice. The plugin sets `Vary: accept-encoding`.
+ *  - request-body decompression is OFF: a Content-Encoding on a request body stays unsupported, so the
+ *    16 KB body limit cannot be bypassed with a compression bomb.
+ */
+export async function registerCompression(app: FastifyInstance): Promise<void> {
+  await app.register(fastifyCompress, {
+    global: true,
+    globalDecompression: false,
+    threshold: 1024,
+    encodings: ['br', 'gzip'],
+    brotliOptions: { params: { [zlibConstants.BROTLI_PARAM_QUALITY]: 4 } },
+    zlibOptions: { level: 6 },
+  });
+}
+
+/**
  * Serves the built web app from `webDist` (SPA fallback for non-/api GET paths without a file
  * extension) or, if it isn't built/present, a minimal Persian placeholder at "/".
  * Returns whether a real web build was found.
@@ -37,6 +60,10 @@ export async function registerWeb(app: FastifyInstance, webDist: string): Promis
     await app.register(fastifyStatic, {
       root: webDist,
       cacheControl: false,
+      // Serve index.html.br / app.js.gz etc. (generated at image build by scripts/precompress.mjs) when the
+      // client accepts them; sets Content-Encoding + Vary. No Range: a partial body of a compressed file is useless.
+      preCompressed: true,
+      acceptRanges: false,
       setHeaders(reply, filePath) {
         const hashed = filePath.includes(`${path.sep}assets${path.sep}`);
         reply.header('Cache-Control', hashed ? 'public, max-age=31536000, immutable' : 'no-cache');

@@ -3,7 +3,7 @@
  * Pure functions; the SQL lives in retrieval/catalog.ts.
  */
 import type { Candidate, Offer, Shop, Weekday, WeeklyHours } from '@app/core';
-import { WEEKDAYS, extractListingFlags, prepTitle, screenInchOf } from '@app/core';
+import { WEEKDAYS, detectListingFlags, extractListingFlags, prepTitle, screenInchOf } from '@app/core';
 import { mapAttrs, parseAttrsJson, type ListingFlags } from './mapping.js';
 
 export interface ProductRow {
@@ -68,7 +68,12 @@ function parseCodes(json: string | null): string[] {
 
 const PRICE_FLAGS = new Set(['missing', 'placeholder', 'outlier']);
 
-export function toOffer(r: OfferRow): Offer {
+/**
+ * One offer. `domain` = the product's extraction domain: the seller's own listing title is read with the same
+ * condition / copy detectors as product titles (core detectListingFlags), so a «… های کپی» seller of a product whose
+ * catalogue title says nothing is flagged on its offer (applied per requirement by core withOfferConditions).
+ */
+export function toOffer(r: OfferRow, domain: string | null = null): Offer {
   const o: Offer = {
     id: String(r.id),
     productId: r.product_id,
@@ -81,7 +86,21 @@ export function toOffer(r: OfferRow): Offer {
     changedAt: r.changed_at,
   };
   if (r.price_flag && PRICE_FLAGS.has(r.price_flag)) o.priceFlag = r.price_flag as Offer['priceFlag'];
+  const listing = offerListingFlags(r.seller_title, domain);
+  if (listing) o.listing = listing;
   return o;
+}
+
+/** Condition / copy flags stated by a seller's own listing title, with the words that state them; undefined = none. */
+export function offerListingFlags(sellerTitle: string | null, domain: string | null): Offer['listing'] {
+  if (!sellerTitle) return undefined;
+  const hit = detectListingFlags(prepTitle(sellerTitle), domain);
+  if (!hit.condition && !hit.replica) return undefined;
+  const out: NonNullable<Offer['listing']> = {};
+  if (hit.condition) out.condition = hit.condition;
+  if (hit.replica) out.replica = true;
+  if (hit.evidence.length) out.evidence = hit.evidence;
+  return out;
 }
 
 /**

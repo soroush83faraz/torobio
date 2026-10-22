@@ -13,6 +13,7 @@ import { StateBadge } from '../components/StateBadge';
 import { StopCard, StopConnector } from '../components/StopCard';
 import { t } from '../copy/fa';
 import { formatCount, formatJalaliDate, formatTomanCompact } from '../lib/format';
+import { altLabel } from '../lib/alternatives';
 import { missingGroups, planMarker } from '../lib/items';
 import { shopsOf } from '../lib/stops';
 import { useUi } from '../store/ui';
@@ -174,9 +175,16 @@ export function PlanView({ plan, busy, changed, onShowSeller, onChangeItem, onSw
           </p>
         ) : (
           <div role="radiogroup" aria-labelledby="alt-h" className="space-y-1">
-            <AltRow checked label={t.plan.altCurrent} description={`${t.plan.stops(plan.stops.length)}`} onSelect={() => onSwitchVariant(null)} />
+            <AltRow checked label={t.plan.altCurrent} description={`${t.plan.stops(plan.stops.length)}`} deltaStops={0} onSelect={() => onSwitchVariant(null)} />
             {plan.alternatives.map((a) => (
-              <AltRow key={a.id} checked={false} label={a.label} description={a.description} onSelect={() => onSwitchVariant(a.id)} />
+              <AltRow
+                key={a.id}
+                checked={false}
+                label={altLabel(a, plan.alternatives, plan.stops.length)}
+                description={a.description}
+                deltaStops={a.deltaStops}
+                onSelect={() => onSwitchVariant(a.id)}
+              />
             ))}
           </div>
         )}
@@ -196,12 +204,14 @@ export function PlanView({ plan, busy, changed, onShowSeller, onChangeItem, onSw
   );
 }
 
-function AltRow({ checked, label, description, onSelect }: { checked: boolean; label: string; description: string; onSelect: () => void }) {
+function AltRow({ checked, label, description, deltaStops, onSelect }: { checked: boolean; label: string; description: string; deltaStops: number; onSelect: () => void }) {
   return (
     <button
       type="button"
       role="radio"
       aria-checked={checked}
+      data-testid={checked ? 'alt-current' : 'alt-option'}
+      data-delta-stops={deltaStops}
       onClick={onSelect}
       className="flex min-h-touch w-full items-start gap-3 rounded-xl px-2 py-2 text-start hover:bg-white/70"
     >

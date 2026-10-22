@@ -200,15 +200,7 @@ export function Workspace() {
   };
   const action = nextAction();
 
-  const copyLink = async () => {
-    const url = shareUrl(usePlans.getState().plans[saved.id]!);
-    try {
-      await navigator.clipboard.writeText(url);
-      toast(t.workspace.menu.linkCopied);
-    } catch {
-      toast(t.workspace.menu.linkFailed);
-    }
-  };
+  const getShareUrl = () => shareUrl(usePlans.getState().plans[saved.id]!);
 
   const report = (target: Target, kind: ReportKind, price?: number) => {
     const prev = usePlans.getState().plans[saved.id]!.reports[target.line.itemId];
@@ -290,6 +282,7 @@ export function Workspace() {
         prevPlan: data.plan,
         message: r.messageFa,
         degraded: r.degraded === true,
+        degradedReason: r.degradedReason,
         changes: null,
         totalBefore: data.plan.totalToman,
         totalAfter: null,
@@ -485,7 +478,8 @@ export function Workspace() {
         name={saved.name}
         onClose={() => setMenuOpen(false)}
         onRename={(n) => store.rename(saved.id, n)}
-        onCopyLink={copyLink}
+        getShareUrl={getShareUrl}
+        onCopied={() => toast(t.workspace.menu.linkCopied)}
         onNewPlan={() => navigate('/')}
         onRemove={() => {
           store.remove(saved.id);
@@ -501,6 +495,7 @@ export function Workspace() {
         autoText={assistText}
         onClose={() => setAssistOpen(false)}
         onApply={applyAssist}
+        onUnchanged={() => setReplan((cur) => (cur?.kind === 'assist' ? { ...cur, superseded: true } : cur))}
       />
       <OptionsSheet
         open={!!optionsFor}

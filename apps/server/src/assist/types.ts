@@ -31,6 +31,25 @@ export const ACTION_TYPES = [
 ] as const;
 export type ActionType = (typeof ACTION_TYPES)[number];
 
+/**
+ * Numeric attributes whose stated value can be changed in one phrase («هارد ۴ ترابایت بگیر»). Produced by the
+ * deterministic keyword matcher only (the model is never asked for numbers), so `set_spec` is not in ACTION_TYPES.
+ */
+export const SPEC_ATTRS = ['capacity_tb', 'resolution_mp', 'channels', 'power_w', 'wire_section_mm2'] as const;
+export type SpecAttr = (typeof SPEC_ATTRS)[number];
+
+/** Item kinds an attribute belongs to (an item that already states the attribute qualifies too). */
+export const SPEC_ATTR_KINDS: Readonly<Record<SpecAttr, readonly string[]>> = {
+  capacity_tb: ['hdd'],
+  resolution_mp: ['camera'],
+  channels: ['recorder'],
+  power_w: ['adapter'],
+  wire_section_mm2: ['wire'],
+};
+
+/** Why a request fell back to the deterministic path (additive; the UI words the notice by it). */
+export type DegradedReason = 'not_configured' | 'failed' | 'budget';
+
 /** An attribute the user stated for an item, its budget, or its accepted listing condition («استوک», «کپی»). */
 export type RelaxableAttr = AttrKey | 'budget' | typeof Api.CONDITION_ATTR;
 
@@ -49,6 +68,8 @@ export type AssistAction =
   /** text: the user's own words; it goes through the deterministic parser. */
   | { type: 'add_item'; text: string }
   | { type: 'remove_item'; itemId: string }
+  /** Change the stated value of a numeric attribute of an item (value read from the user's own words / a fixed step ladder). */
+  | { type: 'set_spec'; itemId: string; attr: SpecAttr; value: number }
   | { type: 'explain' }
   /** Nothing applied (unsupported, needs a choice, or nothing to change). */
   | { type: 'none' };
@@ -89,5 +110,10 @@ export interface AssistResponse {
   source: AssistSource;
   /** The LLM is configured but could not be used for this request (timeout, error, invalid answer, budget). */
   degraded?: true;
+  /**
+   * Set when the free-text (LLM) path was needed but not used: 'not_configured' (no key; `degraded` is absent),
+   * 'failed' (timeout / error / invalid or rejected answer / circuit open) or 'budget' (per-client or global limit).
+   */
+  degradedReason?: DegradedReason;
   choices?: AssistChoice[];
 }

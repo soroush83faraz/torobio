@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api/client';
+import { degradedKind, degradedText, useLlmConfigured } from '../api/health';
 import type { AssistChip, AssistRequest, AssistResult, RequirementState } from '../api/types';
 import { BidiText, Interp } from '../components/Bdi';
 import { BottomSheet } from '../components/BottomSheet';
@@ -22,6 +23,8 @@ interface Props {
   onClose: () => void;
   /** The assistant changed the requirement state: the parent applies `newState`, shows the diff and «برگرداندن». */
   onApply: (result: AssistResult) => void;
+  /** An answer that changed nothing (shown here): the page's older change banner is no longer the latest word. */
+  onUnchanged?: (result: AssistResult) => void;
 }
 
 const CHIPS: { id: AssistChip; label: string }[] = [
@@ -37,7 +40,8 @@ const CHIPS: { id: AssistChip; label: string }[] = [
  * sends the request and shows the answer. A change closes the sheet (the diff banner takes over); anything else
  * (nothing to change, not supported, a choice to make) stays here with the server's Persian sentence.
  */
-export function AssistantSheet({ open, state, context, contextLabel, autoText, onClose, onApply }: Props) {
+export function AssistantSheet({ open, state, context, contextLabel, autoText, onClose, onApply, onUnchanged }: Props) {
+  const llm = useLlmConfigured();
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<AssistResult | null>(null);
@@ -49,6 +53,7 @@ export function AssistantSheet({ open, state, context, contextLabel, autoText, o
     const mine = ++seq.current;
     setBusy(true);
     setFailed(null);
+    setResult(null); // never leave the previous answer on screen next to a new request (or its failure)
     try {
       const r = await api.assist({ state, ...req, context: req.context ?? context });
       if (mine !== seq.current) return; // the sheet was closed or another request started
@@ -58,6 +63,7 @@ export function AssistantSheet({ open, state, context, contextLabel, autoText, o
         onClose();
       } else {
         setResult(r);
+        onUnchanged?.(r);
       }
     } catch (e) {
       if (mine !== seq.current) return;
@@ -85,12 +91,21 @@ export function AssistantSheet({ open, state, context, contextLabel, autoText, o
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, autoText]);
 
+  // «simple mode» is a mode, not an outage: said up front when the server has no model, and never as «not available»
+  const resultKind = result?.degraded ? degradedKind(result.degradedReason, llm) : null;
+  const simple = resultKind ? resultKind === 'not_configured' : llm === false;
+
   return (
     <BottomSheet open={open} onClose={onClose} title={t.assistant.title}>
       <p className="mb-1 text-base font-semibold">{t.assistant.prompt}</p>
       {contextLabel && (
         <p data-testid="assist-context" className="mb-3 text-sm text-ink-soft [overflow-wrap:anywhere]">
           <Interp tpl={t.assistant.forShop} args={[contextLabel]} />
+        </p>
+      )}
+      {simple && (
+        <p data-testid="assist-simple-mode" className="mb-2 rounded-xl bg-sunken px-4 py-2 text-sm text-ink-soft">
+          {t.assistant.simpleMode}
         </p>
       )}
       <div className="mt-2 flex flex-wrap gap-2">
@@ -130,9 +145,9 @@ export function AssistantSheet({ open, state, context, contextLabel, autoText, o
         )}
         {result && !busy && (
           <>
-            {result.degraded && (
+            {result.degraded && !simple && (
               <p data-testid="assist-degraded" className="rounded-xl bg-sunken px-4 py-2 text-sm text-ink-soft">
-                {t.assistant.degraded}
+                {degradedText(resultKind ?? 'failed')}
               </p>
             )}
             <div

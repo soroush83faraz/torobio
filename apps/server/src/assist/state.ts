@@ -23,6 +23,8 @@ export interface StatedAttr {
   label: string;
   /** 'chip': stated on the item itself (parser constraint / chip); 'answer': a decoded question answer; 'budget'. */
   origin: 'chip' | 'answer' | 'budget';
+  /** The stated number of an exact numeric constraint («۲ ترابایت» -> 2); absent for ranges / non-numbers. */
+  value?: number;
 }
 
 /** Persian display name of a brand key ('dahua' -> «داهوا», 'fa:نوید' -> «نوید»). */
@@ -69,9 +71,10 @@ function conditionLabel(mode: string): string {
 /** What the user stated for an item: its constraints (incl. the listing condition), decoded answers, and its budget. */
 export function statedAttrs(req: Req, state: State): StatedAttr[] {
   const out: StatedAttr[] = [];
-  const push = (attr: RelaxableAttr, label: string, origin: StatedAttr['origin']) => {
-    if (!out.some((s) => s.attr === attr)) out.push({ attr, label, origin });
+  const push = (attr: RelaxableAttr, label: string, origin: StatedAttr['origin'], value?: number) => {
+    if (!out.some((s) => s.attr === attr)) out.push({ attr, label, origin, ...(value !== undefined ? { value } : {}) });
   };
+  const numeric = (c: { op: string; value?: unknown }): number | undefined => (c.op === 'eq' && typeof c.value === 'number' && Number.isFinite(c.value) ? c.value : undefined);
   const derived = isParserItem(req) ? derivedAttrs(req, state) : new Set<string>();
   for (const { constraint, label } of statedOf(req)) {
     if (Api.isConditionConstraint(constraint)) {
@@ -82,7 +85,7 @@ export function statedAttrs(req: Req, state: State): StatedAttr[] {
     const c = Api.toEngineConstraint(constraint, 'user');
     if (!c) continue;
     const brand = c.attr === 'brand' && c.op === 'eq' && typeof c.value === 'string' ? brandLabel(c.value) : undefined;
-    push(c.attr, brand ?? (label || constraintText(c)), 'chip');
+    push(c.attr, brand ?? (label || constraintText(c)), 'chip', numeric(c));
   }
   if (req.condition && req.condition !== 'new') push(Api.CONDITION_ATTR, conditionLabel(req.condition), 'chip');
   for (const optionId of Object.values(state.answers[req.id] ?? {})) {
@@ -92,7 +95,7 @@ export function statedAttrs(req: Req, state: State): StatedAttr[] {
       if (d.condition !== 'new') push(Api.CONDITION_ATTR, conditionLabel(d.condition), 'answer');
     } else if (d.kind === 'budget') push('budget', budgetBandLabel(d.budget.min, d.budget.max), 'answer');
     else if (d.constraint.attr === 'brand' && d.constraint.op === 'eq' && typeof d.constraint.value === 'string') push('brand', brandLabel(d.constraint.value), 'answer');
-    else push(d.constraint.attr, constraintText(d.constraint), 'answer');
+    else push(d.constraint.attr, constraintText(d.constraint), 'answer', numeric(d.constraint));
   }
   const b = req.budget;
   if (b && (b.min !== undefined || b.max !== undefined)) push('budget', budgetBandLabel(b.min, b.max), 'budget');

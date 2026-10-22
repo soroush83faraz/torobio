@@ -1,8 +1,22 @@
 import type { AttrKey, AttrValue, CompatFinding, Constraint, CriticalUnknown, DerivedConstraint, ItemResolution, ProductAttrs, Requirement } from '../types/index';
+import { compatCopy } from '../copy/fa';
 import { changeableItems, COMPAT_RULES, type ChosenItem } from './rules';
 
 export { changeableItems, COMPAT_RULES, MANDATORY_RULES } from './rules';
 export type { ChosenItem, CompatRule } from './rules';
+
+/**
+ * Non-blocking item notes from compat relationships (item id -> Persian note). camera_adapter_current: several
+ * cameras (total qty > 1) next to an adapter item whose quantity the user did not write; the note says what quantity
+ * is assumed and what to check. Never a question, never a constraint.
+ */
+export function compatItemNotes(items: readonly Requirement[]): Map<string, string> {
+  const out = new Map<string, string>();
+  const cams = items.filter((i) => i.kind === 'camera').reduce((s, c) => s + c.qty, 0);
+  if (cams < 2) return out;
+  for (const a of items) if (a.kind === 'adapter' && !a.qtyStated) out.set(a.id, compatCopy.adapterQtyNote(cams, a.qty));
+  return out;
+}
 
 /** Strip previously derived constraints (source 'compat'). */
 export function stripDerived(items: readonly Requirement[]): Requirement[] {

@@ -5,6 +5,7 @@ import { Button } from './components/Button';
 import { EmptyState } from './components/States';
 import { ToastHost } from './components/Toast';
 import { t } from './copy/fa';
+import { useServiceWorkerControlled } from './lib/serviceWorker';
 import { useConnection } from './store/connection';
 import { Home } from './screens/Home';
 import { ShareImport } from './screens/ShareImport';
@@ -60,6 +61,7 @@ function OfflineNotice() {
     };
   }, []);
   const serverDown = useConnection((s) => s.serverDown);
+  const swControlled = useServiceWorkerControlled();
   // the server banner is the more specific message: it shows as soon as a request failed, offline or not
   if (serverDown)
     return (
@@ -70,8 +72,8 @@ function OfflineNotice() {
     );
   if (offline)
     return (
-      <p role="status" className="bg-amber-soft px-4 py-2 text-center text-sm text-amber-ink">
-        {t.notice.offline}
+      <p role="status" data-testid="offline-notice" className="bg-amber-soft px-4 py-2 text-center text-sm text-amber-ink">
+        {swControlled ? t.notice.offline : t.notice.offlineNoSw}
       </p>
     );
   return null;

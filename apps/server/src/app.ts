@@ -16,7 +16,7 @@ import { planRoutes } from './routes/plan.js';
 import { resolveRoutes } from './routes/resolve.js';
 import { parseRoutes } from './routes/parse.js';
 import { stubRoutes } from './routes/stubs.js';
-import { installNotFound, registerWeb } from './web.js';
+import { installNotFound, registerCompression, registerWeb } from './web.js';
 
 export interface BuildOptions {
   config: Config;
@@ -115,6 +115,8 @@ export async function buildApp(opts: BuildOptions): Promise<{ app: FastifyInstan
   // --- errors + input sanitising (errors.ts): every error is the Persian envelope; request text is cleaned ---
   installErrorHandler(app);
   installBodySanitizer(app);
+
+  await registerCompression(app);
 
   // --- routes -------------------------------------------------------------------------------
   healthRoutes(app, ctx);

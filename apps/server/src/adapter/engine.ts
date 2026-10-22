@@ -18,6 +18,7 @@ import {
   buildPlanItems,
   chosenItemsForCompat,
   compatCopy,
+  compatItemNotes,
   compatRepairs,
   conflictCulprit,
   describeConstraintEval,
@@ -53,7 +54,12 @@ import {
   resolveItems,
   subkindWords,
   withKindIssues,
+  withOfferConditionsAll,
+  offerFlagReason,
+  offerOwnFlags,
+  offerAccepted,
   type KindContext,
+  type Offer,
   type AttrKey,
   type AttrValue,
   type CandidateEval,
@@ -272,6 +278,9 @@ export function resolveState(catalog: Catalog, state: WireState): ResolvedState 
     });
     // plausibility: listings whose title names another kind of goods are not the requested thing (core rule 1-2)
     if (retrieval.categoryIds.length && retrieval.candidates.length) retrieval.candidates = withKindIssues(retrieval.candidates, kindContext(catalog, dto.text, retrieval.categoryIds));
+    // offer-level condition (D1): a seller whose own listing title says «کپی» / «استوک» is set aside for an item that
+    // does not accept it, BEFORE anything reads prices (min price, sellers, ranges, quantiles, plan offers)
+    if (retrieval.candidates.length) retrieval.candidates = withOfferConditionsAll(req, retrieval.candidates);
     const kind: ItemKind = retrieval.categoryIds.length
       ? Api.kindForCategoryNames(retrieval.categoryIds.map((id) => cats.get(id)?.name))
       : (dto.kind ?? 'other');
@@ -554,6 +563,8 @@ export function resolutionDto(catalog: Catalog, rs: ResolvedState, ri: ResolvedI
     out.conflictNote = compatCopy.statedConflict(stated.sentence, rs.items.find((x) => x.item.id === other)?.dto.text ?? '');
   }
   if (res.counts.incomplete > 0) out.incompleteSpecsCount = res.counts.incomplete;
+  const compatNote = compatItemNotes(rs.list.items).get(ri.item.id);
+  if (compatNote) out.compatNote = compatNote;
   const q = questionDto(ri, brands);
   if (q) out.question = q;
   const labelOf = (id: string) => rs.items.find((x) => x.item.id === id)?.dto.text;
@@ -706,6 +717,12 @@ function planInputs(rs: ResolvedState, state: WireState): { inputs: PlanItemInpu
     if (pinShop) {
       const atPin = offers.filter((o) => o.shopId === pinShop);
       if (atPin.length) offers = atPin;
+      else if (!excluded.has(pinShop)) {
+        // the user pinned this product AND this seller although the seller's own title states a condition the item
+        // does not accept («… های کپی»): their explicit choice is planned (the stop line carries the flag)
+        const flagged = pinnedFlaggedOffer(ri, pi.chosenProductId, pinShop);
+        if (flagged) offers = [flagged];
+      }
     }
     const qty = ri.item.kind === 'wire' ? saleQty(ri.dto, itemSaleUnit(ri) ?? saleUnitOf(ri.byId.get(pi.chosenProductId ?? -1))) : pi.qty;
     const hasPriced = offers.some((o) => o.price !== null) && pi.state !== 'needs_info' && pi.state !== 'not_found';
@@ -719,6 +736,29 @@ function planInputs(rs: ResolvedState, state: WireState): { inputs: PlanItemInpu
     return { ...pi, qty, offers };
   });
   return { inputs, overflow };
+}
+
+/** A set-aside offer of the user-pinned product at the user-pinned shop (only when both are pinned). */
+function pinnedFlaggedOffer(ri: ResolvedItem, chosenId: number | undefined, shopId: string): PlanItemInput['offers'][number] | undefined {
+  const pid = ri.item.pinnedProductId;
+  if (pid === undefined || chosenId !== pid) return undefined;
+  const o = ri.byId.get(pid)?.conditionExcludedOffers?.find((x) => x.shopId === shopId);
+  if (!o) return undefined;
+  return { offerId: o.id, productId: o.productId, shopId: o.shopId, price: isPricedOffer(o) ? o.price : null };
+}
+
+/** The offer by id among a candidate's used and set-aside offers. */
+function offerById(c: MarketCandidate | undefined, offerId: string): Offer | undefined {
+  return c?.offers.find((o) => o.id === offerId) ?? c?.conditionExcludedOffers?.find((o) => o.id === offerId);
+}
+
+/** Flags of one seller's listing: the product's flags plus what that seller's own title states. */
+function offerFlags(c: MarketCandidate, o: Offer | undefined): Api.ConditionFlag[] {
+  const out = conditionFlags(c);
+  const own = o ? offerOwnFlags(c.flags, o) : undefined;
+  if (own?.condition && !out.includes(own.condition)) out.push(own.condition);
+  if (own?.replica && !out.includes('replica')) out.push('replica');
+  return out;
 }
 
 /**
@@ -849,6 +889,7 @@ export function compatLines(findings: readonly CompatFinding[], autoConflicting:
       ruleId: f.ruleId,
     };
     if (f.askSeller) line.askSeller = f.askSeller;
+    if (f.askSellerByItem) line.askSellerByItem = { ...f.askSellerByItem };
     if (fromUser) line.fromUserChoice = true;
     if (f.lifted) line.assumptionLifted = true;
     return line;
@@ -856,15 +897,16 @@ export function compatLines(findings: readonly CompatFinding[], autoConflicting:
 }
 
 /**
- * «از فروشنده بپرس» lines for one item's seller: findings about that item (its listing is the subject,
- * itemIds[0]); the camera/recorder signal question is asked at both sellers.
+ * «از فروشنده بپرس» lines for one item's seller. A finding with per-seller wording (askSellerByItem, core copy
+ * askCompatWith) asks exactly the sellers it names, each about the item bought there; otherwise the finding's
+ * subject (itemIds[0]) is asked its general question.
  */
 export function askSellerFor(lines: readonly Api.CompatLine[], itemId: string): string[] {
   const out: string[] = [];
   for (const l of lines) {
     if (l.level === 'stated' || !l.askSeller) continue;
-    const mine = l.itemIds[0] === itemId || (l.ruleId === 'camera_recorder_signal' && l.itemIds.includes(itemId));
-    if (mine && !out.includes(l.askSeller)) out.push(l.askSeller);
+    const text = l.askSellerByItem ? l.askSellerByItem[itemId] : l.itemIds[0] === itemId ? l.askSeller : undefined;
+    if (text && !out.includes(text)) out.push(text);
   }
   return out;
 }
@@ -910,7 +952,7 @@ export function planResponse(ps: PlannedState & { activeVariant: string | null }
         const stopLines: Api.StopLine[] = assignments.map((a) => {
           const ri = riById.get(a.itemId)!;
           const cand = ri.byId.get(a.productId);
-          const offer = cand?.offers.find((o) => o.id === a.offerId);
+          const offer = offerById(cand, a.offerId);
           const unit = ri.item.kind === 'wire' ? (itemSaleUnit(ri) ?? saleUnitOf(cand)) : undefined;
           const line: Api.StopLine = {
             itemId: a.itemId,
@@ -929,7 +971,7 @@ export function planResponse(ps: PlannedState & { activeVariant: string | null }
           const code = cand ? displayModelCode(cand.product.title) : undefined;
           if (code) line.modelCode = code;
           if (unit) line.unitLabel = Api.apiCopy.saleUnitLabel[unit];
-          const f = cand ? conditionFlags(cand) : [];
+          const f = cand ? offerFlags(cand, offer) : [];
           if (f.length) {
             line.flags = f;
             line.flagLabels = flagLabels(f);
@@ -999,12 +1041,16 @@ export function planResponse(ps: PlannedState & { activeVariant: string | null }
       if (p === selected || ps.conflictingPlans?.has(p)) continue;
       const dCost = p.totals.total - selected.totals.total;
       const dStops = p.stopCount - selected.stopCount;
+      // distinct, truthful labels: the plan's own stop count and its price delta (ids stay `stops:N`)
       alternatives.push({
         id: `stops:${p.stopCount}`,
-        label: dStops < 0 ? Api.apiCopy.altFewerStops : Api.apiCopy.altCheaper,
+        label: planCopy.altLabel(p.stopCount, dCost),
         description: planCopy.delta(dCost, dStops),
         deltaToman: dCost,
         deltaStops: dStops,
+        stopCount: p.stopCount,
+        kind: dStops < 0 ? 'fewer_stops' : 'cheaper',
+        kindLabel: dStops < 0 ? Api.apiCopy.altFewerStops : Api.apiCopy.altCheaper,
       });
     }
     if (alternatives.length === 0) {
@@ -1061,6 +1107,8 @@ export function planResponse(ps: PlannedState & { activeVariant: string | null }
   if (noAlternativesReason) out.noAlternativesReason = noAlternativesReason;
   if (selected) {
     out.totalLine = marker ? planCopy.withMarker(selected.totals.line, marker) : selected.totals.line;
+    // the market view's «by the listed prices» total, worded once (never «جمع طبق فهرست · جمع ۴ مورد»)
+    if (coverage.coveredCount > 0) out.datasetTotalLine = planCopy.datasetTotal(coverage.coveredCount, coverage.totalCount, selected.totals.total, marker);
     // grouped by reason («پیدا نشد» / «منتظر انتخاب» / «قیمت ثبت نشده» …), with the adapter's stop-limit overrides
     if (missingReasons.length) out.missingLine = planCopy.missingLines(missingReasons);
     if (selected.totals.suggestionNote) out.suggestionNote = selected.totals.suggestionNote;
@@ -1177,7 +1225,8 @@ export function optionsResponse(ps: PlannedState, itemId: string, productId: str
   const sellers: Api.SellerOption[] = [];
   if (target) {
     const unit = ri.item.kind === 'wire' ? saleUnitOf(target) : undefined;
-    for (const o of target.offers) {
+    const setAside = new Set(target.conditionExcludedOffers ?? []);
+    for (const o of [...target.offers, ...setAside]) {
       const shop = ps.shops.get(o.shopId);
       if (!shop) continue;
       const others = planShops.filter((s) => s.buildingKey !== shop.buildingKey);
@@ -1199,6 +1248,17 @@ export function optionsResponse(ps: PlannedState, itemId: string, productId: str
       }
       if (unit) s.unitLabel = Api.apiCopy.saleUnitLabel[unit];
       if (o.priceFlag === 'unit_mismatch') s.priceNote = plausibilityCopy.offerUnitMismatch;
+      // the seller's own listing title states a condition (offer-level flag): shown with the words that state it;
+      // `conditionExcluded` = kept out of the automatic pick, the cheapest price and the plan for this item
+      const own = offerOwnFlags(target.flags, o);
+      if (own) {
+        const f = offerFlags(target, o);
+        s.flags = f;
+        s.flagLabels = flagLabels(f);
+        s.flagReason = offerFlagReason(own.evidence, f);
+      }
+      // set aside for this item, or every seller of the product is (the product then reads as flagged)
+      if (setAside.has(o) || (own && !offerAccepted(ri.item.condition ?? 'new', { ...target, listing: target.flags }, o))) s.conditionExcluded = true;
       sellers.push(s);
     }
     sellers.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity) || (a.shopId < b.shopId ? -1 : 1));

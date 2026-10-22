@@ -427,6 +427,11 @@ export interface ItemResolution {
    */
   conflictNote?: string;
   /**
+   * Non-blocking compat note (Persian), e.g. on an adapter next to several cameras when the user did not write how
+   * many adapters: «تعداد آداپتور را ننوشتی؛ ۱ عدد برای ۴ دوربین در نظر گرفته شد…». Never a question.
+   */
+  compatNote?: string;
+  /**
    * Present when the item has candidates but none meets every requirement (state 'alternative', or 'needs_info' with
    * nothing pickable). Nothing is picked on the user's behalf in that state; `product` stays absent.
    */
@@ -497,6 +502,20 @@ export interface SellerOption {
   unitLabel?: string;
   /** Why this seller's price is not used (e.g. it contradicts the listing's sale unit); `price` is then null. */
   priceNote?: string;
+  /**
+   * Condition flags of THIS seller's listing (product flags plus what the seller's own listing title states), set
+   * only when the seller's own title states one: «کارکرده»، «ریفربیش»، «کپی».
+   */
+  flags?: ConditionFlag[];
+  flagLabels?: string[];
+  /** Persian reason: the words of the seller's own listing title, e.g. «در عنوان آگهی فروشنده: های کپی». */
+  flagReason?: string;
+  /**
+   * true = this seller is kept out of the automatic pick, the item's cheapest price / seller count / price range and
+   * the plan, because its listing condition does not fit the item (it is planned only when the user pinned both
+   * this product and this shop). `price` is still the seller's price, for reference.
+   */
+  conditionExcluded?: true;
 }
 
 export interface OptionsResponse {
@@ -531,6 +550,11 @@ export interface CompatLine {
   fromUserChoice?: boolean;
   /** The user lifted the rule's general assumption (e.g. an adapter voltage other than 12 V): not verified. */
   assumptionLifted?: boolean;
+  /**
+   * Item id -> «از فروشنده بپرس» phrased for the item bought at that seller («آیا این دوربین با ضبط‌کننده‌ای که می‌خرم
+   * (DVR) سازگار است؟»). StopLine.askSeller already uses it; `askSeller` above stays the line's general question.
+   */
+  askSellerByItem?: Record<string, string>;
 }
 
 export interface StopLine {
@@ -618,10 +642,21 @@ export interface UnpricedItem {
 
 export interface PlanAlternative {
   id: string;
+  /**
+   * Distinct per alternative: its own stop count and its price delta vs the shown plan, e.g.
+   * «۱ توقف · ۴٫۷ میلیون تومان بیشتر» (was the shared «کم‌توقف‌تر» / «ارزان‌تر», now in `kindLabel`).
+   */
   label: string;
   description: string;
   deltaToman: number;
   deltaStops: number;
+  // ---- additive ----
+  /** Stops of this alternative plan (the id is `stops:<stopCount>`). */
+  stopCount?: number;
+  /** Direction vs the shown plan (non-dominated: fewer stops for more money, or cheaper with more stops). */
+  kind?: 'fewer_stops' | 'cheaper';
+  /** The former shared label («کم‌توقف‌تر» / «ارزان‌تر»), for a group heading. */
+  kindLabel?: string;
 }
 
 export interface ReplacedStopNote {
@@ -648,6 +683,12 @@ export interface PlanResponse {
   // ---- additive ----
   /** Engine total line, e.g. «فقط ۳ از ۵ مورد: ۱۱٫۲ میلیون تومان». */
   totalLine?: string;
+  /**
+   * The market view's total by the listed prices, worded once: «جمع طبق فهرست برای ۴ مورد: ۲۰٫۳ میلیون تومان»
+   * («جمع طبق فهرست، فقط ۳ از ۵ مورد: …», « — <marker>» when flagged). Render it as is instead of prefixing
+   * «جمع طبق فهرست ·» to `totalLine` (which already starts with «جمع ۴ مورد»).
+   */
+  datasetTotalLine?: string;
   missingLine?: string;
   suggestionNote?: string;
   orderNote?: string;

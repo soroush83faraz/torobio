@@ -105,12 +105,24 @@ describe('CCTV job (4 Dahua 2MP cameras, 4ch recorder, 2TB HDD, 12V adapter)', (
     expect(p.coverage).toMatchObject({ covered: 4, total: 4, missing: [] });
     expect(p.totalToman).toBe(4 * 1_450_000 + 5_500_000 + 3_000_000 + 240_000);
     expect(p.totalLine).toMatch(/^جمع ۴ مورد/);
+    // the market view's total says «جمع» once (D7c)
+    expect(p.datasetTotalLine).toMatch(/^جمع طبق فهرست برای ۴ مورد: /);
+    expect(p.datasetTotalLine!.match(/جمع/g)).toHaveLength(1);
     expect(p.usesSuggestions).toBe(true);
     expect(p.stopCount).toBe(2);
     const lineSum = p.stops.flatMap((s) => s.lines).reduce((a, l) => a + (l.lineTotal ?? 0), 0);
     expect(lineSum).toBe(p.totalToman);
     expect(p.alternatives).toEqual([
-      { id: 'stops:1', label: 'کم‌توقف‌تر', description: '۵۰۰ هزار تومان بیشتر، یک توقف کمتر', deltaToman: 500_000, deltaStops: -1 },
+      {
+        id: 'stops:1',
+        label: '۱ توقف · ۵۰۰ هزار تومان بیشتر',
+        description: '۵۰۰ هزار تومان بیشتر، یک توقف کمتر',
+        deltaToman: 500_000,
+        deltaStops: -1,
+        stopCount: 1,
+        kind: 'fewer_stops',
+        kindLabel: 'کم‌توقف‌تر',
+      },
     ]);
     const lv = (rule: string) => p.compat.filter((c) => c.ruleId === rule).map((c) => c.level);
     expect(lv('recorder_channels')).toEqual(['stated']); // «۴ کانال» read from the recorder title
@@ -121,7 +133,14 @@ describe('CCTV job (4 Dahua 2MP cameras, 4ch recorder, 2TB HDD, 12V adapter)', (
     for (const c of p.compat) if (c.level !== 'stated') expect(c.askSeller).toBeTruthy();
     // ask-seller lines go to the seller of the item they are about
     const hddLine = p.stops.flatMap((s) => s.lines).find((l) => l.itemId === 'hdd')!;
-    expect(hddLine.askSeller).toEqual(['این هارد مخصوص ضبط تصویر (سورویلنس) است؟']);
+    expect(hddLine.askSeller).toContain('این هارد مخصوص ضبط تصویر (سورویلنس) است؟');
+    // every question at the drive's seller is about the drive (never «این ضبط‌کننده …»)
+    expect(hddLine.askSeller).toHaveLength(2);
+    expect(hddLine.askSeller.find((a) => a.startsWith('آیا این هارد با ضبط‌کننده‌ای که می‌خرم'))).toBeTruthy();
+    for (const l of p.stops.flatMap((s) => s.lines)) {
+      const self = { cam: 'دوربین', rec: 'ضبط‌کننده', hdd: 'هارد', adp: 'آداپتور' }[l.itemId as 'cam'];
+      for (const a of l.askSeller) if (a.includes('این ')) expect(a, `${l.itemId}: ${a}`).toMatch(new RegExp(`این ${self}`));
+    }
   });
 
   it('variant «fewest» switches to the one-stop plan and reports the delta back', async () => {
@@ -131,7 +150,7 @@ describe('CCTV job (4 Dahua 2MP cameras, 4ch recorder, 2TB HDD, 12V adapter)', (
     expect(p.stopCount).toBe(1);
     expect(p.activeVariant).toBe('fewest');
     expect(p.totalToman).toBe(15_040_000);
-    expect(p.alternatives[0]).toMatchObject({ id: 'stops:2', deltaToman: -500_000, deltaStops: 1, label: 'ارزان‌تر' });
+    expect(p.alternatives[0]).toMatchObject({ id: 'stops:2', deltaToman: -500_000, deltaStops: 1, label: '۲ توقف · ۵۰۰ هزار تومان ارزان‌تر', kindLabel: 'ارزان‌تر' });
   });
 
   it('excluded shops and seller pins are respected', async () => {

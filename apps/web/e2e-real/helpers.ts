@@ -22,9 +22,12 @@ const KEY_360 = new Set([
   '63-condition-note',
   '64-assist-diff',
   '65-assist-degraded',
+  '66-assist-simple-mode',
   '73-bidi-stop-line',
   '81-conflict-plan',
   '82-not-found-chips',
+  '85-share-fallback',
+  '86-share-manual',
 ]);
 
 /** Small PNG of the current state. Full-page captures un-stick fixed bars and cap the height. */
@@ -147,17 +150,18 @@ export async function answerQuestions(page: Page) {
 export type CompatLevel = 'stated' | 'assumed' | 'unknown' | 'conflict';
 
 /** The rows of the «سازگاری» block as shown: the level chip and the sentence. */
-export async function compatRows(page: Page): Promise<{ level: CompatLevel; text: string }[]> {
+export async function compatRows(page: Page): Promise<{ level: CompatLevel; text: string; rule: string }[]> {
   return page.locator('[data-testid="compat-block"] li').evaluateAll((lis) =>
     lis.map((li) => ({
       level: li.querySelector('[data-compat]')!.getAttribute('data-compat') as CompatLevel,
       text: (li.querySelector('p')?.textContent ?? '').replace(/[\u2066-\u2069]/g, ''),
+      rule: li.getAttribute('data-rule') ?? '',
     })),
   );
 }
 
 /** Asserts the level of the one compat row whose sentence matches `re` (and that exactly one row matches). */
-export function expectCompatLevel(rows: { level: CompatLevel; text: string }[], re: RegExp, level: CompatLevel) {
+export function expectCompatLevel(rows: { level: CompatLevel; text: string; rule?: string }[], re: RegExp, level: CompatLevel) {
   const hit = rows.filter((r) => re.test(r.text));
   expect(hit.map((r) => `${r.level}: ${r.text}`), `compat row ${re}`).toHaveLength(1);
   expect(hit[0]!.level, `level of «${hit[0]!.text}»`).toBe(level);

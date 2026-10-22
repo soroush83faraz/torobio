@@ -62,7 +62,13 @@ export const t = {
       newPlan: 'شروع برنامهٔ تازه',
       remove: 'حذف',
       linkCopied: 'پیوند برنامه کپی شد.',
-      linkFailed: 'کپی نشد؛ پیوند را از نوار آدرس بردار.',
+      share: 'اشتراک‌گذاری پیوند',
+      linkTitle: 'پیوند برنامه',
+      linkHelpCopied: 'پیوند کپی شد. اگر جایی چسبانده نشد، از کادر زیر بردارش.',
+      linkHelp: 'این مرورگر کپی خودکار را نمی‌پذیرد. «انتخاب همه» را بزن، بعد پیوند را کپی کن و برای خودت یا دیگری بفرست.',
+      linkField: 'پیوند برنامه',
+      selectAll: 'انتخاب همه',
+      copyAgain: 'کپی',
       confirmRemove: 'این برنامه برای همیشه از روی این گوشی پاک شود؟',
       removeYes: 'بله، حذف شود',
       removeNo: 'نه، بماند',
@@ -224,6 +230,8 @@ export const t = {
     compatNoClaim: 'برای این دسته ادعای سازگاری نداریم.',
     altHeading: 'گزینه‌های دیگر',
     altCurrent: 'برنامهٔ فعلی',
+    /** Derived name of an alternative: how many stops it has. */
+    altStops: (k: number) => `${n(k)} توقف`,
     altSwitched: 'برنامه عوض شد.',
     dataFooter: 'قیمت‌ها از فهرست ۲۱ مهر است؛ موجودی تأیید نشده.',
     emptyHeading: 'هنوز برنامه‌ای نیست',
@@ -360,7 +368,12 @@ export const t = {
     explain: 'توضیح بده',
     error: 'نشد؛ دوباره امتحان کن.',
     forShop: (name: string) => `برای مغازهٔ «${name}»`,
+    /** The smart assistant failed just now (a real, temporary outage). */
     degraded: 'دستیار هوشمند فعلاً در دسترس نیست؛ پاسخ ساده نمایش داده شد',
+    /** The server runs without a language model: not an outage, a mode. */
+    simpleMode: 'دستیار در حالت ساده است: فقط درخواست‌های کوتاه مثل «ارزان‌تر» یا «بدون این مغازه» را می‌فهمد',
+    /** The assistant's usage budget is spent. */
+    budget: 'سهمیهٔ دستیار هوشمند فعلاً پر شده؛ پاسخ ساده نمایش داده شد',
     noChange: 'تغییری ایجاد نشد',
     pickOne: 'یکی را انتخاب کن',
     lastChange: 'آخرین تغییر',
@@ -418,7 +431,9 @@ export const t = {
     legacyDropped: (k: number) => `${n(k)} برنامهٔ آزمایشی قبلی با داده‌ی واقعی سازگار نبود و کنار گذاشته شد.`,
     parseSlow: 'کمی طول می‌کشد؛ لطفاً صبر کن…',
     degraded: 'جستجوی ساده فعال شد؛ مورد را از فهرست زیر انتخاب کن.',
+    /** «باز می‌شوند» after a reload only holds when a service worker keeps the app shell (secure origins). */
     offline: 'به اینترنت وصل نیستی. برنامه‌هایی که ذخیره کرده‌ای همچنان باز می‌شوند.',
+    offlineNoSw: 'اتصال به سرور برقرار نیست؛ برنامه‌های ذخیره‌شده روی همین دستگاه می‌مانند و با برقراری اتصال دوباره کار می‌کنند.',
     dataChanged: 'داده‌ها به‌روز شده‌اند؛ قیمت‌ها دوباره محاسبه شد.',
   },
 

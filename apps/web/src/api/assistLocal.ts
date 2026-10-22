@@ -11,8 +11,8 @@ import { isVisitActive } from '../lib/visitActive';
 const UNAVAILABLE = 'یکی از گزینه‌های بالا را بزن یا درخواستت را ساده‌تر بنویس.';
 
 /** Every answer here is `degraded`: the server-side assistant could not be reached, only the chips work. */
-const no = (message: string): AssistResponse => ({ message, action: { type: 'none' }, supported: false, degraded: true });
-const yes = (message: string, action: AssistResponse['action']): AssistResponse => ({ message, action, supported: true, degraded: true });
+const no = (message: string): AssistResponse => ({ message, action: { type: 'none' }, supported: false, degraded: true, degradedReason: 'failed' });
+const yes = (message: string, action: AssistResponse['action']): AssistResponse => ({ message, action, supported: true, degraded: true, degradedReason: 'failed' });
 
 export async function assistFallback(req: AssistRequest, api: Pick<ApiAdapter, 'plan'>): Promise<AssistResponse> {
   const text = (req.text ?? '').replace(/[‌‏]/g, ' ');
