@@ -5,7 +5,7 @@ Tehran's bazaar belt (Ferdowsi, Sheikh Hadi, Baharestan): which products, from w
 floors, in what order, at what price, and whether the shops are open when you go. Built for the Torob hackathon on
 the organisers' marketplace dataset (snapshot of 13 Oct 2026 = 21 Mehr 1405).
 
-> Deployed demo: _(URL to be added by the team after deployment, see [docs/DEPLOY.md](docs/DEPLOY.md))_
+> **Live demo:** http://87.107.5.78:8088 (Docker on a VPS; open it on a phone or in a 390 px browser window). Deployment details: [docs/DEPLOY.md](docs/DEPLOY.md).
 
 Persian summary for judges: [خلاصهٔ فارسی](#خلاصهٔ-فارسی). Five-minute demo script (Persian) and judge crib sheet:
 [docs/DEMO.md](docs/DEMO.md).
@@ -97,8 +97,9 @@ knows and what it only assumes, and keeps working when the shop says "we don't h
 - **The LLM is optional.** With no key, parsing and the assistant's chips are deterministic; typed free text goes through a
   keyword fallback and may not be understood. No LLM key was available during development; the LLM layer is tested with
   fakes and, for local runs only, with the `claude-cli` backend below.
-- **Not deployed by the authors yet at the time of writing**: the Docker setup is verified locally with the real database,
-  not on a public host ([docs/DEPLOY.md](docs/DEPLOY.md)).
+- **Deployed over plain HTTP on a shared VPS** (Docker, port 8088, no domain/TLS yet): the offline service worker and
+  the clipboard API need a secure origin, so on the demo URL they fall back or stay inactive; put it behind HTTPS
+  (`--proxy` + `DOMAIN`, [docs/DEPLOY.md](docs/DEPLOY.md)) for the full experience.
 - No independent Persian-speaker review or first-time-user test is recorded in this repository; the copy has not been
   validated with outside users.
 
