@@ -168,7 +168,7 @@ export function Workspace() {
       const parsed = await api.parse({ text });
       if (!parsed.items.length) throw new Error('empty');
       store.addItems(saved.id, parsed.items);
-      if (parsed.degraded) toast(t.notice.degraded);
+      if (parsed.degraded) toast(parsed.degradedReason === 'budget' ? t.notice.degradedBudget : t.notice.degraded);
       return true;
     } catch (e) {
       toast((e as { messageFa?: string }).messageFa || t.list.addFailed);

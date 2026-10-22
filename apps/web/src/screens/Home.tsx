@@ -64,7 +64,7 @@ export function Home() {
       if (!parsed.items.length) throw new Error('empty');
       const id = create(parsed.title, parsed.items);
       navigate(`/plan/${id}`);
-      if (parsed.degraded) toast(t.notice.degraded);
+      if (parsed.degraded) toast(parsed.degradedReason === 'budget' ? t.notice.degradedBudget : t.notice.degraded);
     } catch (e) {
       setError((e as { messageFa?: string }).messageFa || t.home.parseError);
       setBusy(false);

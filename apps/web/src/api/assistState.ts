@@ -28,6 +28,10 @@ export function applyLocalAction(state: RequirementState, action: AssistResponse
       for (const [itemId, pinned] of Object.entries(next.shopPins)) if (pinned === action.shopId) delete next.shopPins[itemId];
       break;
     }
+    case 'set_spec':
+      // the server always answers with `newState` (the number is rewritten into the item's constraints and words
+      // there); a local fallback never produces this action, so nothing is invented here
+      break;
     default:
       break;
   }

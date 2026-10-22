@@ -64,6 +64,12 @@ export function CompatRow({ line }: { line: CompatLine }) {
           </span>
         )}
       </div>
+      {line.level !== 'stated' && line.askSeller && (
+        <p data-testid="compat-ask" className="text-sm text-ink-soft">
+          <span className="font-semibold">{t.plan.askSeller}: </span>
+          <BidiText text={line.askSeller} />
+        </p>
+      )}
     </li>
   );
 }

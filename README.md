@@ -76,7 +76,7 @@ knows and what it only assumes, and keeps working when the shop says "we don't h
 7. All questions, reasons, compatibility sentences and errors are templated Persian, so the product is complete with the LLM off.
 8. Data: a read-only SQLite file (about 130 MB) built offline from the provided CSVs; FTS5 over normalised titles.
 9. Attributes (megapixels, channels, TB, volts, wire section, phone model, ...) are read from titles; unreadable stays unknown.
-10. Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+10. Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); the full backend and recommendation-engine reference is [docs/ENGINE.md](docs/ENGINE.md).
 
 ## Honest limitations
 
@@ -183,7 +183,7 @@ apps/web          React + Vite + Tailwind PWA shell (RTL, Vazirmatn), screens, s
                   Playwright suites (e2e, e2e-real), real screenshots
 scripts/data      CSV -> market.sqlite build, cleaners (price, hours, address), quality gates and report, labelled samples
 deploy/, docker/  VPS deploy, smoke and rollback scripts; build-time data fetch
-docs/             PLAN, ARCHITECTURE, DATA-TRANSPARENCY, DATA_SCHEMA, SECURITY, DEPLOY, DEMO, AUDIT-suggestions, CONTRACTS
+docs/             PLAN, ENGINE (backend + recommendation engine reference), ARCHITECTURE, DATA-TRANSPARENCY, DATA_SCHEMA, SECURITY, DEPLOY, DEMO, AUDIT-suggestions, CONTRACTS
 conductor*/       tooling used to orchestrate the AI-assisted development of this repo (not part of the product)
 ```
 

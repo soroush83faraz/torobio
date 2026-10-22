@@ -182,6 +182,7 @@ export function PlanView({ plan, busy, changed, onShowSeller, onChangeItem, onSw
                 checked={false}
                 label={altLabel(a, plan.alternatives, plan.stops.length)}
                 description={a.description}
+                kindLabel={a.kindLabel}
                 deltaStops={a.deltaStops}
                 onSelect={() => onSwitchVariant(a.id)}
               />
@@ -204,7 +205,7 @@ export function PlanView({ plan, busy, changed, onShowSeller, onChangeItem, onSw
   );
 }
 
-function AltRow({ checked, label, description, deltaStops, onSelect }: { checked: boolean; label: string; description: string; deltaStops: number; onSelect: () => void }) {
+function AltRow({ checked, label, description, kindLabel, deltaStops, onSelect }: { checked: boolean; label: string; description: string; kindLabel?: string; deltaStops: number; onSelect: () => void }) {
   return (
     <button
       type="button"
@@ -222,6 +223,11 @@ function AltRow({ checked, label, description, deltaStops, onSelect }: { checked
         {checked && <span className="h-2.5 w-2.5 rounded-full bg-accent" />}
       </span>
       <span className="text-sm">
+        {kindLabel && (
+          <span data-testid="alt-kind" className="me-2 inline-block rounded-chip bg-sunken px-2 py-0.5 text-xs font-semibold text-ink-soft">
+            {kindLabel}
+          </span>
+        )}
         <span className="font-bold">
           <BidiText text={label} />
         </span>

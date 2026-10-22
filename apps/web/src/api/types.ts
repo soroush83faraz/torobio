@@ -125,6 +125,8 @@ export interface ParseResponse {
   title: string;
   items: Requirement[];
   degraded?: boolean;
+  /** Why the smart parse was not used (additive, server-side): not set up / failed just now / usage budget spent. */
+  degradedReason?: DegradedReason;
   preference?: 'cheapest' | 'fewest_stops';
   notes?: ParseNote[];
 }
@@ -144,7 +146,12 @@ export interface OptionsRequest {
  * Assistant actions as the web handles them: the server's closed set plus the local `set_variant` used by the
  * chips-only fallback / mock (never sent by the server).
  */
-export type AssistAction = CoreAssistAction | { type: 'set_variant'; value: PlanVariant };
+export type SpecAttr = 'capacity_tb' | 'resolution_mp' | 'channels' | 'power_w' | 'wire_section_mm2';
+export type AssistAction =
+  | CoreAssistAction
+  | { type: 'set_variant'; value: PlanVariant }
+  /** Server action (assist/types.ts): a stated number changed («هارد ۴ ترابایت»). The server's `newState` carries it. */
+  | { type: 'set_spec'; itemId: string; attr: SpecAttr; value: number };
 /** Server response; the state-application fields are optional because the fallback / mock do not produce them. */
 export type AssistResponse = Pick<CoreAssistResponse, 'message' | 'supported'> &
   Partial<Pick<CoreAssistResponse, 'changed' | 'messageFa' | 'source' | 'degraded' | 'choices'>> & {

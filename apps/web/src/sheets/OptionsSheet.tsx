@@ -97,7 +97,14 @@ export function OptionsSheet({ open, state, itemId, itemName, mode = 'change', r
             {data.sellers.length === 0 && <p className="rounded-xl bg-sunken px-4 py-3 text-sm">{t.options.noSellersYet}</p>}
             {data.onlyOneSeller && <p className="rounded-xl bg-sunken px-4 py-2 text-sm">{t.options.onlyOne}</p>}
             {data.sellers.slice(0, shown).map((s) => (
-              <SellerRow key={s.shopId} s={s} reported={mode === 'unavailable' && s.shopId === reportedShopId} visitActive={visitActive} onPick={() => onPickShop(s.shopId)} />
+              <SellerRow
+                key={s.shopId}
+                s={s}
+                reported={mode === 'unavailable' && s.shopId === reportedShopId}
+                visitActive={visitActive}
+                pinned={!!itemId && s.productId !== undefined && state.pins?.[itemId] === s.productId}
+                onPick={() => onPickShop(s.shopId)}
+              />
             ))}
             <More shown={shown} total={data.sellers.length} onMore={() => setShown((n) => n + PAGE)} />
           </>
@@ -159,9 +166,20 @@ export function ModelRow({ m, onPick }: { m: ModelOption; onPick: () => void }) 
   );
 }
 
-export function SellerRow({ s, reported, visitActive, onPick }: { s: SellerOption; reported: boolean; visitActive: boolean; onPick: () => void }) {
+/**
+ * One seller of the model. A seller whose own listing title states a condition the item does not accept
+ * (`conditionExcluded`: «کپی» / «کارکرده» / «ریفربیش») is greyed out with the reason and can only be chosen when the user
+ * pinned this very model (`pinned`): the server plans such a shop only for a pinned product AND a pinned shop.
+ */
+export function SellerRow({ s, reported, visitActive, pinned = false, onPick }: { s: SellerOption; reported: boolean; visitActive: boolean; pinned?: boolean; onPick: () => void }) {
+  const blocked = !!s.conditionExcluded && !pinned;
   return (
-    <article className="rounded-card border border-line bg-surface p-4">
+    <article
+      data-testid="seller-row"
+      data-condition-excluded={s.conditionExcluded ? 'true' : undefined}
+      data-blocked={blocked || undefined}
+      className={`rounded-card border bg-surface p-4 ${s.conditionExcluded ? 'border-dashed border-line-strong' : 'border-line'} ${blocked ? 'opacity-70' : ''}`}
+    >
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-base font-bold">
@@ -177,6 +195,21 @@ export function SellerRow({ s, reported, visitActive, onPick }: { s: SellerOptio
       <p className="mt-2 text-sm text-ink-soft">
         «<BidiText text={s.listingTitle} />»
       </p>
+      {((s.flagLabels?.length ?? 0) > 0 || (s.flags?.length ?? 0) > 0 || s.flagReason) && (
+        <div data-testid="seller-flags" className="mt-1 space-y-0.5">
+          <FlagNote flags={s.flags} flagLabels={s.flagLabels} />
+          {s.flagReason && (
+            <p data-testid="flag-reason" className="text-sm text-ink-soft [overflow-wrap:anywhere]">
+              <BidiText text={s.flagReason} />
+            </p>
+          )}
+        </div>
+      )}
+      {s.conditionExcluded && (
+        <p data-testid="condition-excluded-note" className="mt-1 text-sm font-semibold text-amber-ink">
+          {pinned ? t.options.excludedPinned : t.options.excludedSeller}
+        </p>
+      )}
       <div className="mt-1 flex flex-wrap items-center justify-between gap-x-3">
         {s.price != null ? <PriceBlock amount={s.price} /> : <span className="text-sm font-semibold">{t.options.noPrice}</span>}
         <span className="text-sm text-ink-soft">
@@ -192,8 +225,8 @@ export function SellerRow({ s, reported, visitActive, onPick }: { s: SellerOptio
           <BidiText text={s.distanceNote} />
         </p>
       )}
-      <Button variant={s.current ? 'secondary' : 'primary'} className="mt-3" block onClick={onPick} disabled={s.current || reported || s.price == null}>
-        {reported ? t.options.reportedHere : s.current ? t.options.alreadyCurrent : t.options.useSeller}
+      <Button variant={s.current ? 'secondary' : 'primary'} className="mt-3" block onClick={onPick} disabled={s.current || reported || s.price == null || blocked}>
+        {reported ? t.options.reportedHere : s.current ? t.options.alreadyCurrent : blocked ? t.options.excludedButton : t.options.useSeller}
       </Button>
     </article>
   );

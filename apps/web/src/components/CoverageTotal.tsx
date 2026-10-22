@@ -17,6 +17,11 @@ interface Props {
   marker?: string;
   /** The engine's own total line (Persian; ends with the marker when there is one); shown as given while `marker` is set. */
   line?: string;
+  /**
+   * The server's market-view total, worded once («جمع طبق فهرست برای ۴ مورد: …» / «جمع طبق فهرست، فقط ۳ از ۵ مورد: …»).
+   * Rendered as given, with no `label` in front (that doubled «جمع»); only its «— marker» tail becomes the amber chip.
+   */
+  datasetLine?: string;
   className?: string;
 }
 
@@ -53,7 +58,7 @@ function MarkerChip({ text }: { text: string }) {
  *  - complete: «جمع ۵ مورد: ۱۸٫۴ میلیون تومان» (+ «با مدل‌های پیشنهادی»)
  *  - partial:  amber badge «فقط ۳ از ۵ مورد» + outlined amount, then what is missing.
  */
-export function CoverageTotal({ covered, total, amount, usesSuggestions, missing = [], label, marker, line, className = '' }: Props) {
+export function CoverageTotal({ covered, total, amount, usesSuggestions, missing = [], label, marker, line, datasetLine, className = '' }: Props) {
   if (covered === 0) {
     return (
       <p className={`text-base font-semibold text-ink-soft ${className}`} data-total="none">
@@ -63,6 +68,29 @@ export function CoverageTotal({ covered, total, amount, usesSuggestions, missing
   }
   const money = formatTomanCompact(amount);
   const complete = covered === total;
+  if (datasetLine) {
+    const text = marker ? stripMarker(datasetLine, marker) : datasetLine;
+    return (
+      <div className={className} data-total={complete ? 'complete' : 'partial'} data-conflict={marker ? 'true' : undefined}>
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-lg font-bold">
+          <span data-testid="total-line" className={complete ? '' : 'rounded-lg bg-amber-soft px-2.5 py-0.5 text-amber-ink'}>
+            <BidiText text={text} />
+          </span>
+          {marker && <MarkerChip text={marker} />}
+        </p>
+        {missing.length > 0 && (
+          <ul className="mt-1 space-y-0.5 text-sm text-ink-soft" data-testid="missing-groups">
+            {missing.map((g) => (
+              <li key={g.kind} data-kind={g.kind}>
+                <Interp tpl={t.total.missingBy[g.kind]} args={[g.names.join('، ')]} />
+              </li>
+            ))}
+          </ul>
+        )}
+        {usesSuggestions && <p className="text-sm text-ink-soft">{t.total.withSuggestions}</p>}
+      </div>
+    );
+  }
   // A conflicted plan shows the engine's line as given (it carries the marker) with the amber chip beside it.
   if (marker && line) {
     return (

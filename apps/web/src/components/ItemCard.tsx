@@ -86,6 +86,15 @@ export function ItemCard({ req, res, active, onChange, onRemove, onActivate, onD
         </p>
       )}
 
+      {res.compatNote && (
+        <p data-testid="compat-note" role="note" className="mt-2 flex items-start gap-2 rounded-xl bg-sunken px-3 py-2 text-sm text-ink">
+          <Icon name="info" size={16} className="mt-1 shrink-0" />
+          <span className="min-w-0 [overflow-wrap:anywhere]">
+            <BidiText text={res.compatNote} />
+          </span>
+        </p>
+      )}
+
       {dead && <NoMatchPanel res={res} onRelax={onRelax} onPickModel={onPickModel} onSeeClosest={onChange} />}
 
       {hasProduct && name && (

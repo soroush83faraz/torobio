@@ -11,6 +11,7 @@ import { FlagNote } from '../components/FlagNote';
 import { StateBadge } from '../components/StateBadge';
 import { StopCard } from '../components/StopCard';
 import { missingGroups, planMarker } from '../lib/items';
+import { askForLine } from '../lib/ask';
 import { allLines } from '../lib/stops';
 import { t } from '../copy/fa';
 import { formatCount, formatJalaliShort, formatTomanCompact } from '../lib/format';
@@ -141,6 +142,17 @@ export function MarketView({ saved, plan, changed, onToggle, onShowSeller, onUna
                           ''
                         )}
                       </p>
+                      {askForLine(line, plan.compat).length > 0 && (
+                        <div data-testid="market-ask" className="mt-1 text-sm">
+                          <span className="font-semibold text-amber-ink">{t.plan.askSeller}: </span>
+                          {askForLine(line, plan.compat).map((q, k) => (
+                            <span key={q}>
+                              {k > 0 ? ' · ' : ''}
+                              <BidiText text={q} />
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -215,7 +227,8 @@ export function MarketView({ saved, plan, changed, onToggle, onShowSeller, onUna
           {t.money.total}
         </h3>
         <CoverageTotal
-          label={t.total.byDataset}
+          label={plan.datasetTotalLine ? undefined : t.total.byDataset}
+          datasetLine={plan.datasetTotalLine}
           covered={plan.coverage.covered}
           total={plan.coverage.total}
           amount={plan.totalToman}

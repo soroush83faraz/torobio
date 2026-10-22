@@ -11,7 +11,7 @@ const genericKeys = new Set([...GENERIC].map(norm));
  * What names an alternative in the plan switcher. The server's `label` is used when it says something specific and
  * differs from every other alternative's («۳ توقف»); a bare bucket word, a blank or a duplicate would make the options
  * indistinguishable, so then the label is derived from what is true of the plan itself: its stop count
- * (current stops + deltaStops). The price difference stays in the description next to it.
+ * (`stopCount`, else current stops + deltaStops). The price difference stays in the description next to it.
  */
 export function altLabel(a: PlanAlternative, all: PlanAlternative[], currentStops: number): string {
   const own = (a.label ?? '').trim();
@@ -19,5 +19,5 @@ export function altLabel(a: PlanAlternative, all: PlanAlternative[], currentStop
   const specific = key !== '' && !genericKeys.has(key);
   const unique = all.filter((b) => norm(b.label ?? '') === key).length === 1;
   if (specific && unique) return own;
-  return t.plan.altStops(Math.max(1, currentStops + a.deltaStops));
+  return t.plan.altStops(a.stopCount ?? Math.max(1, currentStops + a.deltaStops));
 }

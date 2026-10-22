@@ -31,6 +31,7 @@ import {
   META,
   NEARBY_CATEGORIES,
   PRODUCTS,
+  SHOPS,
   productById,
   shopById,
   type Kind,
@@ -526,8 +527,14 @@ function evalAll(state: RequirementState): Ev[] {
 
 export function mockResolve(state: RequirementState): ResolveResponse {
   const evs = evalAll(state);
+  const cams = evs.filter((e) => e.req.categoryId === 'camera').reduce((s, e) => s + e.req.qty, 0);
   return {
-    items: evs.map((e) => e.res),
+    items: evs.map((e) =>
+      // the server's non-blocking adapter note (never a question): the adapter count was not written, the total current is unverified
+      e.req.categoryId === 'adapter' && cams >= 2
+        ? { ...e.res, compatNote: `تعداد آداپتور را ننوشتی؛ ۱ عدد برای ${faN(cams)} دوربین در نظر گرفته شد. جریان کل آداپتور تأیید نشده.` }
+        : e.res,
+    ),
     pendingItemCount: evs.filter((e) => e.res.state === 'needs_info').length,
   };
 }
@@ -694,6 +701,10 @@ function compatLines(evs: Ev[], state: RequirementState): CompatLine[] {
       level: 'assumed',
       text: 'دوربین‌ها معمولاً با آداپتور ۱۲ ولت کار می‌کنند',
       askSeller: `ولتاژ و آمپر این آداپتور برای ${cam ? faN(cam.req.qty) : ''} دوربین کافی است؟`.replace('  ', ' '),
+      askSellerByItem: {
+        [ad.req.id]: `ولتاژ و آمپر این آداپتور برای ${cam ? faN(cam.req.qty) : ''} دوربین کافی است؟`.replace('  ', ' '),
+        ...(cam ? { [cam.req.id]: 'آیا این دوربین با آداپتوری که می‌خرم (۱۲ ولت) کار می‌کند؟' } : {}),
+      },
       itemIds: [ad.req.id],
     });
   }
@@ -826,7 +837,18 @@ export function mockPlan(state: RequirementState, now: Date = new Date()): PlanR
         label = 'کم‌توقف‌تر';
         description = `${faN(o.shops.length)} توقف، ${money} بیشتر${single}`;
       }
-      alternatives.push({ id: `stops:${o.shops.length}`, label, description, deltaToman: dCost, deltaStops: dStops });
+      const fewer = label === 'کم‌توقف‌تر';
+      alternatives.push({
+        id: `stops:${o.shops.length}`,
+        // the server's distinct label: the plan's own stop count and its price delta; the bucket word moved to `kindLabel`
+        label: `${faN(o.shops.length)} توقف · ${dCost < 0 ? `${money} ارزان‌تر` : dCost > 0 ? `${money} بیشتر` : 'همان قیمت'}`,
+        description,
+        deltaToman: dCost,
+        deltaStops: dStops,
+        stopCount: o.shops.length,
+        kind: fewer ? 'fewer_stops' : 'cheaper',
+        kindLabel: label,
+      });
     }
   }
   let noAlternativesReason: string | undefined;
@@ -869,11 +891,17 @@ export function mockPlan(state: RequirementState, now: Date = new Date()): PlanR
   const hasConflict = compat.some((c) => c.level === 'conflict');
   const totalLine = `${complete ? `جمع ${faN(covered)} مورد` : `فقط ${faN(covered)} از ${faN(evs.length)} مورد`}: ${formatTomanCompact(total)}${hasConflict ? ' (ناسازگاری دارد)' : ''}`;
 
+  const datasetTotalLine =
+    covered > 0
+      ? `${complete ? `جمع طبق فهرست برای ${faN(covered)} مورد` : `جمع طبق فهرست، فقط ${faN(covered)} از ${faN(evs.length)} مورد`}: ${formatTomanCompact(total)}${hasConflict ? ' — ناسازگاری دارد' : ''}`
+      : undefined;
+
   return {
     title: '',
     coverage: { covered, total: evs.length, missing },
     totalToman: total,
     totalLine,
+    ...(datasetTotalLine ? { datasetTotalLine } : {}),
     hasConflict,
     usesSuggestions,
     complete,
@@ -947,6 +975,30 @@ export function mockOptions(state: RequirementState, itemId: string, now: Date =
       } satisfies SellerOption;
     })
     .sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+  // one seller whose own listing says «های کپی»: set aside by the server's condition rule (adapters only, to keep the rest of the mock stable)
+  if (kind === 'adapter' && cur) {
+    const spare = SHOPS.find((s) => !cur.offers.some((o) => o.shopId === s.id));
+    if (spare) {
+      sellers.unshift({
+        shopId: spare.id,
+        shopName: spare.name,
+        mall: spare.mall,
+        floor: spare.floor,
+        unit: spare.unit,
+        listingTitle: `${cur.name} های کپی`,
+        price: Math.max(1, Math.round(curLow / 2)),
+        warranty: 'بدون گارانتی',
+        hoursText: hoursText(spare, state.visit, now),
+        open: openStatus(spare, state.visit, now),
+        current: false,
+        productId: cur.id,
+        flags: ['replica'],
+        flagLabels: ['کپی'],
+        flagReason: 'در عنوان آگهی فروشنده: های کپی',
+        conditionExcluded: true,
+      });
+    }
+  }
   return { models, sellers, onlyOneSeller: sellers.length === 1 };
 }
 

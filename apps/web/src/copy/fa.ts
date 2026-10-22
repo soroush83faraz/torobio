@@ -283,6 +283,10 @@ export const t = {
     current: 'انتخاب فعلی',
     use: 'این را بردار',
     useSeller: 'از این مغازه',
+    /** A seller whose own listing states a condition the item does not accept (copy / used / refurbished). */
+    excludedSeller: 'در انتخاب خودکار، جمع و برنامه نمی‌آید؛ فقط وقتی این مدل را خودت انتخاب کنی می‌شود از این مغازه خرید.',
+    excludedPinned: 'این آگهی خودکار انتخاب نمی‌شود؛ چون این مدل را خودت انتخاب کرده‌ای، می‌توانی از این مغازه بخری.',
+    excludedButton: 'برای انتخاب، اول این مدل را بردار',
     conflictTitle: 'ناسازگار',
     onlyOne: 'فقط یک فروشنده دارد',
     noPrice: 'قیمت ثبت نشده',
@@ -431,6 +435,8 @@ export const t = {
     legacyDropped: (k: number) => `${n(k)} برنامهٔ آزمایشی قبلی با داده‌ی واقعی سازگار نبود و کنار گذاشته شد.`,
     parseSlow: 'کمی طول می‌کشد؛ لطفاً صبر کن…',
     degraded: 'جستجوی ساده فعال شد؛ مورد را از فهرست زیر انتخاب کن.',
+    /** The smart parse's usage budget is spent (server `degradedReason: 'budget'`). */
+    degradedBudget: 'سهمیهٔ جستجوی هوشمند فعلاً پر شده؛ جستجوی ساده فعال شد، مورد را از فهرست زیر انتخاب کن.',
     /** «باز می‌شوند» after a reload only holds when a service worker keeps the app shell (secure origins). */
     offline: 'به اینترنت وصل نیستی. برنامه‌هایی که ذخیره کرده‌ای همچنان باز می‌شوند.',
     offlineNoSw: 'اتصال به سرور برقرار نیست؛ برنامه‌های ذخیره‌شده روی همین دستگاه می‌مانند و با برقراری اتصال دوباره کار می‌کنند.',
