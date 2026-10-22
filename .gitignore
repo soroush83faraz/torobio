@@ -1,0 +1,20 @@
+# dataset and build artifacts must never be committed
+starcoach-dataset-v16-cap300-csv/
+*.sqlite
+*.sqlite-journal
+*.zst
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+.DS_Store
+coverage/
+playwright-report/
+test-results/
+.claude/worktrees/
+
+# private local tooling (not part of the product)
+/conductor/
+/conductor-high-cost/

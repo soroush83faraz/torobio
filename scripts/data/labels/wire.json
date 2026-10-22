@@ -1,0 +1,815 @@
+{
+ "set": "wire",
+ "labelled_by": "worker-labelled",
+ "method": "Random sample (fixed seed, scripts/data/src/label-sample.ts). Each title read by hand; expected holds only values a careful reader can establish from the title (incl. well-known manufacturer model-code conventions). An attribute absent from expected means: not determinable from the title (unknown).",
+ "attributes": [
+  "section_mm2",
+  "cores",
+  "sale_unit"
+ ],
+ "items": [
+  {
+   "title": "کابل الومینیوم 400*1دامغان بهفر(1 در 400)- XLPE",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 400
+   }
+  },
+  {
+   "title": "کابل افشان 16+25×3 مشهد",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل افشان 3 در 95 (95*3)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 95
+   }
+  },
+  {
+   "title": "کابل افشان 1 در 70 مشهد",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 70
+   }
+  },
+  {
+   "title": "کابل فرمان 24x1",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 24,
+    "section_mm2": 1
+   }
+  },
+  {
+   "title": "کابل برق افشان 10*3 کرمان کابل رادین متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 10,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل 0/6*2*50 هوایی JY(st)Y رویان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل ۹۵*۱ آلومینیوم ۲۰ کیلو ولت متال NA2XSY",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 95
+   }
+  },
+  {
+   "title": "سیم 2/5 البرز ابهر مدل افشان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 2.5
+   }
+  },
+  {
+   "title": "کابل مفتول (زمینی) NYY زرتافته کرمان سایز10*3 (1متر)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 10,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل برق افشان 3 در 16 استاندارد زیتون",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "کابل آلومینیوم 16x2 سیمپود",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "سیمپود",
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "سیم برق افشان ۱.۵ تک رشته ۹۰ متر با روکش PVC",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 1.5,
+    "sale_unit": "other"
+   }
+  },
+  {
+   "title": "کابل الومینیوم 16*5دامغان بهفر(5 در 16)- XLPE",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 5,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "کابل الومینیوم25*5دامغان بهفر(5 در 25)- XLPE",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 5,
+    "section_mm2": 25
+   }
+  },
+  {
+   "title": "سیم برق افشان 6*1 زئوس 100 متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 6,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل 0/75*2 افشان زاگرس حلقه 100 متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 0.75,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "سیم نایلون برق 2 در 1 کد SN1 طول 5 متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 1,
+    "sale_unit": "other"
+   }
+  },
+  {
+   "title": "کابل 120*1 آلومینیوم خراسان الکتریک(نارگان)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 120
+   }
+  },
+  {
+   "title": "کابل افشان 16 * 3 پرتو الکتریک",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "پرتو الکتریک",
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "سیم برق افشان 10 خراسان افشارنژاد 100متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 10,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل 1.5*4 زره دار زمینی شاهین NYRY",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "کابل ۲×۴ افشان ویام",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 4
+   }
+  },
+  {
+   "title": "کابل افشان دو روکشه مسی 1 × 150 افشار نژاد خراشان (1 متر)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 150,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "سیم 4*1 ابوالفضل کاشان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 4
+   }
+  },
+  {
+   "title": "کابل آلومینیومی 95*4 سیمپود",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "سیمپود",
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 95
+   }
+  },
+  {
+   "title": "سیم برق افشان 1 در 1/5 البرز ابهر کاسیم",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "کابل افشان 1/5*4 NYMHY برند مروارید ابهر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "کابل آلومینیوم 16*4 مروارید ابهر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "کابل مفتول ۶×۲ باخترایرانیان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "کابل مفتول مسی خراسان ایوان 6*5",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 5,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "سیم 25صدم روکش سیلیکون قلع اندود افشان 10 متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "sale_unit": "other"
+   }
+  },
+  {
+   "title": "کابل افشان 2 در 1.5 (2x1.5) کرمان کابل ابهر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "‌کابل برق افشان سیمیا سایز ۶×۲ با روکش PVC",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "سیمیا",
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "کابل افشان 4 در 6 (4x6) هادی کابل البرز",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "کابل افشان 4 در 35 (4x35) هادی کابل البرز",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 35
+   }
+  },
+  {
+   "title": "کابل الومینیوم 10*4",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 10
+   }
+  },
+  {
+   "title": "کابل افشان 3 در 70 به علاوه 35 خراسان افشار نژاد",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل فشار قوی 10*5 پژواک البرز متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "پژواک البرز",
+   "model_field": null,
+   "expected": {
+    "cores": 5,
+    "section_mm2": 10
+   }
+  },
+  {
+   "title": "کابل افشان ۱۰*۴ لینکو",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "البرز الکتریک نور",
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 10
+   }
+  },
+  {
+   "title": "کابل زمینی 120+240*3 آلومینیوم با روکش PVC برند سیمکان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل افشان 6*2 خراسان افشارنژاد",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "سیم افشان 1*1 لوشان - آبی",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 1
+   }
+  },
+  {
+   "title": "کابل افشان 0.75*2 لوشان - مشکی",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 0.75
+   }
+  },
+  {
+   "title": "کابل آلومینیوم 16*2 لوشان XLPE - متراژ دلخواه",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 16,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل شیلددار 1*2 لوشان - برش دلخواه",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 1,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "سیم افشان زیتون سایز 35×1 - واحد فروش متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 35,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل 4x1/5 افشان کولری برند زر کابل آلبا - 1 متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 1.5,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل برق 4x4 افشان برند زر کابل آلبا - 1 متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 4,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "سیم افشان تک رشته نمره 16 برند هادی کابل البرز (سایز 16*1)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "کابل افشان 1.5×2 | کابل برق افشان دو رشته 1.5 میلی‌متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "کابل افشان 4*3 ملت کابل سپهر حلقه صدمتری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 4,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل افشان 10*3 ملت کابل سپهر متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 10,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "سیم افشان ۲/۵ کمان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 2.5
+   }
+  },
+  {
+   "title": "کابل افشان 16x1 سیمپود",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "سیمپود",
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "سیم افشان 120x1 مغان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 120
+   }
+  },
+  {
+   "title": "کابل افشان 4x4 خراسان افشارنژاد",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 4
+   }
+  },
+  {
+   "title": "سیم افشان 1x1.5 سیمیا",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "سیمیا",
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "کابل افشان ۴×۳ نیکو رسا",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 4
+   }
+  },
+  {
+   "title": "کابل افشان ۶×۲ نیکو رسا",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "کابل زمینی 10*4 آلومینیوم با روکش XLPE برند جهان شاهین نوین",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 10
+   }
+  },
+  {
+   "title": "کابل فرمان ۱٫۵×۷ البرز نیرو رعد فروش هر متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "البرز نیرو",
+   "model_field": null,
+   "expected": {
+    "cores": 7,
+    "section_mm2": 1.5,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "سیم افشان 70*1 البرز الکتریک نور (لینکو) متری - براساس سفارش( ابی قرمز زرد سبز مشکی ...)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "البرز الکتریک نور",
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 70,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل آلومینیوم 120+240×3 روکش PVC (دفنی) خراسان الکتریک",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل افشان 2 در 0.5",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 0.5
+   }
+  },
+  {
+   "title": "سیم افشان مسی 10 پژواک البرز (یک متر )",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "پژواک البرز",
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 10,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل 1/5*3 افشان البرز کومش-تمام مس استاندارد - 100متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 1.5,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل افشان 0.75 * 4 البرز الکتریک نور",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "البرز الکتریک نور",
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 0.75
+   }
+  },
+  {
+   "title": "کابل افشان البرز الکتریک نور ۱.۵*۲ طول ۱۰۰ متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "البرز الکتریک نور",
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 1.5,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل آلومینیوم ۴ در ۱۰ البرز الکتریک نور طول ۱ متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "البرز الکتریک نور",
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 10,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل زمینی 6*4 خراسان افشار نژاد (فروش به صورت حلقه ۱۰۰ متری)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 6,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل افشان 3در2/5 زرتافته کرمان(متری)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 2.5,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل 6×5 مفتولی NY",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "سیمیا",
+   "model_field": null,
+   "expected": {
+    "cores": 5,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "کابل افشان 4در2/5 زرتافته کرمان(متری)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 2.5,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "شماره سیم حلقوی 0 تا 9 کد EC-3",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل زمینی 4*4 افشار نژاد خراسان - متراژ: 1 متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 4,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "کابل افشان نمره 50+95*3 برند افشار نژاد خراسان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل آلومینیوم ۲ در ۵۰ خراسان الکتریک با روکش PVC",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 50
+   }
+  },
+  {
+   "title": "کابل افشان هادی نور البرز ۲.۵ در ۲ متری ۹۰",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "هادی نور البرز",
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 2.5
+   }
+  },
+  {
+   "title": "کابل آلومینیوم ۱۶*۴ سیمکان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 16
+   }
+  }
+ ]
+}

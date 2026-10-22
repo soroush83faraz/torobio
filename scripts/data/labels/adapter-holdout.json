@@ -1,0 +1,346 @@
+{
+ "set": "adapter-holdout",
+ "labelled_by": "worker-labelled",
+ "method": "Random sample (fixed seed, scripts/data/src/label-sample.ts). Each title read by hand; expected holds only values a careful reader can establish from the title (incl. well-known manufacturer model-code conventions). An attribute absent from expected means: not determinable from the title (unknown).",
+ "attributes": [
+  "volts",
+  "amps"
+ ],
+ "items": [
+  {
+   "title": "آداپتور ۱۲ ولت ۱۰ آمپر سوئیچینگ پلاستیکی",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 10
+   }
+  },
+  {
+   "title": "اداپتور 30 امپر صنعتی",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "amps": 30
+   }
+  },
+  {
+   "title": "آداپتور12 ولت_5 آمپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 5
+   }
+  },
+  {
+   "title": "آداپتور 2.5 آمپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "amps": 2.5
+   }
+  },
+  {
+   "title": "آداپتور 5.5 ولت 600میلی امپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 5.5,
+    "amps": 0.6
+   }
+  },
+  {
+   "title": "آداپتور برق ۱۲ ولت ۵ آمپر مدل 12V5A",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 5
+   }
+  },
+  {
+   "title": "عنوان حذف‌شده برای انتشار",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "آداپتور ۲آمپر Adapter 2A",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور 16 ولت 2 آمپر دیواری سان",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 16,
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور 48 ولت 0.35 آمپر POE مدل PENB1020B4800N02 مناسب تجهیزات شبکه و روتر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 48,
+    "amps": 0.35
+   }
+  },
+  {
+   "title": "آداپتور سوئیچ 5.4 ولت 1.2 آمپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 5.4,
+    "amps": 1.2
+   }
+  },
+  {
+   "title": "آداپتور ۵ ولت ۱ آمپر دیواری مدیانور | منبع تغذیه سوئیچینگ ۵V 1A",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 5,
+    "amps": 1
+   }
+  },
+  {
+   "title": "اداپتور سوئیچینگ 15ولت2امپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 15,
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور 9 ولت 2.2 آمپر SAGEM",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 9,
+    "amps": 2.2
+   }
+  },
+  {
+   "title": "آداپتور 12 ولت 5 آمپر سونی (SONY)",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 5
+   }
+  },
+  {
+   "title": "فیش نری آداپتور",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "آداپتور متغیر 3تا24 ولت 2.5آمپر برند BRS",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "amps": 2.5
+   }
+  },
+  {
+   "title": "آداپتور لپ‌تاپی پلاستیکی 2 آمپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور لپ‌تاپی پلاستیکی 5آمپر 12 ولت",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 5
+   }
+  },
+  {
+   "title": "آداپتور 12ولت 2آمپر مدل JAH-S122000",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور 12 ولت 5 آمپر سومو مدل SM-120500D",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 5
+   }
+  },
+  {
+   "title": "آداپتور 12 ولت 2.5 آمپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 2.5
+   }
+  },
+  {
+   "title": "آداپتور 5 ولت 3 آمپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 5,
+    "amps": 3
+   }
+  },
+  {
+   "title": "آداپتور 12 ولت 3 آمپر دوطرف سیم",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 3
+   }
+  },
+  {
+   "title": "اداپتور 25 ولت 2 آمپر برای چاپگر SATO TG-5011 | فروشگاه ولتاژین",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 25,
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور 13.5 ولت 2 آمپر دیواری برند B.R.S",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 13.5,
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور 12 ولت 3 آمپر رومیزی مرغوب",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 3
+   }
+  },
+  {
+   "title": "آداپتور اصلی فشارسنج دیجیتال امرن (omron)",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "آداپتور سوئیچ 24 ولت 5 آمپر ریور",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 24,
+    "amps": 5
+   }
+  },
+  {
+   "title": "آداپتور متغیر 3 تا 12 ولت 2 امپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "amps": 2
+   }
+  },
+  {
+   "title": "شارژر جارو شارژی 35 ولت 500 میلی آمپر",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 35,
+    "amps": 0.5
+   }
+  },
+  {
+   "title": "آداپتور یاماها 16 ولت 2.4 آمپر مدل PA-300 / PA-301",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 16,
+    "amps": 2.4
+   }
+  },
+  {
+   "title": "آداپتور 12 ولت 2 آمپر مانیتور ال جی برند KT",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 12,
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور 32 ولت 2 آمپر 32V/2A دیواری",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 32,
+    "amps": 2
+   }
+  },
+  {
+   "title": "آداپتور دیواری 5 ولت 2 آمپر مدل ADS0502",
+   "category": "آداپتور برق",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "volts": 5,
+    "amps": 2
+   }
+  }
+ ]
+}

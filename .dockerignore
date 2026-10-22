@@ -1,0 +1,32 @@
+# Keep the build context small and free of secrets / data. The database is never part of the image
+# build context: it is mounted at runtime (/data) or fetched by the DATA_URL build arg.
+.git
+.gitignore
+.claude
+conductor
+conductor-high-cost
+node_modules
+**/node_modules
+**/dist
+starcoach-dataset-*
+data
+*.sqlite
+*.sqlite-*
+*.zst
+.env
+.env.*
+!.env.example
+coverage
+playwright-report
+test-results
+**/screenshots
+**/screenshots-real
+apps/web/e2e
+apps/web/e2e-real
+docs
+*.md
+# deployment files are not needed inside the image
+Dockerfile
+.dockerignore
+compose*.yaml
+deploy

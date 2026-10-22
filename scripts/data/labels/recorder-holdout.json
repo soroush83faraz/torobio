@@ -1,0 +1,353 @@
+{
+ "set": "recorder-holdout",
+ "labelled_by": "worker-labelled",
+ "method": "Random sample (fixed seed, scripts/data/src/label-sample.ts). Each title read by hand; expected holds only values a careful reader can establish from the title (incl. well-known manufacturer model-code conventions). An attribute absent from expected means: not determinable from the title (unknown).",
+ "attributes": [
+  "kind",
+  "channels"
+ ],
+ "items": [
+  {
+   "title": "DVR های سیلیکون 16 کانال 5 مگاپیکسل",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "DVR هایبرید 4 کانال 5 مگاپیکسل",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "xvr",
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه ضبط یونی ویو مدل NVR504-32B ظرفیت ۳۲ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 32
+   }
+  },
+  {
+   "title": "دستگاه ضبط تصاویر ۴کانال ۵مگاپیکسل برایتون A04H",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "برایتون",
+   "model_field": null,
+   "expected": {
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه DVR هایک ویژن مدل IDS-7216HQHI-M1/S ظرفیت ۱۶ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "دستگاه NVR کلارنت مدل CNP-8832H1-4K ظرفیت ۳۲ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 32
+   }
+  },
+  {
+   "title": "دستگاه NVR داهوا مدل DH-NVR4116-EI",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "دستگاه DVR هایک ویژن DS-7204HGHI-K1",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه ضبط تصاویر برایتون مدل UVR-B04EHB ظرفیت ۴ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "برایتون",
+   "model_field": null,
+   "expected": {
+    "kind": "xvr",
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه دی وی آر 16 کانال هایک ویژن مدل DS-7216HUHI-K2",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "دستگاه 4 کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه ضبط ویدئویی کلارنت مدل CNP-8810i1-4K ۱۰ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "channels": 10
+   }
+  },
+  {
+   "title": "دستگاه NVR 16 کانال هوشمند HI EASY",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "دی وی آر 32 کانال داهوآ داهوا NVR XVR 5232 EI DAHUA",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "kind": "xvr",
+    "channels": 32
+   }
+  },
+  {
+   "title": "ضبط کننده ویدیویی هایک ویژن مدل DS-7616NI-K1",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "دستگاه دی وی آر 4 کانال 5 مگاپیکسل هایسیلیکون",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه دی وی آر برایتون مدل UVR-C08EHB-D78G ظرفیت ۸ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "برایتون",
+   "model_field": null,
+   "expected": {
+    "kind": "xvr",
+    "channels": 8
+   }
+  },
+  {
+   "title": "دستگاه رکوردر AHD 4کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه ضبط کننده ی ویدیویی داهوا مداDH-XVR5108HS-I3",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "kind": "xvr",
+    "channels": 8
+   }
+  },
+  {
+   "title": "رکوردر 32 کانال شبکه IP سی پی پلاس cpplus CP-UNR-4K4322-FI",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 32
+   }
+  },
+  {
+   "title": "ضبط کننده ویدیویی داهوا مدل DHI-NVR4108-4KS3 ظرفیت ۸ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 8
+   }
+  },
+  {
+   "title": "دستگاه دی وی ار نواتک ATX0804",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "dvr"
+   }
+  },
+  {
+   "title": "ضبط کننده ویدیویی 18 کانال آیمو مدل NVR-N118-8A0E",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 18
+   }
+  },
+  {
+   "title": "دستگاه ذخیره ساز هایک ویژن مدل DS-9664NI-I8",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 64
+   }
+  },
+  {
+   "title": "دستگاه NVR هایک ویژن DS-7732NXI-K4(D) | ضبط ۳۲ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 32
+   }
+  },
+  {
+   "title": "دستگاه NVR هایک ویژن DS-7604NXI-K1",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه ضبط NVR2116HS-4KS",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "دستگاه IP NVR شانزده کانال 8MP ساپورت خروجی 4K تصویر هوش مصنوعی برند B-TECH مدل BT-816AI سرور داخلی (ایران)",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "دستگاه هایک ویژن مدل 7204HUHI K1",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه دی وی آرAHD 4 کانال 5 مگاپیسل-1080N)DVR 4CH 5MP) مدل 5004 XMEYE PLUS",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 4
+   }
+  },
+  {
+   "title": "دستگاه ضبط تصاویر مدل HV-415X-FA وانویژن",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "دستگاه DVR هشت کانال XMEYE PLUS پنج مگاپیکسل",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 8
+   }
+  },
+  {
+   "title": "دستگاه NVR هایک ویژن مدل DS-9664NI-M8 ظرفیت ۶۴ کانال",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 64
+   }
+  },
+  {
+   "title": "دستگاه DVR هایسیلکن 16کانال 5 مگاپیکسل",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "kind": "dvr",
+    "channels": 16
+   }
+  },
+  {
+   "title": "دستگاه NVR دوربین مداربسته داهوا مدل NVR4108HS-4KS2",
+   "category": "ضبط کننده ویدیویی دوربین‌های نظارتی و امنیتی",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "kind": "nvr",
+    "channels": 8
+   }
+  }
+ ]
+}

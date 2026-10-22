@@ -1,0 +1,828 @@
+{
+ "set": "hdd",
+ "labelled_by": "worker-labelled",
+ "method": "Random sample (fixed seed, scripts/data/src/label-sample.ts). Each title read by hand; expected holds only values a careful reader can establish from the title (incl. well-known manufacturer model-code conventions). An attribute absent from expected means: not determinable from the title (unknown).",
+ "attributes": [
+  "tb",
+  "surveillance",
+  "ssd"
+ ],
+ "items": [
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال مدل WD102KRYZ ظرفیت ۱۰ ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 10,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال سیگیت اسکای هاوک 10 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 10,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال وسترن دیجیتال مدل بنفش ظرفیت 500 گیگابایت استوک",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 0.5,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال Ultrastar DC HA210 ظرفیت ۱ ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال مدل Purple ظرفیت 10 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "tb": 10,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال مدل Western Digital Red 6TB WD60EFAX",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 6,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال وسترن دیجیتال مدل بنفش ظرفیت 2 ترابایت گارانتی شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت 6 ترابایت باراکودا Barracuda گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 6,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت ironwolf آیرون ولف 10 ترابایت ST10000VN0008 گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 10,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال قرمز 14 ترابایت مدل Red PLUS WD140EFFX گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 14,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال 20 ترابایت گلد Gold گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 20,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارددیسک وسترن دیجیتال Red Pro مدل wd20",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارددیسک اینترنال سیگیت مدل SkyHawk ST12000VX0008 ظرفیت 12 ترابایت گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 12,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت 2 ترابایت باراکودا Barracuda گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال مشکی 4 ترابایت مدل بلک Black WD4004FZEX گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 4,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال سیگیت 6 ترابایت اگزوز Exos گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 6,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت 2 ترابایت اسکای هاوک Skyhawk گارانتی 18 ماهه آی تی سالار",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال سبز 4 ترابایت (استوک)",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 4,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال سیگیت 16 ترابایت اگزوز Exos X16 گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 16,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال قرمز پرو 10 ترابایت مدل WD101KFBX گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 10,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال قرمز پرو 6 ترابایت مدل WD6003FFBX گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 6,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت 14 ترابایت باراکودا پرو Seagate Barracuda Pro ST14000DM001 گارانتی 18 ماهه آی تی سالار",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 14,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال قرمز پرو 24 ترابایت مدل WD240KFGX گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 24,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت اگزوز مدل Seagate Exos 2TB ST2000NM0008",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال سیگیت مدل ST1000VN002 ظرفیت ۱ ترابایت آیرون ولف",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت ironwolf آیرون ولف 8 ترابایت ST8000VN004 گارانتی 18 ماهه آی تی سالار",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 8,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت ironwolf آیرون ولف 8 ترابایت ST8000VN004 گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 8,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد 3 ترابایت باراکودا اینترنال سیگیت Barracuda ST3000DM007 گارانتی 18 ماهه آی تی سالار",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 3,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال مشکی 3 ترابایت مدل بلک Black WD30FZEX گارانتی 18 ماهه آی تی سالار",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 3,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال سیگیت ironwolf آیرون ولف 3 ترابایت ST3000VN007 گارانتی 12 ماهه شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 3,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "Seagate IronWolf ST16000VN001 Internal Hard Drive - 16TB",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 16,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال وسترن دیجیتال مدل آبی ظرفیت 2 ترابایت گارانتی شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال وسترن دیجیتال مدل بنفش ظرفیت 8 ترابایت گارانتی شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 8,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک 2.5 اینترنال سیگیت مدل ST1000VT001 ظرفیت ۵۰۰ گیگابایت-کارکرده",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال وسترن دیجیتال مدل قرمز ظرفیت 6 ترابایت استوک",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 6,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک وسترن دیجیتال مدل WD22PURZ ظرفیت ۲ ترابایت بنفش",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک سیگیت ۱ ترابایت بنفش",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال مدل Purple ظرفیت ۲ ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال مدل WD11PURZ ظرفیت ۱ ترابایت بنفش",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال ظرفیت 2 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال ظرفیت 1 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال 10 ترابایت وسترن مدل WD Purple 10TB",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "tb": 10,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارددیسک اینترنال وسترن دیجیتال مدل Purple WD40PURZ ظرفیت 4 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 4,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک وسترن دیجیتال بنفش ظرفیت ۱ ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال قرمز پرو 20 ترابایت مدل WD201KFGX گارانتی 18 ماهه آی تی سالار",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 20,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک Western Digital Black 1TB (WD1003FZEX)",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد یک ترا وسترن سبز سلامت 100",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال بنفش اصلی مدل Purple WD62PURZ ظرفیت 6 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 6,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد وسترن بنفش 4 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 4,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال 4 ترابایت وسترن دیجیتال بنفش (شرکتی)",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 4,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال سبز یک ترابایت شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال مدل WD Purple ظرفیت ۱ ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارددیسک اینترنال وسترن دیجیتال مدل Purple WD140PURZ ظرفیت 14 ترابایت (ریفر)",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 14,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد وسترن دیجیتال بنفش (WD Purple) مخصوص دوربین مداربسته | ظرفیت 500GB، 1TB، 2TB و 4TB - یک ترا",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال مدل WD8002FRYZ ظرفیت ۸ ترابایت گلد",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 8,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک 10 ترابایت وسترن بنفش گارانتی اصل ونوس سرویس",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "tb": 10,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال مدل WD121KRYZ ظرفیت ۱۲ ترابایت گلد",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 12,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک وسترن دیجیتال 8 ترابایت مدل بنفش اصلی گارانتی سازگار",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 8,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال Purple مدل WD10PURZ ظرفیت ۱ ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارددیسک اینترنال وسترن دیجیتال مدل Blue WD2500AAKX ظرفیت 250 گیگابایت (شرکتی)",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 0.25,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد 10 ترابایت وسترن بنفش گارانتی ایران تک",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "tb": 10,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد اینترنال وسترن دیجیتال Purple Surveillance مدل Western Digital WD10PURZ ظرفیت 1 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد 750 گیگابایت وسترن دیجیتال بنفش WD Purple 750GB | گارانتی شرکتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 0.75,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال سیگیت مدل IronWolf ST6000VN00 ظرفیت 6 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 6,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال وسترن دیجیتال مدل بنفش ظرفیت 12 ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 12,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد 1ترابایت وسترن بنفش 1000گیگ",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک وسترن دیجیتال 1 ترابایت بنفش WD10PURX مخصوص دوربین مداربسته",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد بنفش 12 ترابایت وسترن دیجیتال+گارانتی",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 12,
+    "surveillance": true,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد یک ترا بایت ارسال رایگان",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "tb": 1
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال مدل WD2500AAKX ظرفیت ۲۵۰ گیگابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 0.25,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال سیگیت مدل Barracuda ST500DM002 ظرفیت ۵۰۰ گیگابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "سیگیت",
+   "model_field": null,
+   "expected": {
+    "tb": 0.5,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال Ultrastar DC HC520 ظرفیت ۱۲ ترابایت",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 12,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال وسترن دیجیتال مدل مشکی ظرفیت 1 ترابایت استوک",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 1,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "حافظه اچ دی دی اینترنال وسترن دیجیتال مدل آبی ظرفیت 2 ترابایت استوک",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 2,
+    "surveillance": false,
+    "ssd": false
+   }
+  },
+  {
+   "title": "هارد دیسک اینترنال وسترن دیجیتال مدل WD180PURZ ظرفیت ۱۸ ترابایت بنفش",
+   "category": "هارد دیسک اینترنال",
+   "brand_field": "وسترن دیجیتال",
+   "model_field": null,
+   "expected": {
+    "tb": 18,
+    "surveillance": true,
+    "ssd": false
+   }
+  }
+ ]
+}

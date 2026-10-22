@@ -1,0 +1,20 @@
+{
+  "name": "@app/data",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsx src/build.ts",
+    "check": "tsx src/check.ts",
+    "labels": "tsx src/labels-report.ts",
+    "address-check": "tsx src/address-check.ts"
+  },
+  "dependencies": {
+    "@app/core": "*",
+    "better-sqlite3": "^12.11.1",
+    "csv-parse": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13"
+  }
+}

@@ -1,0 +1,839 @@
+{
+ "set": "phone-accessory",
+ "labelled_by": "worker-labelled",
+ "method": "Random sample (fixed seed, scripts/data/src/label-sample.ts). Each title read by hand; expected holds only values a careful reader can establish from the title (incl. well-known manufacturer model-code conventions). An attribute absent from expected means: not determinable from the title (unknown).",
+ "attributes": [
+  "fits_models"
+ ],
+ "items": [
+  {
+   "title": "محافظ صفحه نمایش بوف مدل Hydrogel مناسب برای گوشی موبایل سامسونگ Galaxy S24 Ultra",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": "s 24 ultra",
+   "expected": {
+    "fits_models": [
+     "galaxy s24 ultra"
+    ]
+   }
+  },
+  {
+   "title": "قاب ژله ای شفاف گوشی Galaxy S24",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy s24"
+    ]
+   }
+  },
+  {
+   "title": "کیف چرمی شیائومی Redmi A3 مدل کلاسوری جاکارتی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "شیائومی",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "redmi a3"
+    ]
+   }
+  },
+  {
+   "title": "قاب ژله ای iPhone 14 Pro نیلکین مدل Nature TPU Pro",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 14 pro"
+    ]
+   }
+  },
+  {
+   "title": "قاب سیلیکونی محافظ لنزدار اصل گوشی اپل iPhone 14 Pro Max - قرمز پاکنی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 14 pro max"
+    ]
+   }
+  },
+  {
+   "title": "کاور طرح دار مناسب گوشی TCL 505",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "خرید گلس گوشی اوپو ریلمی کیو | Glass Oppo Realme Q",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اوپو",
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "قاب ضد ضربه UAG مدل Pathfinder مناسب آیفون ۱۶ پرو مکس مگ سیف",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 16 pro max"
+    ]
+   }
+  },
+  {
+   "title": "گلس پرایوسی اپل مدل D+ مناسب آیفون ۱۶ پرو مکس با کیت نصب",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": "iphone x",
+   "expected": {
+    "fits_models": [
+     "iphone 16 pro max"
+    ]
+   }
+  },
+  {
+   "title": "قاب مگ سیف شفاف دور رنگی گوشی اپل iPhone 15 - سفید",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 15"
+    ]
+   }
+  },
+  {
+   "title": "محافظ صفحه نمایش تمام صفحه مناسب برای گوشی Galaxy A51 4G",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy a51 4g"
+    ]
+   }
+  },
+  {
+   "title": "قاب می 11 لایت",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "xiaomi 11 lite"
+    ]
+   }
+  },
+  {
+   "title": "کاور محافظ طرح گوزن مدل Deer Case مناسب برای گوشی شیائومی Redmi Note 8 Pro",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "شیائومی",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "redmi note 8 pro"
+    ]
+   }
+  },
+  {
+   "title": "محافظ صفحه نمایش تمام صفحه مناسب برای گوشی Apple iPhone 12 Pro",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": "iphone 12 pro",
+   "expected": {
+    "fits_models": [
+     "iphone 12 pro"
+    ]
+   }
+  },
+  {
+   "title": "کاور نیلکین مدل Super Frosted Shield مناسب برای گوشی موبایل سامسونگ Galaxy M10",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "نیلکین",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy m10"
+    ]
+   }
+  },
+  {
+   "title": "محافظ صفحه نمایش سرامیکی سامسونگ A02s",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": "a 02 s",
+   "expected": {
+    "fits_models": [
+     "galaxy a02s"
+    ]
+   }
+  },
+  {
+   "title": "گارد یانگ کیت مدل Technology Magnetic 020 مناسب برای گوشی موبایل اپل iPhone 16 Pro Max",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 16 pro max"
+    ]
+   }
+  },
+  {
+   "title": "کاور مدل سیلیکونی مناسب برای گوشی های سری آیفون (سری 13 تا 17)",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "محافظ صفحه نمایش شیشه ای گلس کو مدل CGo1 مناسب برای گوشی داریا Bond 5G",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "قاب نیلکین آیفون iPhone 17 Pro Max مدل CamShield Pro Magnetic",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 pro max"
+    ]
+   }
+  },
+  {
+   "title": "گلس نیلکین آیفون iPhone 17 Air مدل H+ Pro tempered glass",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 air"
+    ]
+   }
+  },
+  {
+   "title": "گلس نیلکین آیفون iPhone 17 Pro Max مدل H+ Pro tempered glass",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 pro max"
+    ]
+   }
+  },
+  {
+   "title": "گلس انتی استاتیک بدون حاشیه ایفون ۱۷ پرومکس",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 pro max"
+    ]
+   }
+  },
+  {
+   "title": "محافظ صفحه نمایش تمام صفحه مناسب برای گوشی Huawei Y7p",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "هوآوی",
+   "model_field": "y 7 p",
+   "expected": {
+    "fits_models": [
+     "huawei y7p"
+    ]
+   }
+  },
+  {
+   "title": "قاب نیلکین سامسونگ Galaxy S25 FE مدل CamShield Pro Magnetic",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "نیلکین",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy s25 fe"
+    ]
+   }
+  },
+  {
+   "title": "قاب نیلکین CamShield Pro مناسب برای گوشی سامسونگ Galaxy S25 FE",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "نیلکین",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy s25 fe"
+    ]
+   }
+  },
+  {
+   "title": "کاور نیلکین مدل CamShield Pro مناسب برای گوشی موبایل سامسونگ Galaxy S25 FE",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "نیلکین",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy s25 fe"
+    ]
+   }
+  },
+  {
+   "title": "کاور Black Stone",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "گلس نیلکین شیائومی 15T/15T Pro مدل CP+ Pro tempered glass",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "شیائومی",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "xiaomi 15t",
+     "xiaomi 15t pro"
+    ]
+   }
+  },
+  {
+   "title": "قاب گوشی طرح شکوفه گیلاس مخصوص انواع مدل‌های گوشی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کاور نیلکین Camshield Pro مناسب اپل iPhone 17 Air",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 air"
+    ]
+   }
+  },
+  {
+   "title": "قاب سیلیکونی اپل آیفون ۱۴",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 14"
+    ]
+   }
+  },
+  {
+   "title": "قاب سیلیکونی محافظ لنزدار اورجینال گوشی سامسونگ Galaxy A16 - قرمز",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy a16"
+    ]
+   }
+  },
+  {
+   "title": "کاور موفی مناسب برای گوشی شیائومی Redmi Note 14 4G",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "شیائومی",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "redmi note 14 4g"
+    ]
+   }
+  },
+  {
+   "title": "کاور موفی مدل NOTE14PRO_SSCCL مناسب برای گوشی موبایل شیائومی Redmi Note 14 Pro 4G",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "شیائومی",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "redmi note 14 pro 4g"
+    ]
+   }
+  },
+  {
+   "title": "قاب سیلیکونی محافظ لنزدار مناسب برای گوشی سامسونگ Galaxy A55 - آبی آسمانی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy a55"
+    ]
+   }
+  },
+  {
+   "title": "قاب گوشی آیفون طرح ساده - 15promax / سرمه ای / بالوگو",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 15 pro max"
+    ]
+   }
+  },
+  {
+   "title": "گلس پرایوسی D+ Tools لیتو مناسب برای گوشی موبایل اپل iPhone 17 Pro همراه با کیت نصب",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 pro"
+    ]
+   }
+  },
+  {
+   "title": "قاب نیلکین مدل Super Frosted Shield Pro Magnetic مناسب برای گوشی موبایل اپل iPhone 17 Air",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 air"
+    ]
+   }
+  },
+  {
+   "title": "قابKDOO MAG ARES مناسب برای گوشی آیفون 17 پرو مکس",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 pro max"
+    ]
+   }
+  },
+  {
+   "title": "کاور مگ سیف مناسب برای گوشی موبایل سامسونگ Galaxy S23 fe - مشکی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy s23 fe"
+    ]
+   }
+  },
+  {
+   "title": "کاور گرین لاین مدل Regal MagSafe مناسب برای گوشی موبایل اپل iPhone 17 Pro Max",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 pro max"
+    ]
+   }
+  },
+  {
+   "title": "قاب فانتزی داریا باند کد ۱۱۷",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "گلس محافظ صفحه Full Hd آیفون 15pro max +پک دستمال",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": "iphone 15 pro max",
+   "expected": {
+    "fits_models": [
+     "iphone 15 pro max"
+    ]
+   }
+  },
+  {
+   "title": "محافظ صفحه نمایشه گوشی Anti Static مناسب برای گوشی موبایل Samsung A20s",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": "a 20 s",
+   "expected": {
+    "fits_models": [
+     "galaxy a20s"
+    ]
+   }
+  },
+  {
+   "title": "کاور طرح چرم مناسب برای گوشی موبایل Samsung Galaxy S23 Fe",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy s23 fe"
+    ]
+   }
+  },
+  {
+   "title": "کاور ضد ضربه بتمنی مدل Moto G60s",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "moto g60s"
+    ]
+   }
+  },
+  {
+   "title": "کاور مدل بتمنی ضد ضربه مناسب برای گوشی Samsung Galaxy A36",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy a36"
+    ]
+   }
+  },
+  {
+   "title": "قاب سامسونگ A750 لیزری با قیمت عمده - قرمز",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "گلس سوپردی شیائومی Redmi Note 11",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "شیائومی",
+   "model_field": "redmi note 11",
+   "expected": {
+    "fits_models": [
+     "redmi note 11"
+    ]
+   }
+  },
+  {
+   "title": "گلس Super x مناسب برای سامسونگ S24 fe",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": "s 24",
+   "expected": {
+    "fits_models": [
+     "galaxy s24 fe"
+    ]
+   }
+  },
+  {
+   "title": "گلس صفحه نمایش Super x مناسب برای آیفون X",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": "iphone x",
+   "expected": {
+    "fits_models": [
+     "iphone x"
+    ]
+   }
+  },
+  {
+   "title": "گلس بدون حاشیه ایفون 14پرو",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": "iphone 14 pro",
+   "expected": {
+    "fits_models": [
+     "iphone 14 pro"
+    ]
+   }
+  },
+  {
+   "title": "گلس مات ایفون 11 پرو",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": "iphone 11 pro",
+   "expected": {
+    "fits_models": [
+     "iphone 11 pro"
+    ]
+   }
+  },
+  {
+   "title": "کاور یانگ کیت مدل Hidden Sand مناسب برای گوشی موبایل اپل iphone 16 pro max - خاکی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 16 pro max"
+    ]
+   }
+  },
+  {
+   "title": "کاور یانگ کیت مدل Rock sand skin مناسب برای گوشی موبایل اپل Apple iphone 17 promax - نقره‌ای مات",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 pro max"
+    ]
+   }
+  },
+  {
+   "title": "کیس متال چرمی فلزی محفظه عطردار - IPhone 17 Pro / عسلی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17 pro"
+    ]
+   }
+  },
+  {
+   "title": "قاب MY CASE ORGINAL مناسب برای آیفون 16 پرومکس رنگ سرمه ای",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 16 pro max"
+    ]
+   }
+  },
+  {
+   "title": "گلس برند kdoo",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "قاب چرمی ویوامادرید",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "قاب TPU",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "قاب طرح چریکی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "قاب خرسی سیلیکونی مناسب iPhone 15normal رنگ کرم",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 15"
+    ]
+   }
+  },
+  {
+   "title": "کیف اصلی شرکتی مدل سام سونگ Z Fold3. 5G باقلم",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy z fold 3"
+    ]
+   }
+  },
+  {
+   "title": "محافظ صفحه نمایش مک کوی مدل Privacy ایفون iPhone 16 ProMax",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 16 pro max"
+    ]
+   }
+  },
+  {
+   "title": "گلس بدون حاشیه برند xmart مناسب آیفون 17",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 17"
+    ]
+   }
+  },
+  {
+   "title": "قاب Mat guard MH \nمناسب iPhone 16pro رنگ مشکی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 16 pro"
+    ]
+   }
+  },
+  {
+   "title": "قاب Mat guard MH \nمناسب iPhone 15normal رنگ مشکی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 15"
+    ]
+   }
+  },
+  {
+   "title": "قاب Mat guard MH \nمناسب iPhone 14normal رنگ مشکی",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 14"
+    ]
+   }
+  },
+  {
+   "title": "گارد ضد ضربه انگشتی سامسونگ Samsung Galaxy S22 5G Black Panther Keysion ShockProof Armor Ring",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy s22 5g"
+    ]
+   }
+  },
+  {
+   "title": "قاب ice Diamond اپل Apple iPhone 13",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 13"
+    ]
+   }
+  },
+  {
+   "title": "قاب Shock سامسونگ Samsung S25 Ultra",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy s25 ultra"
+    ]
+   }
+  },
+  {
+   "title": "قاب ردمی ۱۲",
+   "category": "کیف و کاور گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "redmi 12"
+    ]
+   }
+  },
+  {
+   "title": "گلس ایفون ۱8 پرومکس",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 18 pro max"
+    ]
+   }
+  },
+  {
+   "title": "کاور سیلیکونی سامسونگ مدل A24",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "galaxy a24"
+    ]
+   }
+  },
+  {
+   "title": "کاور مگ سیف اپل مدل آیفون ۱۱ از جنس ژله ای",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "اپل",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "iphone 11"
+    ]
+   }
+  },
+  {
+   "title": "محافظ صفحه نمایش سامسونگ مدل A34 شیشه ای آنتی استاتیک",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": "سامسونگ",
+   "model_field": "a 34",
+   "expected": {
+    "fits_models": [
+     "galaxy a34"
+    ]
+   }
+  },
+  {
+   "title": "کاور ژله‌ای شفاف محافظ لنزدار مناسب برای گوشی شیائومی Poco X5 5G - بی‌رنگ شفاف",
+   "category": "کیف و کاور گوشی",
+   "brand_field": "شیائومی",
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "poco x5 5g"
+    ]
+   }
+  },
+  {
+   "title": "گلس گوشی ریلمی 10 تی | Realme 10 T Glass",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "fits_models": [
+     "realme 10t"
+    ]
+   }
+  },
+  {
+   "title": "محافظ صفحه نمایش شفاف داریا مدل Bond 5 از جنس شیشه",
+   "category": "محافظ صفحه نمایش گوشی",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  }
+ ]
+}

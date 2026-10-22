@@ -1,0 +1,342 @@
+{
+ "set": "cctv-camera-holdout",
+ "labelled_by": "worker-labelled",
+ "method": "Random sample (fixed seed, scripts/data/src/label-sample.ts). Each title read by hand; expected holds only values a careful reader can establish from the title (incl. well-known manufacturer model-code conventions). An attribute absent from expected means: not determinable from the title (unknown).",
+ "attributes": [
+  "mp",
+  "signal",
+  "ptz",
+  "wifi"
+ ],
+ "items": [
+  {
+   "title": "دوربین مداربسته تحت شبکه آیمو مدل Renger 2 بسته 2 عددی",
+   "category": "دوربین مدار بسته",
+   "brand_field": "آیمو",
+   "model_field": null,
+   "expected": {
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین دام 8 مگاپیکسل D M4 - 55LF HUNTER",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 8
+   }
+  },
+  {
+   "title": "دوربین مداربسته_فلزی_بولت",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "دوربین پلاک خوان IP تحت شبکه چرخشی 8MP دو لنزه بیسیم مدل v38pro با کیفیت 4k - بدون برق اضطراری / به همراه کارت حافظه 64GB",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 8,
+    "signal": "ip",
+    "ptz": true,
+    "wifi": true
+   }
+  },
+  {
+   "title": "دوربین IP مداربسته دام 8 مگاپیکسل HISILICON 30FPS دید در شب رنگی میکروفون دار",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 8,
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین هوشمند چرخشی فیلیپس مدل TAI6000W با دید ۳۶۰ درجه",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "ptz": true
+   }
+  },
+  {
+   "title": "دوربین سیم کارتی زومدار 3 لنز OKAM-PRO (ZD12)",
+   "category": "دوربین مدار بسته",
+   "brand_field": "اوکم",
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "دوربین مداربسته بولت برایتون مدل UVC-211B19P-C کیفیت ۲ مگاپیکسل",
+   "category": "دوربین مدار بسته",
+   "brand_field": "برایتون",
+   "model_field": null,
+   "expected": {
+    "mp": 2,
+    "signal": "analog"
+   }
+  },
+  {
+   "title": "دوربین مدار بسته هایک ویژن DS-2CE76D0T-ITPFS",
+   "category": "دوربین مدار بسته",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "mp": 2,
+    "signal": "analog"
+   }
+  },
+  {
+   "title": "دوربین مداربسته AHD دام 2 مگ برد 2053 از شرکت HS دید در شب رنگی فلزی",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 2,
+    "signal": "ahd"
+   }
+  },
+  {
+   "title": "دوربین مداربسته داهوا مدل HFW1509TLMP-IL-A کیفیت ۵ مگاپیکسل",
+   "category": "دوربین مدار بسته",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "mp": 5
+   }
+  },
+  {
+   "title": "دوربین مداربسته | پنج مگاپیکسل 335SONY | AHD | لنز YTOT",
+   "category": "دوربین مدار بسته",
+   "brand_field": "سونی",
+   "model_field": null,
+   "expected": {
+    "mp": 5,
+    "signal": "ahd"
+   }
+  },
+  {
+   "title": "دوربین مدار بسته اوکم مدل MG4 - به همراه کارت حافظه 64GB",
+   "category": "دوربین مدار بسته",
+   "brand_field": "اوکم",
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "دوربین مداربسته دام یونیویو مدل IPC324LE-ADF28K-H",
+   "category": "دوربین مدار بسته",
+   "brand_field": "یو ان وی",
+   "model_field": null,
+   "expected": {
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین لامپی چرخشی وای‌فای با دید در شب رنگی OKAM Pro",
+   "category": "دوربین مدار بسته",
+   "brand_field": "اوکم",
+   "model_field": null,
+   "expected": {
+    "ptz": true,
+    "wifi": true
+   }
+  },
+  {
+   "title": "دوربین داهوا DH-HAC-B1A41 | 4 مگاپیکسل",
+   "category": "دوربین مدار بسته",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "mp": 4,
+    "signal": "hdcvi"
+   }
+  },
+  {
+   "title": "دوربین مدار بسته داهوا مدل DH-HAC-B2A51P-U-IL-A",
+   "category": "دوربین مدار بسته",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "signal": "hdcvi"
+   }
+  },
+  {
+   "title": "دوربین مداربسته برایتون مدل UVC-232B40M-MC",
+   "category": "دوربین مدار بسته",
+   "brand_field": "برایتون",
+   "model_field": null,
+   "expected": {
+    "signal": "analog"
+   }
+  },
+  {
+   "title": "دوربین مداربسته تحت شبکه داهوا مدل DH-IPC-HFW2439SP-SA-LED",
+   "category": "دوربین مدار بسته",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "mp": 4,
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین بولت تحت شبکه ۵ مگاپیکسل IPC-414557C2C-TAMLZ",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 5,
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین وایرلس 3مگاپیکسل دولنز داهوا مدل HPT1339DD-STW-3E2",
+   "category": "دوربین مدار بسته",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "mp": 3,
+    "wifi": true
+   }
+  },
+  {
+   "title": "دوربین مداربسته کلارنت CCP-MD6530E-WA",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "دوربین مینی اسپیددام سیمکارتی 3 لنز Casacop مدل Q15",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "ptz": true
+   }
+  },
+  {
+   "title": "دوربین مداربسته تحت شبکه TVT مدل TD-9421S4",
+   "category": "دوربین مدار بسته",
+   "brand_field": "تی وی تی",
+   "model_field": null,
+   "expected": {
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین مداربسته دام فلزی ۲ مگاپیکسل | برد AHD 2MP F38 | دیددرشب رنگی | SkyHawk 2706",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 2,
+    "signal": "ahd"
+   }
+  },
+  {
+   "title": "دوربین بالت داهوا 2 مگاپیکسل HAC-HFW1200TLMP-IL-A | Smart Dual Light",
+   "category": "دوربین مدار بسته",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "mp": 2,
+    "signal": "hdcvi"
+   }
+  },
+  {
+   "title": "دوربین مداربسته IP دام 5MP مدل 5071 | i.Vision",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 5,
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین مینی اسپیددام سیمکارتی 5مگاپیکسل 4لنز آژیردار اوکم مدل X4",
+   "category": "دوربین مدار بسته",
+   "brand_field": "اوکم",
+   "model_field": null,
+   "expected": {
+    "mp": 5,
+    "ptz": true
+   }
+  },
+  {
+   "title": "دوربین مدار بسته بولت ۵ مگاپیکسل دید در شب رنگی",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 5
+   }
+  },
+  {
+   "title": "دوربین مداربسته داهوا DAHUA IPC-HDPW1431R1P-S4",
+   "category": "دوربین مدار بسته",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "mp": 4,
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین مداربسته داهوا مدلIPC-HFW2231T-ZS-S2",
+   "category": "دوربین مدار بسته",
+   "brand_field": "داهوا",
+   "model_field": null,
+   "expected": {
+    "mp": 2,
+    "signal": "ip"
+   }
+  },
+  {
+   "title": "دوربین مداربسته بولت 5 مگاپیکسل دید در شب رنگی AHD مدل B-4521f",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 5,
+    "signal": "ahd"
+   }
+  },
+  {
+   "title": "دوربین مداربسته هایک ویژن DS-2CE17H0T-IT3F کیفیت ۵ مگاپیکسل با دید در شب",
+   "category": "دوربین مدار بسته",
+   "brand_field": "هایک ویژن",
+   "model_field": null,
+   "expected": {
+    "mp": 5,
+    "signal": "analog"
+   }
+  },
+  {
+   "title": "دوربین سیم کارت خور دو لنزه چرخشی v380 pro",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "ptz": true
+   }
+  },
+  {
+   "title": "دوربین یونیکم دام IP یونیکم کیفیت 4MP وارم لایت مدل UC-DM-2254-IP-WM",
+   "category": "دوربین مدار بسته",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "mp": 4,
+    "signal": "ip"
+   }
+  }
+ ]
+}

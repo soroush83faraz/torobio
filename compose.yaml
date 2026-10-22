@@ -1,0 +1,107 @@
+# Bazaar Companion on a single VPS. See docs/DEPLOY.md.
+#
+#   docker compose up -d --build                    # app only, on 127.0.0.1:8080
+#   docker compose --profile proxy up -d --build    # app + Caddy (automatic HTTPS when DOMAIN is set)
+#
+# Configuration comes from ./.env (copy .env.example). Compose also reads that file for the ${...}
+# substitutions below, so APP_BIND / APP_PORT / DOMAIN / TRUST_PROXY ... live in one place.
+# The database is NOT in the image: put market.sqlite in ./data (deploy/push-data.sh does this).
+name: bazaar
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        # Leave as is on the VPS. Only set NODE_IMAGE where Docker Hub is blocked, e.g.
+        # NODE_IMAGE=docker.arvancloud.ir/library/node:22-slim
+        NODE_IMAGE: ${NODE_IMAGE:-node:22-slim}
+        APP_COMMIT: ${APP_COMMIT:-dev}
+        # Optional: bake the database into the image instead of mounting ./data (then also drop the volume below).
+        DATA_URL: ${DATA_URL:-}
+        DATA_SHA256: ${DATA_SHA256:-}
+    image: bazaar-companion:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    # No `init: true`: node is PID 1 without child processes and handles SIGTERM itself (graceful close).
+    env_file:
+      - path: .env
+        required: false # all settings have defaults; the app runs without it
+    environment:
+      # Fixed by the deployment, they win over anything in .env.
+      NODE_ENV: production
+      PORT: "8080"
+      HOST: 0.0.0.0
+      DATABASE_PATH: /data/market.sqlite
+      # 0 = nothing in front of the app (app published directly, e.g. APP_BIND=0.0.0.0): X-Forwarded-For is untrusted.
+      # 1 = exactly one proxy in front (the bundled Caddy, or nginx on the host): use the address that proxy saw.
+      # Default is 1 because the default bind (127.0.0.1) is only reachable through a proxy on the same host.
+      TRUST_PROXY: ${TRUST_PROXY:-1}
+    # Published on loopback by default: reachable only through the proxy / an SSH tunnel.
+    # Plain HTTP on the VPS IP without a proxy: APP_BIND=0.0.0.0 and TRUST_PROXY=0 in .env.
+    ports:
+      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-8080}:8080"
+    volumes:
+      # Mount the DIRECTORY (not the file): deploy/push-data.sh swaps the file atomically and a
+      # single-file bind mount would keep pointing at the old inode.
+      - ${DATA_DIR:-./data}:/data:ro
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:8080/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    # Hardening: nothing is written anywhere (logs go to stdout, SQLite is opened read-only).
+    # (`security_opt: no-new-privileges` is deliberately not set: it makes exec fail under snap Docker's AppArmor.)
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop: [ALL]
+    # Resource limits (measured 77 MB idle, 84 MB after the smoke chain + 40 parses, see docs/DEPLOY.md).
+    # Raise APP_MEM_LIMIT on a larger VPS; the SQLite page cache lives in the kernel, not in this limit.
+    mem_limit: ${APP_MEM_LIMIT:-512m}
+    cpus: ${APP_CPUS:-1.0}
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Reverse proxy with automatic HTTPS. Only started with --profile proxy.
+  #   DOMAIN=bazaar.example.com  -> Caddy obtains and renews a Let's Encrypt certificate (DNS must point here,
+  #                                 ports 80 and 443 must be open).
+  #   DOMAIN unset               -> plain HTTP on port 80 for any host name / the VPS IP (no certificate).
+  # TRUST_PROXY=1 is correct for this setup: Caddy replaces X-Forwarded-For with the address it saw.
+  caddy:
+    image: ${CADDY_IMAGE:-caddy:2-alpine}
+    profiles: [proxy]
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      DOMAIN: ${DOMAIN:-:80}
+    ports:
+      - "${CADDY_HTTP_PORT:-80}:80"
+      - "${CADDY_HTTPS_PORT:-443}:443"
+      - "${CADDY_HTTPS_PORT:-443}:443/udp" # HTTP/3
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data # certificates: keep this volume or you will re-issue (rate limits)
+      - caddy_config:/config
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    mem_limit: 128m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  caddy_data:
+  caddy_config:

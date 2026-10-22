@@ -1,0 +1,29 @@
+{
+  "name": "@app/server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "node build.mjs",
+    "start": "node dist/server.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "llm:smoke": "tsx src/llm/smoke.ts",
+    "audit:suggestions": "tsx scripts/audit-suggestions.ts",
+    "llm:smoke:cli": "tsx src/llm/smoke-cli.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.0.0",
+    "@app/core": "*",
+    "@fastify/rate-limit": "^11.2.1",
+    "@fastify/static": "^10.1.6",
+    "better-sqlite3": "^13.0.3",
+    "fastify": "^5.12.7",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "esbuild": "^0.28.2"
+  }
+}

@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Vazirmatn Variable', Vazirmatn, system-ui, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    background: #faf7f2;
+  }
+  body {
+    @apply bg-canvas text-ink antialiased;
+    min-height: 100dvh;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    font-feature-settings: 'kern', 'liga';
+    overflow-x: hidden;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-bold text-ink;
+    line-height: 1.5;
+  }
+  button,
+  [role='button'],
+  a,
+  input,
+  textarea,
+  select {
+    touch-action: manipulation;
+  }
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+  textarea,
+  input {
+    font: inherit;
+  }
+  :focus-visible {
+    outline: 3px solid #0a6b6b;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  /* Latin runs (model codes, brands) stay left-to-right and isolated. */
+  bdi {
+    unicode-bidi: isolate;
+    /* a long product title is a Latin run too: let it wrap instead of pushing the page wider than the screen */
+    overflow-wrap: anywhere;
+  }
+  ::placeholder {
+    color: #6f665a;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .page {
+    @apply mx-auto w-full max-w-[480px] px-4;
+  }
+  .card {
+    @apply rounded-card border border-line bg-surface shadow-card;
+  }
+  .tap {
+    @apply min-h-touch min-w-touch;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes saved-pulse {
+  0% {
+    background-color: #dff0ee;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+.animate-sheet-in {
+  animation: sheet-in 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+.animate-toast-in {
+  animation: toast-in 0.22s ease-out;
+}
+.animate-saved {
+  animation: saved-pulse 1.2s ease-out;
+}
+
+/* Visually hidden but available to screen readers. */
+.sr-only-fa {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

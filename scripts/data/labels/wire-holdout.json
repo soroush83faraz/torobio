@@ -1,0 +1,350 @@
+{
+ "set": "wire-holdout",
+ "labelled_by": "worker-labelled",
+ "method": "Random sample (fixed seed, scripts/data/src/label-sample.ts). Each title read by hand; expected holds only values a careful reader can establish from the title (incl. well-known manufacturer model-code conventions). An attribute absent from expected means: not determinable from the title (unknown).",
+ "attributes": [
+  "section_mm2",
+  "cores",
+  "sale_unit"
+ ],
+ "items": [
+  {
+   "title": "سیم افشان 1 در 2.5 نوید",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "نوید",
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 2.5
+   }
+  },
+  {
+   "title": "سیم افشان AWG24 سبز-حلقه 610متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "sale_unit": "other"
+   }
+  },
+  {
+   "title": "کابل مفتولی 4 در یک و نیم سیمیا (600/1000V) (NYY)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "سیمیا",
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "کابل 0/6*2*50 هوایی JY(st)Y کرمان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل افشان ۱۰۰ متری ۲ در ۱۶ افشار نژاد",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 16,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل ۹۵*۱ آلومینیوم ۲۰ کیلو ولت متال NA2XSY",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 95
+   }
+  },
+  {
+   "title": "کابل افشان 4 در 1 (1*4)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل مسی 50*1",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 50
+   }
+  },
+  {
+   "title": "کابل آلومینیومی زره دار 20 کیلو ولت 185×1 مشهد NA2XSYRY",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 185
+   }
+  },
+  {
+   "title": "کابل برق زمینی NYY سایز 1 در 150 شاهین",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 150
+   }
+  },
+  {
+   "title": "کابل برق آلومینیومی NA2XY سایز 1 در 120 عایق XLPE شاهین",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 120
+   }
+  },
+  {
+   "title": "کابل الومینیومی زمینی و خود نگه دار",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "سیم برق افشان 1 در 2.5 تک سیما البرز مدل r2.5mm2",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 2.5
+   }
+  },
+  {
+   "title": "کابل مفتول 50*1 برند پرتو الکتریک",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "پرتو الکتریک",
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 50
+   }
+  },
+  {
+   "title": "کابل برق افشان 16*4 زرتافته کرمان 1 متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 16,
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "سیم۲/۵ استاندارد صدمتری خراسان الکتریک باکدده رقمی",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 2.5,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل افشان 1/5*3 NYMHY برند مروارید ابهر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "سیم افشان خراسان ایوان 16*1",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "کابل افشان 3 در 0.75 (3x0.75) کرمان کابل ابهر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 0.75
+   }
+  },
+  {
+   "title": "سیم افشان ۱در۱ کیمیا افشان مسی کلاف ۱۰۰ متری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 1,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل زمینی 35+70*3 آلومینیوم با روکش PVC برند سیمکان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "سیم افشان نمره 2/5 برند پرتو الکتریک - ارت",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "پرتو الکتریک",
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 2.5
+   }
+  },
+  {
+   "title": "کابل افشان نیرو کابل زاگرس هر متر سایز 50+95*3",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "نیرو کابل زاگرس",
+   "model_field": null,
+   "expected": {
+    "sale_unit": "meter"
+   }
+  },
+  {
+   "title": "سیم افشان 16*1 لوشان - زرد",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 16
+   }
+  },
+  {
+   "title": "کابل افشان 2.5*3 لوشان - مشکی",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 2.5
+   }
+  },
+  {
+   "title": "کابل RG59 ترکیبی زیمنس مدل Siemens SM-100 مغزی مس",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {}
+  },
+  {
+   "title": "کابل شیلد دار سپاهان 0/75*3",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 0.75
+   }
+  },
+  {
+   "title": "کابل کنترل فرمان ۱/۵*۶ سپاهان",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 6,
+    "section_mm2": 1.5
+   }
+  },
+  {
+   "title": "سیم افشان 6×1 | سیم برق افشان 6 میلی‌متر",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "کابل افشان 1*2 ملت کابل سپهر حلقه صدمتری",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 1,
+    "sale_unit": "roll100"
+   }
+  },
+  {
+   "title": "کابل دو رشته نمره 6 افشان برند کرمان کابل ابهر (سایز 6*2)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 2,
+    "section_mm2": 6
+   }
+  },
+  {
+   "title": "کابل چهار رشته نمره 4 افشان برند کرمان کابل ابهر (سایز 4*4)",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 4,
+    "section_mm2": 4
+   }
+  },
+  {
+   "title": "سیم افشان مسی 2.5*1 بهفر دامغان (سیم 2.5 مس) - آبی",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 2.5
+   }
+  },
+  {
+   "title": "سیم خشک سایز۱۰ مفتول",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": null,
+   "model_field": null,
+   "expected": {
+    "cores": 1,
+    "section_mm2": 10
+   }
+  },
+  {
+   "title": "کابل افشان 0.5x3 سیمپود",
+   "category": "سیم و کابل برق ساختمان",
+   "brand_field": "سیمپود",
+   "model_field": null,
+   "expected": {
+    "cores": 3,
+    "section_mm2": 0.5
+   }
+  }
+ ]
+}

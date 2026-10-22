@@ -1,0 +1,35 @@
+# Reverse proxy for the app (compose profile "proxy"). DOMAIN comes from the environment (compose.yaml):
+#   DOMAIN=bazaar.example.com -> automatic HTTPS (Let's Encrypt), HTTP redirects to HTTPS
+#   DOMAIN=:80 (the default)   -> plain HTTP for any host name / the VPS IP
+{
+	# Single site: no need for the admin API inside the container network.
+	admin off
+}
+
+{$DOMAIN::80} {
+	encode zstd gzip
+
+	# API bodies are tiny (the app limits them to 16 KB); stop bigger ones early.
+	request_body {
+		max_size 64KB
+	}
+
+	header {
+		# The app already sets CSP, nosniff, frame, referrer, COOP/CORP and HSTS (production). "?" = only if absent.
+		?X-Content-Type-Options nosniff
+		?Referrer-Policy no-referrer
+		-Server
+		-X-Powered-By
+	}
+
+	# Caddy sets X-Forwarded-For / -Proto / -Host itself and REPLACES any client-supplied X-Forwarded-*
+	# (no trusted_proxies configured), so the app, with TRUST_PROXY=1, sees the address Caddy saw.
+	reverse_proxy app:8080 {
+		health_uri /api/health
+		health_interval 15s
+		transport http {
+			dial_timeout 3s
+			response_header_timeout 15s
+		}
+	}
+}
