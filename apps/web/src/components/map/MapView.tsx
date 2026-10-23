@@ -15,7 +15,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './map.css';
-import { boundsOf, hasCoords, sheetAwarePadding, type LatLon } from './geo';
+import { boundsOf, framingPoints, hasCoords, sheetAwarePadding, type LatLon } from './geo';
 import { resolveCollisions, type MarkerTone } from './placeModel';
 import { toPersianDigits } from '../../lib/format';
 import { tileConfig } from './tiles';
@@ -53,6 +53,11 @@ export interface MapViewProps {
   className?: string;
   /** Accessible name of the map region. */
   label?: string;
+  /**
+   * false: a still preview (no drag, zoom or controls) for a small header that opens a full map on tap. Read once,
+   * when the map is created. Default true.
+   */
+  interactive?: boolean;
 }
 
 const TILES = tileConfig(import.meta.env.VITE_MAP_TILES as string | undefined, import.meta.env.VITE_MAP_TILES_ATTRIBUTION as string | undefined);
@@ -97,6 +102,7 @@ export default function MapView({
   busy = false,
   className = '',
   label = 'نقشهٔ پاساژها',
+  interactive = true,
 }: MapViewProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -138,6 +144,9 @@ export default function MapView({
       markerZoomAnimation: !still,
       inertia: !still,
       bounceAtZoomLimits: false,
+      ...(interactive
+        ? {}
+        : { dragging: false, touchZoom: false, scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false }),
     });
     L.tileLayer(TILES.url, {
       subdomains: TILES.subdomains,
@@ -210,6 +219,14 @@ export default function MapView({
 
   /* ---- sync markers with places ---- */
   const placesKey = useMemo(() => places.map((p) => p.id).join('|'), [places]);
+  const routeRef2 = useRef(route);
+  routeRef2.current = route;
+  const routeKey = useMemo(
+    () => (route ?? []).map((s) => (hasCoords(s) ? `${s.lat.toFixed(5)},${s.lon.toFixed(5)}` : '-')).join(';'),
+    [route],
+  );
+  /** What the first fit frames: the places, else the route. */
+  const fitKey = placesKey || (routeKey ? `route:${routeKey}` : '');
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -271,16 +288,25 @@ export default function MapView({
 
   /* ---- fit all markers into the visible band ---- */
   const fitAll = useCallback(
-    (animate: boolean) => {
+    (animate: boolean, everything = false) => {
       const map = mapRef.current;
       if (!map) return;
-      const pts: LatLon[] = placesRef.current.filter(hasCoords);
+      // no places (a plan's route on its own): frame the route's stops
+      const own: LatLon[] = placesRef.current.filter(hasCoords);
+      const all: LatLon[] = own.length ? own : (routeRef2.current ?? []).filter(hasCoords);
+      // the first view frames the bazaar core (a far-away branch would zoom everything out to dots); the «همهٔ
+      // پاساژها» control shows every place
+      const pts = everything ? all : framingPoints(all);
       const b = boundsOf(pts, { minSpanDeg: 0.0035 });
       if (!b) return;
       const h = map.getSize().y;
       const { top, bottom } = insetRef.current;
       // side padding: half of a typical pill so edge pills are not clipped
-      const pad = sheetAwarePadding(h, bottom, { top: top + PIN_HEIGHT + 24, side: 74, gap: 20 });
+      // a route alone has no pills above its points, only numbered discs beside and below them: tighter padding,
+      // so a small header map is not all margin
+      const pad = own.length
+        ? sheetAwarePadding(h, bottom, { top: top + PIN_HEIGHT + 24, side: 74, gap: 20 })
+        : sheetAwarePadding(h, bottom, { top: top + 14, side: 44, gap: 46, minVisible: 60 });
       map.fitBounds(
         [
           [b.south, b.west],
@@ -300,10 +326,10 @@ export default function MapView({
 
   const fittedFor = useRef<string | null>(null);
   useEffect(() => {
-    if (!ready || placesKey === '' || fittedFor.current === placesKey) return;
-    fittedFor.current = placesKey;
+    if (!ready || fitKey === '' || fittedFor.current === fitKey) return;
+    fittedFor.current = fitKey;
     fitAll(false);
-  }, [ready, placesKey, fitAll]);
+  }, [ready, fitKey, fitAll]);
 
   /* ---- selection: classes, z-order, fly ---- */
   const flownTo = useRef<string | null>(null);
@@ -372,10 +398,6 @@ export default function MapView({
   }, [insetBottom, insetTop, flyToSelected]);
 
   /* ---- route ---- */
-  const routeKey = useMemo(
-    () => (route ?? []).map((s) => (hasCoords(s) ? `${s.lat.toFixed(5)},${s.lon.toFixed(5)}` : '-')).join(';'),
-    [route],
-  );
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -481,34 +503,36 @@ export default function MapView({
     <div className={`hbm h-full w-full ${className}`}>
       <div ref={hostRef} className="absolute inset-0" />
       {busy && <div className="hbm-veil" aria-hidden="true" />}
-      <div className="hbm-controls">
-        <button
-          type="button"
-          className={`hbm-ctl ${located ? 'is-on' : ''}`}
-          onClick={locate}
-          aria-busy={locating || undefined}
-          aria-label="نمایش موقعیت من روی نقشه"
-          title="موقعیت من"
-        >
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true">
-            {locating ? (
-              <path d="M12 3a9 9 0 1 0 9 9" />
-            ) : (
-              <>
-                <circle cx="12" cy="12" r="3.2" fill={located ? 'currentColor' : 'none'} />
-                <circle cx="12" cy="12" r="7.5" />
-                <path d="M12 1.8v2.7M12 19.5v2.7M1.8 12h2.7M19.5 12h2.7" />
-              </>
-            )}
-          </svg>
-        </button>
-        <button type="button" className="hbm-ctl" onClick={() => fitAll(true)} aria-label="دیدن همهٔ پاساژها روی نقشه" title="همهٔ پاساژها">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15" />
-            <circle cx="12" cy="12" r="2.2" />
-          </svg>
-        </button>
-      </div>
+      {interactive && (
+        <div className="hbm-controls">
+          <button
+            type="button"
+            className={`hbm-ctl ${located ? 'is-on' : ''}`}
+            onClick={locate}
+            aria-busy={locating || undefined}
+            aria-label="نمایش موقعیت من روی نقشه"
+            title="موقعیت من"
+          >
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true">
+              {locating ? (
+                <path d="M12 3a9 9 0 1 0 9 9" />
+              ) : (
+                <>
+                  <circle cx="12" cy="12" r="3.2" fill={located ? 'currentColor' : 'none'} />
+                  <circle cx="12" cy="12" r="7.5" />
+                  <path d="M12 1.8v2.7M12 19.5v2.7M1.8 12h2.7M19.5 12h2.7" />
+                </>
+              )}
+            </svg>
+          </button>
+          <button type="button" className="hbm-ctl" onClick={() => fitAll(true, true)} aria-label="دیدن همهٔ پاساژها روی نقشه" title="همهٔ پاساژها">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15" />
+              <circle cx="12" cy="12" r="2.2" />
+            </svg>
+          </button>
+        </div>
+      )}
       <div aria-live="polite" className="contents">
         {note && (
           <p key={note.key} className="hbm-note">

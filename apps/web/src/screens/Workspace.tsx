@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api/client';
-import type { AssistResult, PlanResponse, Requirement, Stop, StopLine, StopShop } from '../api/types';
+import type { AssistResult, PlaceMall, PlanResponse, Requirement, Stop, StopLine, StopShop } from '../api/types';
 import { BidiText } from '../components/Bdi';
 import { Button, IconButton } from '../components/Button';
 import { SegmentedControl } from '../components/SegmentedControl';
@@ -14,6 +14,7 @@ import { t } from '../copy/fa';
 import { formatCount } from '../lib/format';
 import { CONDITION_ANY, isDeadEnd, planMarker } from '../lib/items';
 import { diffPlans } from '../lib/planDiff';
+import { applyMallPick, bestMall, buildingName } from '../lib/places';
 import { sanitizeText } from '../lib/sanitize';
 import { shopsOf } from '../lib/stops';
 import { visitChipLabel } from '../lib/visit';
@@ -28,17 +29,19 @@ import { isStorageAvailable, requirementStateOf, usePlans, type ReportKind, type
 import { shareUrl } from '../store/share';
 import { ListView } from './ListView';
 import { MarketView } from './MarketView';
+import { PlacesTab, PlacesTeaser } from './PlacesTab';
 import { PlanView } from './PlanView';
 import { usePlanData } from './usePlanData';
+import { usePlaces } from './usePlaces';
 
 type Target = { line: StopLine; stop: Stop; shop: StopShop };
 
-/** Sets --bottom-bar so toasts sit above the sticky action bar. */
-function useBottomBar(active: boolean) {
+/** Sets --bottom-bar (px) so toasts sit above whatever is fixed at the bottom (action bar, market progress). */
+function useBottomBar(px: number) {
   useEffect(() => {
-    document.documentElement.style.setProperty('--bottom-bar', active ? '88px' : '0px');
+    document.documentElement.style.setProperty('--bottom-bar', `${px}px`);
     return () => document.documentElement.style.setProperty('--bottom-bar', '0px');
-  }, [active]);
+  }, [px]);
 }
 
 export function Workspace() {
@@ -48,6 +51,8 @@ export function Workspace() {
   const actions = usePlans.getState;
   const lastSavedAt = usePlans((s) => s.lastSavedAt);
   const data = usePlanData(saved);
+  // «کجا برم؟»: asked once the plan is ready and again whenever the list changes (also feeds the list's teaser)
+  const places = usePlaces(saved ? requirementStateOf(saved) : null, !!data.plan);
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [timeOpen, setTimeOpen] = useState(false);
@@ -120,8 +125,8 @@ export function Workspace() {
     setReplan(null);
   }, [id]);
 
-  const barVisible = !!saved && view !== null && (view !== 'market') && !data.error;
-  useBottomBar(barVisible);
+  const barVisible = !!saved && view !== null && view !== 'market' && view !== 'places' && !data.error;
+  useBottomBar(barVisible ? 88 : view === 'market' && data.plan ? 92 : 0);
 
   const undoable = useCallback(
     (message: string, fn: () => void) => {
@@ -307,6 +312,21 @@ export function Workspace() {
    */
   const relaxItem = (itemId: string, attr: string) => undoable(t.item.relaxed, () => store.relax(saved.id, itemId, attr));
 
+  /**
+   * «انتخاب این پاساژ» on the map: every item the mall covers is pinned to its cheapest shop there (and settled, as the
+   * map assumed), the plan recomputes on that mall and the user lands on «برنامه». «برگردان» restores the state and
+   * the map tab.
+   */
+  const pickMall = (m: PlaceMall) => {
+    undoable(t.places.picked(buildingName(m.name)), () =>
+      store.patch(saved.id, (p) => {
+        applyMallPick(p, m);
+        p.view = 'plan';
+      }),
+    );
+    window.scrollTo({ top: 0 });
+  };
+
   const includeCondition = (itemId: string) => undoable(t.item.conditionShown, () => store.answer(saved.id, itemId, 'condition', CONDITION_ANY));
 
   const openSeller = (line: StopLine, stop: Stop, shop: StopShop) => {
@@ -316,10 +336,12 @@ export function Workspace() {
 
   /* ------------ render ------------ */
 
+  const teaserMall = bestMall(places.places);
   const changedIds = new Set((replan?.changes ?? []).filter((c) => c.kind !== 'dropped').map((c) => c.itemId));
 
   const viewOptions = [
     { value: 'list' as const, label: t.workspace.views.list, badge: pendingCount > 0 ? formatCount(pendingCount) : undefined },
+    { value: 'places' as const, label: t.workspace.views.places },
     { value: 'plan' as const, label: t.workspace.views.plan },
     { value: 'market' as const, label: t.workspace.views.market },
   ];
@@ -355,8 +377,11 @@ export function Workspace() {
         onPickNearby={pickNearby}
         onUnsure={(itemId, q) => openAssistant({ itemId }, q)}
         marker={planMarker(data.plan)}
+        teaser={teaserMall && pendingCount === 0 ? <PlacesTeaser mall={teaserMall} onOpen={() => setView('places')} /> : undefined}
       />
     );
+  } else if (view === 'places') {
+    body = <PlacesTab data={places} stops={data.plan.stops} onPick={pickMall} />;
   } else if (view === 'plan') {
     body = (
       <PlanView
@@ -392,14 +417,21 @@ export function Workspace() {
     );
   }
 
+  // the map fills the screen under the tabs: no title block, no page scroll
+  const mapMode = view === 'places' && !!data.plan && !!data.resolve;
+
   return (
-    <div className="page pb-8">
+    <div className={`page ${mapMode ? '' : 'pb-8'}`}>
       <div className="glass sticky top-14 z-20 -mx-4 px-4 py-2">
         <SegmentedControl<View> label={t.workspace.viewsLabel} value={view ?? 'list'} onChange={setView} options={viewOptions} />
       </div>
 
+      {mapMode ? (
+        body
+      ) : (
+      <>
       <div className="mt-3 flex items-start gap-1">
-        <h1 className="line-clamp-2 min-w-0 flex-1 pt-1.5 text-2xl font-black leading-snug [overflow-wrap:anywhere]" title={sanitizeText(saved.name)} data-testid="plan-name">
+        <h1 className={`min-w-0 flex-1 pt-1.5 font-black leading-snug [overflow-wrap:anywhere] ${view === 'market' ? 'line-clamp-1 text-xl' : 'line-clamp-2 text-2xl'}`} title={sanitizeText(saved.name)} data-testid="plan-name">
           <BidiText text={saved.name} />
         </h1>
         <IconButton icon="more" label={t.header.more} onClick={() => setMenuOpen(true)} data-testid="plan-menu" />
@@ -457,6 +489,8 @@ export function Workspace() {
         )}
         {body}
       </div>
+      </>
+      )}
 
       {barVisible && action && (
         <div

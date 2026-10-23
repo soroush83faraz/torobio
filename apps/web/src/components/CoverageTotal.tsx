@@ -3,6 +3,7 @@ import { formatTomanCompact } from '../lib/format';
 import type { MissingGroup } from '../lib/items';
 import { BidiText, Interp } from './Bdi';
 import { Icon } from './Icon';
+import { CountUp } from './motion/CountUp';
 
 interface Props {
   covered: number;
@@ -22,6 +23,8 @@ interface Props {
    * Rendered as given, with no `label` in front (that doubled «جمع»); only its «— marker» tail becomes the amber chip.
    */
   datasetLine?: string;
+  /** Count the amount up (plan header). */
+  countUp?: boolean;
   className?: string;
 }
 
@@ -58,7 +61,7 @@ function MarkerChip({ text }: { text: string }) {
  *  - complete: «جمع ۵ مورد: ۱۸٫۴ میلیون تومان» (+ «با مدل‌های پیشنهادی»)
  *  - partial:  amber badge «فقط ۳ از ۵ مورد» + outlined amount, then what is missing.
  */
-export function CoverageTotal({ covered, total, amount, usesSuggestions, missing = [], label, marker, line, datasetLine, className = '' }: Props) {
+export function CoverageTotal({ covered, total, amount, usesSuggestions, missing = [], label, marker, line, datasetLine, countUp, className = '' }: Props) {
   if (covered === 0) {
     return (
       <p className={`text-base font-semibold text-ink-soft ${className}`} data-total="none">
@@ -66,7 +69,8 @@ export function CoverageTotal({ covered, total, amount, usesSuggestions, missing
       </p>
     );
   }
-  const money = formatTomanCompact(amount);
+  // the amount counts up when it first appears and glides when the plan changes (final text on first paint)
+  const money = countUp ? <CountUp value={amount} format={(v) => formatTomanCompact(v)} /> : formatTomanCompact(amount);
   const complete = covered === total;
   if (datasetLine) {
     const text = marker ? stripMarker(datasetLine, marker) : datasetLine;
@@ -121,7 +125,10 @@ export function CoverageTotal({ covered, total, amount, usesSuggestions, missing
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-lg font-bold">
           <span>
             {label ? `${label} · ${dropLeadingTotalWord(t.total.complete(total))}` : t.total.complete(total)}
-            <span className="text-accent-ink">{`: ${money}`}</span>
+            <span className="text-accent-ink">
+              {': '}
+              {money}
+            </span>
           </span>
           {marker && <MarkerChip text={marker} />}
         </p>

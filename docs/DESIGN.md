@@ -48,5 +48,7 @@ CSS helpers (`index.css`): `.surface-night`, `.girih` / `.girih-soft`, `.glass`,
 
 ## Slots
 
-- `src/screens/home/HomeMapSlot.tsx`: a 4:3 placeholder for the bazaar-belt dot map. Keep its outer wrapper.
+- `src/screens/home/HomeMapSlot.tsx`: the living bazaar-belt map (HomeMapHero, 3:2) as the top band of the Home night hero, fading into it under the heading; caption «بازار تهران، زنده · ۵۰۱ پاساژ». Keep its `data-slot="home-map"` wrapper.
+- Workspace tabs: «فهرست · نقشه · برنامه · در بازارم». «نقشه» (PlacesTab) fills the screen under the tabs (no page scroll); its first answer can take ~10 s, so the assistant narrates progress over the map. When nothing is left to answer, the list shows a dusk teaser card for the best mall.
+- Plan: route map header (RouteMap: still preview, tap for the full map), stops as a numbered timeline when there are 2+, alternatives as side-by-side comparison cards. Market: compact stop headers, big check rows that fold when bought, the progress docked at the bottom in the night surface.
 - Product images: `lib/images.ts` `imageOf()` reads the optional `imageUrl` from `ItemResolution.product` or `ModelOption`, and `ProductThumb` renders it, falling back to a placeholder.

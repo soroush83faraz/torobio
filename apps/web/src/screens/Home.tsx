@@ -138,8 +138,9 @@ export function Home() {
   return (
     <div className="page pb-12 pt-3">
       {/* ---------- hero: the conversation starts here ---------- */}
-      <section aria-labelledby="home-heading" className="surface-night relative overflow-hidden rounded-hero px-4 pb-5 pt-7 shadow-hero">
-        <span className="girih" aria-hidden="true" />
+      <section aria-labelledby="home-heading" className="surface-night relative overflow-hidden rounded-hero px-4 pb-5 shadow-hero">
+        {/* the living map of the bazaar belt is the hero's top band; the heading is written over its fading foot */}
+        <HomeMapSlot className="-mx-4 -mb-9" />
         <div className="relative">
           <Rise>
             <h1 id="home-heading" className="text-display font-black text-night-ink">
@@ -318,10 +319,6 @@ export function Home() {
           })}
         </StaggerList>
       </section>
-
-      <div className="mt-8">
-        <HomeMapSlot />
-      </div>
 
       {!noteHidden && meta && meta.snapshotDate && (
         <aside className="mt-6 flex items-start gap-1 border-t border-line pt-3 text-sm text-ink-soft">

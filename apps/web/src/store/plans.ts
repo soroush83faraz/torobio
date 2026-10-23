@@ -9,7 +9,7 @@ import type { PlanVariant, Requirement, RequirementState, VisitTime } from '../a
 import { CONDITION_ANY, detachInherited, reidItems, relaxRequirement } from '../lib/items';
 import { sanitizeDeep, sanitizeText } from '../lib/sanitize';
 
-export type View = 'list' | 'plan' | 'market';
+export type View = 'list' | 'places' | 'plan' | 'market';
 export type ReportKind = 'available' | 'unavailable' | 'price' | 'paid';
 
 /** A user report. Device-local, never mixed into dataset facts or dataset totals. */

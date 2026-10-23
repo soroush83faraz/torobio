@@ -14,20 +14,44 @@ interface Props {
   visitActive: boolean;
   /** Highlights the stop the user is at (checklist mode). */
   current?: boolean;
+  /** Every line of this stop is bought (checklist mode): the marker turns into a check. */
+  done?: boolean;
   /** Anything shown between the stop header and its shops (e.g. «توقف فعلی»). */
   intro?: ReactNode;
   /** The lines bought at one shop of this stop. */
   renderLines: (shop: StopShop) => ReactNode;
   /** Optional per-shop actions under its lines (e.g. «بدون این مغازه»). */
   renderShopActions?: (shop: StopShop) => ReactNode;
+  /**
+   * Timeline layout: the numbered marker hangs in the gutter at the card's start side (the caller draws the rail);
+   * the card itself carries no number.
+   */
+  timeline?: boolean;
+  /** In the shop (checklist): the header keeps the mall and `intro` only (no counts or subtotal). */
+  compact?: boolean;
   className?: string;
 }
 
+/** The stop's number disc: teal, the current stop in saffron, a finished stop as a check. */
+export function StopMarker({ number, current, done, className = '' }: { number: number; current?: boolean; done?: boolean; className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      data-testid="stop-number"
+      className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-extrabold ring-4 ring-canvas ${
+        done ? 'bg-accent-soft text-accent-ink' : current ? 'bg-saffron text-ink shadow-[0_6px_16px_-6px_rgba(232,163,23,0.9)]' : 'surface-night text-night-ink shadow-card'
+      } ${className}`}
+    >
+      {done ? <Icon name="check" size={20} strokeWidth={2.6} /> : new Intl.NumberFormat('fa-IR').format(number)}
+    </span>
+  );
+}
+
 /**
- * Stop = one building. Header: number, mall, how many shops, the stop's subtotal. Then one block per shop with its
- * own floor/unit, hours (+ open/closed at the chosen time), full address on tap and its own lines.
+ * Stop = one building. Header: mall, how many shops, the stop's subtotal. Then one block per shop with its own
+ * floor/unit chips, hours (+ open/closed at the chosen time), full address on tap and its own lines.
  */
-export function StopCard({ stop, number, visitActive, current, intro, renderLines, renderShopActions, className = '' }: Props) {
+export function StopCard({ stop, number, visitActive, current, done, intro, renderLines, renderShopActions, timeline, compact, className = '' }: Props) {
   const shops = shopsOf(stop);
   const multi = shops.length > 1;
   const lineCount = shops.reduce((k, s) => k + s.lines.length, 0);
@@ -36,39 +60,40 @@ export function StopCard({ stop, number, visitActive, current, intro, renderLine
       data-testid="stop"
       data-shop={shops[0]?.shopId}
       data-shop-count={shops.length}
+      data-current={current || undefined}
       aria-label={t.plan.stopLabel(number)}
-      className={`rounded-card border bg-surface p-4 shadow-card ${current ? 'border-accent ring-2 ring-accent/30' : 'border-line'} ${className}`}
+      className={`relative rounded-card border bg-surface shadow-card ${current ? 'border-saffron/70 ring-2 ring-saffron/30' : 'border-line'} ${className}`}
     >
-      <header className="flex gap-3">
-        <span
-          aria-hidden="true"
-          data-testid="stop-number"
-          className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-white"
-        >
-          {new Intl.NumberFormat('fa-IR').format(number)}
-        </span>
+      {timeline && <StopMarker number={number} current={current} done={done} className="absolute -start-11 top-3.5 !h-9 !w-9 !text-sm" />}
+      <header className="flex items-start gap-3 px-4 pt-4">
+        {!timeline && <StopMarker number={number} current={current} done={done} />}
         <div className="min-w-0 flex-1">
-          <h3 className="text-base leading-snug [overflow-wrap:anywhere]">
+          <h3 className="text-lg font-extrabold leading-snug [overflow-wrap:anywhere]">
             <BidiText text={stop.mall} />
           </h3>
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-ink-soft">
+          {compact ? (
+            intro
+          ) : (
+          <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-soft">
             {multi && (
               <span data-testid="shop-count" className="rounded-chip bg-sunken px-2.5 font-semibold text-ink">
                 {t.plan.shopsCount(shops.length)}
               </span>
             )}
+            <span>{t.plan.stopItems(lineCount)}</span>
             {stop.subtotal != null && (multi || lineCount > 1) && (
               <span data-testid="stop-subtotal">
-                {t.plan.stopSubtotal}: <span className="font-bold text-ink">{formatTomanCompact(stop.subtotal)}</span>
+                {t.plan.stopSubtotal}: <span className="num font-bold text-ink">{formatTomanCompact(stop.subtotal)}</span>
               </span>
             )}
           </p>
+          )}
         </div>
       </header>
-      {intro}
-      <div className="mt-3 space-y-3">
+      {intro && !compact && <div className="px-4">{intro}</div>}
+      <div className="mt-3 space-y-3 px-4 pb-4">
         {shops.map((shop) => (
-          <ShopBlock key={shop.shopId} shop={shop} multi={multi} visitActive={visitActive} actions={renderShopActions?.(shop)}>
+          <ShopBlock key={shop.shopId} shop={shop} visitActive={visitActive} actions={renderShopActions?.(shop)}>
             {renderLines(shop)}
           </ShopBlock>
         ))}
@@ -77,57 +102,84 @@ export function StopCard({ stop, number, visitActive, current, intro, renderLine
   );
 }
 
-function ShopBlock({ shop, multi, visitActive, actions, children }: { shop: StopShop; multi: boolean; visitActive: boolean; actions?: ReactNode; children: ReactNode }) {
-  const [showAddress, setShowAddress] = useState(false);
-  const place = [shop.floor, shop.unit].filter(Boolean).join(' · ');
+/** «طبقهٔ ۲» / «واحد ۶۲» as chips: what the user looks for on the signs inside the building. */
+function PlaceChips({ shop }: { shop: StopShop }) {
+  if (!shop.floor && !shop.unit) return null;
   return (
-    <div
-      data-testid="stop-shop"
-      data-shop={shop.shopId}
-      className={multi ? 'rounded-2xl border border-line bg-sunken/50 p-3' : ''}
-    >
-      <p data-testid="shop-name" className="text-sm font-bold leading-snug [overflow-wrap:anywhere]">
-        <Interp tpl={t.plan.shop} args={[shop.shopName]} />
-      </p>
-      {place && (
-        <p className="text-sm text-ink-soft">
-          <BidiText text={place} />
+    <span className="flex flex-wrap gap-1.5" aria-label={t.plan.floorUnit}>
+      {[shop.floor, shop.unit].filter(Boolean).map((v) => (
+        <span key={v} className="inline-flex items-center gap-1 rounded-lg bg-accent-soft px-2 text-sm font-bold leading-7 text-accent-ink">
+          <BidiText text={v!} />
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function OpenStatus({ shop, visitActive }: { shop: StopShop; visitActive: boolean }) {
+  const known = visitActive && (shop.open === 'open' || shop.open === 'closed');
+  return (
+    <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-soft">
+      {known && (
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-chip px-2.5 font-semibold ${
+            shop.open === 'open' ? 'bg-accent-soft text-accent-ink' : 'bg-amber-soft text-amber-ink'
+          }`}
+        >
+          <span className={`h-2 w-2 rounded-full ${shop.open === 'open' ? 'bg-accent' : 'bg-amber'}`} aria-hidden="true" />
+          {shop.open === 'open' ? t.plan.openAtTime : t.plan.closedAtTime}
+        </span>
+      )}
+      <span className="inline-flex items-center gap-1">
+        <Icon name="clock" size={15} />
+        <BidiText text={shop.hoursText} />
+      </span>
+    </span>
+  );
+}
+
+function ShopBlock({ shop, visitActive, actions, children }: { shop: StopShop; visitActive: boolean; actions?: ReactNode; children: ReactNode }) {
+  const [showAddress, setShowAddress] = useState(false);
+  return (
+    <div data-testid="stop-shop" data-shop={shop.shopId} className="border-t border-dashed border-line pt-3">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+        <p data-testid="shop-name" className="min-w-0 text-base font-bold leading-snug [overflow-wrap:anywhere]">
+          <Interp tpl={t.plan.shop} args={[shop.shopName]} />
+        </p>
+        <PlaceChips shop={shop} />
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-x-3">
+        <OpenStatus shop={shop} visitActive={visitActive} />
+        <button
+          type="button"
+          onClick={() => setShowAddress((v) => !v)}
+          aria-expanded={showAddress}
+          className="-me-1 inline-flex min-h-touch items-center gap-1 rounded-control px-1 text-sm font-semibold text-accent-ink hover:bg-accent-soft/60"
+        >
+          <Icon name="pin" size={15} />
+          {showAddress ? t.plan.hideAddress : t.plan.fullAddress}
+        </button>
+      </div>
+      {showAddress && (
+        <p className="rounded-lg bg-sunken px-3 py-2 text-sm">
+          <BidiText text={shop.address} />
         </p>
       )}
-      <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-soft">
-        <span className="inline-flex items-center gap-1">
-          <Icon name="clock" size={15} />
-          <BidiText text={shop.hoursText} />
-        </span>
-        {visitActive && shop.open === 'open' && <span className="rounded-chip bg-sunken px-2.5 text-ink">{t.plan.openAtTime}</span>}
-        {visitActive && shop.open === 'closed' && (
-          <span className="rounded-chip bg-amber-soft px-2.5 font-semibold text-amber-ink">{t.plan.closedAtTime}</span>
-        )}
-      </p>
-      <button
-        type="button"
-        onClick={() => setShowAddress((v) => !v)}
-        aria-expanded={showAddress}
-        className="mt-0.5 inline-flex min-h-touch items-center gap-1 text-sm font-semibold text-accent-ink"
-      >
-        <Icon name="pin" size={15} />
-        {showAddress ? t.plan.hideAddress : t.plan.fullAddress}
-      </button>
-      {showAddress && <p className="rounded-lg bg-sunken px-3 py-2 text-sm">
-          <BidiText text={shop.address} />
-        </p>}
       <div className="mt-2 space-y-3">{children}</div>
       {actions}
     </div>
   );
 }
 
-/** «↓ حدود ۹۰ متر تا توقف بعدی (خط مستقیم)» between two stop cards. */
+/** Between two timeline stops: «حدود ۹۰ متر پیاده», sitting on the rail. */
 export function StopConnector({ metres }: { metres: number }) {
   return (
-    <p className="flex items-center gap-2 px-2 py-2 text-sm text-ink-soft" aria-hidden={false}>
-      <Icon name="arrow-down" size={16} />
-      {t.plan.distanceNext(metres)}
+    <p className="relative flex min-h-12 items-center py-2 text-sm text-ink-soft" data-testid="stop-distance">
+      <span className="sr-only-fa">{t.plan.distanceNext(metres)}</span>
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-canvas px-3 py-0.5 font-semibold" aria-hidden="true">
+        <Icon name="arrow-down" size={15} />
+        {t.plan.distanceShort(metres)}
+      </span>
     </p>
   );
 }

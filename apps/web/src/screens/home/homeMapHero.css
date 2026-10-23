@@ -168,6 +168,12 @@
 .hb-hero__count {
   color: var(--hero-chip-soft);
 }
+.hb-hero__sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--hero-chip-soft);
+}
 .hb-hero__live {
   width: 8px;
   height: 8px;
@@ -205,4 +211,14 @@
   .hb-hero__layer {
     transform: none;
   }
+}
+
+/* Home: the map is the top band of the night hero and fades into it, so the heading sits on its foot */
+.hb-home-map {
+  -webkit-mask-image: linear-gradient(to bottom, #000 64%, transparent 98%);
+  mask-image: linear-gradient(to bottom, #000 64%, transparent 98%);
+}
+/* the chip sits over mall labels: an opaque night pill keeps it legible */
+.hb-home-map .hb-hero {
+  --hero-chip-bg: rgba(11, 36, 34, 0.82);
 }

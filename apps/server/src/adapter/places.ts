@@ -77,6 +77,7 @@ export function placesResponse(ps: PlannedState, state: Api.RequirementState): A
         unitPrice: l.unitPrice,
         qty: l.qty,
         shopName: shop.name,
+        shopId: shop.id,
         shopsWithItem: l.shopIds.length,
       };
       const { floor, unit } = shopPlace(shop);

@@ -125,9 +125,13 @@ test.describe('Persian RTL smoke journey', () => {
     // ---------- checklist
     await page.getByTestId('primary-action').click(); // «شروع خرید»
     await expect(page.getByTestId('market-view')).toBeVisible();
+    await expect(page.getByTestId('market-dock')).toContainText('۰ از ۳ مورد');
     await page.getByTestId('check').first().click();
     await expect(page.getByTestId('market-line').first()).toHaveAttribute('data-checked', 'true');
-    await page.getByTestId('mark-unavailable').nth(1).click();
+    await expect(page.getByTestId('market-dock')).toContainText('۱ از ۳ مورد');
+    // a bought row folds its report actions away: the first «موجود نیست» left is the second line's
+    await expect(page.getByTestId('market-line').first().getByTestId('mark-unavailable')).toHaveCount(0);
+    await page.getByTestId('mark-unavailable').first().click();
     // the shop is excluded for that item, the plan is recomputed, and the diff offers «برگرداندن»
     await expect(page.getByTestId('replan-diff')).toBeVisible();
     await expect(page.getByTestId('replan-report')).toContainText('گزارش شما');
@@ -159,6 +163,46 @@ test.describe('Persian RTL smoke journey', () => {
     await shot(page, '11-resume-menu');
     await page.getByRole('dialog').getByRole('link').first().click();
     await expect(page.getByTestId('plan-name')).toHaveText('پروژهٔ دوربین مداربسته');
+  });
+
+  test('«نقشه»: teaser in the list -> map -> pick a mall -> plan on that mall (undoable)', async ({ page }) => {
+    await page.goto('/');
+    await page.getByLabel('فهرست خریدت را بنویس').fill(CCTV);
+    await page.getByTestId('go').click();
+    await expect(page.getByTestId('pending-strip')).toBeVisible();
+    await expect(page.getByTestId('places-teaser')).toHaveCount(0); // questions still open
+    await page.getByTestId('settle-all').click();
+    const teaser = page.getByTestId('places-teaser');
+    await expect(teaser).toContainText('یک‌جا پیدا می‌شود');
+    await expect(teaser).toContainText('ببین روی نقشه');
+    await shot(page, '18-list-teaser');
+
+    await teaser.click();
+    await expect(page.getByRole('tab', { name: 'نقشه' })).toHaveAttribute('aria-selected', 'true');
+    const view = page.getByTestId('places-view');
+    await expect(view).toBeVisible();
+    // the map fills the screen under the tabs: no page scroll
+    const scroll = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+    expect(scroll).toBeLessThanOrEqual(1);
+    await expect(page.locator('.hb-card').first()).toBeVisible();
+    await expect(page.getByTestId('action-bar')).toHaveCount(0);
+    await expectNoOverflow(page);
+    await shot(page, '19-map');
+
+    // pick the recommended (selected) mall: every covered item is pinned to its shop there
+    const mall = (await page.locator('.hb-card.is-selected h3').first().innerText()).trim();
+    await page.locator('.hb-pick').first().click();
+    await expect(page.getByTestId('plan-view')).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'برنامه' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('status').filter({ hasText: 'برنامه روی' })).toContainText(mall);
+    // once recomputed, every stop is in that mall
+    await expect(page.getByTestId('stop').filter({ hasNotText: mall })).toHaveCount(0);
+    await expect(page.getByTestId('stop').first()).toContainText(mall);
+    await expectTouchTargets(page);
+    await shot(page, '20-plan-after-pick', true);
+
+    await page.getByRole('button', { name: 'برگردان' }).click();
+    await expect(page.getByTestId('places-view')).toBeVisible();
   });
 
   test('laptop miss keeps the item as «پیدا نشد»; about-data sheet; share link imports a copy', async ({ page, context }) => {

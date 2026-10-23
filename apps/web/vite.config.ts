@@ -30,7 +30,7 @@ function shellServiceWorker(): Plugin {
 
 export default defineConfig({
   plugins: [react(), shellServiceWorker()],
-  server: { host: true, port: 5173, proxy: { '/api': 'http://127.0.0.1:8080' } },
+  server: { host: true, port: 5173, proxy: { '/api': `http://127.0.0.1:${process.env.API_PORT ?? 8080}` } },
   preview: { port: 4173 },
   test: {
     include: ['src/**/*.test.{ts,tsx}'],

@@ -22,6 +22,8 @@ export interface HomeMapHeroProps {
   aspect?: string;
   /** Show the «بازار تهران، زنده» chip. Default true. */
   caption?: boolean;
+  /** Where the chip sits. Default 'bottom'. */
+  captionAt?: 'top' | 'bottom';
   className?: string;
 }
 
@@ -44,7 +46,8 @@ interface Dot {
   alpha: number;
 }
 
-function buildScene() {
+/** `topClear`: viewBox rows kept free of mall labels (a caption chip sits there). */
+function buildScene(topClear = 6) {
   const rows = centroids.malls as Row[];
   const maxN = rows[0]?.[2] ?? 1;
   // 1) radial lens around the core, 2) per-axis density equalisation: crowded strips of the bazaar get room in
@@ -105,12 +108,13 @@ function buildScene() {
     candidates.map((c) => c.rect),
     6,
   );
-  const labels = candidates.filter((c, i) => keep.has(i) && c.rect.x > 8 && c.rect.x + c.rect.w < W - 8 && c.rect.y > 6).slice(0, 4);
+  const labels = candidates.filter((c, i) => keep.has(i) && c.rect.x > 8 && c.rect.x + c.rect.w < W - 8 && c.rect.y > topClear).slice(0, 4);
   return { dots, rings, arcs, labels };
 }
 
-export function HomeMapHero({ tone = 'dark', aspect = '4 / 3', caption = true, className = '' }: HomeMapHeroProps) {
-  const scene = useMemo(buildScene, []);
+export function HomeMapHero({ tone = 'dark', aspect = '4 / 3', caption = true, captionAt = 'bottom', className = '' }: HomeMapHeroProps) {
+  // a chip at the top covers about the first 22% of the drawing's height: no label goes under it
+  const scene = useMemo(() => buildScene(caption && captionAt === 'top' ? H * 0.22 : 6), [caption, captionAt]);
   const rootRef = useRef<HTMLDivElement>(null);
 
   // pointer + scroll parallax, eased; paused off-screen
@@ -236,9 +240,13 @@ export function HomeMapHero({ tone = 'dark', aspect = '4 / 3', caption = true, c
       </svg>
 
       {caption && (
-        <p className="hb-hero__chip absolute bottom-3 start-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold" aria-hidden="true">
+        <p
+          className={`hb-hero__chip absolute start-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold ${captionAt === 'top' ? 'top-3' : 'bottom-3'}`}
+          aria-hidden="true"
+        >
           <span className="hb-hero__live" />
           بازار تهران، زنده
+          <span className="hb-hero__sep" />
           <span className="hb-hero__count font-medium">{formatCount(mallCount)} پاساژ</span>
         </p>
       )}

@@ -1086,6 +1086,7 @@ export function mockPlaces(state: RequirementState, now: Date = new Date()): Pla
         unitPrice: best.offer.price,
         qty: e.lineQty,
         shopName: best.shop.name,
+        shopId: best.shop.id,
         floor: best.shop.floor,
         unit: best.shop.unit,
         shopsWithItem: new Set(here.map((v) => v.shop.id)).size,

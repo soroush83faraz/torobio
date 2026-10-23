@@ -158,6 +158,8 @@ describe('mock places', () => {
       expect(m.items).toHaveLength(m.total);
       expect(m.covered).toBe(m.items.filter((x) => x.covered).length);
       expect(m.badges.includes('one_stop')).toBe(m.total >= 2 && m.covered === m.total);
+      // each covered line names the shop to pin when the user picks this mall
+      for (const x of m.items) expect(!!x.shopId).toBe(x.covered);
       const next = p.malls[i + 1];
       if (next) expect(m.covered).toBeGreaterThanOrEqual(next.covered);
     }

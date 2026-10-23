@@ -15,6 +15,7 @@ const PlaceItemLineSchema = z.strictObject({
   unitPrice: z.number().positive().nullable().optional(),
   qty: z.number().int().positive().optional(),
   shopName: z.string().optional(),
+  shopId: z.string().min(1).optional(),
   floor: z.string().optional(),
   unit: z.string().optional(),
   shopsWithItem: z.number().int().positive().optional(),
@@ -70,10 +71,15 @@ export function expectPlacesInvariants(p: Api.PlacesResponse): void {
     for (const x of covered) {
       expect(x.unitPrice).toBeGreaterThan(0);
       expect(x.shopName).toBeTruthy();
+      // the shop to pin (shopPins) when the user picks this mall
+      expect(x.shopId).toBeTruthy();
       expect(x.shopsWithItem).toBeGreaterThanOrEqual(1);
       expect(x.shopsWithItem!).toBeLessThanOrEqual(m.shopCount);
     }
-    for (const x of m.items.filter((y) => !y.covered)) expect(x.unitPrice).toBeUndefined();
+    for (const x of m.items.filter((y) => !y.covered)) {
+      expect(x.unitPrice).toBeUndefined();
+      expect(x.shopId).toBeUndefined();
+    }
     // coverage first, then the total
     const next = p.malls[i + 1];
     if (next) {
