@@ -91,9 +91,10 @@ export function Home() {
       <h1 id="home-heading" className="text-2xl font-extrabold leading-snug">
         {t.home.heading}
       </h1>
+      <p className="mt-1 text-base text-ink-soft">{t.home.subtitle}</p>
 
       <form
-        className="mt-4"
+        className="mt-5"
         onSubmit={(e) => {
           e.preventDefault();
           void submit(text);
@@ -109,17 +110,15 @@ export function Home() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={onKeyDown}
-            rows={4}
+            rows={3}
             enterKeyHint="go"
             placeholder={t.home.placeholder}
             aria-describedby="home-hint"
-            className="block w-full resize-none rounded-card bg-transparent p-4 text-base outline-none"
+            className="block w-full resize-none rounded-card bg-transparent p-4 text-lg outline-none"
           />
-          <div className="flex items-center justify-between gap-2 border-t border-line bg-canvas/60 p-2">
-            <p id="home-hint" className="px-2 text-sm text-ink-soft">
-              {t.home.hint}
-            </p>
-          </div>
+          <p id="home-hint" className="px-4 pb-3 text-sm text-ink-soft">
+            {t.home.hint}
+          </p>
         </div>
 
         {suggestions.length > 0 && (
@@ -159,19 +158,6 @@ export function Home() {
         </Button>
       </form>
 
-      <section className="mt-8" aria-labelledby="examples-h">
-        <h2 id="examples-h" className="text-base text-ink-soft">
-          {t.home.examples}
-        </h2>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {EXAMPLES.map((e) => (
-            <Chip key={e.label} onClick={() => pickExample(e.text)} disabled={busy}>
-              {e.label}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
       {notice && notice.droppedLegacy > 0 && (
         <aside role="note" data-testid="legacy-notice" className="mt-6 flex items-start gap-1 rounded-card bg-amber-soft ps-4 text-sm text-amber-ink">
           <p className="flex-1 py-3">{t.notice.legacyDropped(notice.droppedLegacy)}</p>
@@ -188,14 +174,40 @@ export function Home() {
         </section>
       )}
 
+      <section className="mt-8" aria-labelledby="examples-h">
+        <h2 id="examples-h" className="text-base font-semibold text-ink-soft">
+          {t.home.examples}
+        </h2>
+        <ul className="mt-2 space-y-2">
+          {EXAMPLES.map((e) => (
+            <li key={e.label}>
+              <button
+                type="button"
+                onClick={() => pickExample(e.text)}
+                disabled={busy}
+                className="card flex min-h-[64px] w-full items-center gap-3 px-4 py-2 text-start transition-colors hover:bg-sunken active:bg-sunken disabled:opacity-60"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block text-base font-bold">{e.label}</span>
+                  <span className="block truncate text-sm text-ink-soft">{e.text}</span>
+                </span>
+                <Icon name="chevron-forward" className="shrink-0 text-ink-soft" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {!noteHidden && meta && meta.snapshotDate && (
-        <aside className="mt-8 flex items-start gap-1 rounded-card bg-sunken ps-4 text-sm text-ink-soft">
-          <p className="flex-1 py-3">
+        <aside className="mt-8 flex items-start gap-2 text-sm text-ink-soft">
+          <Icon name="info" size={18} className="mt-1.5 shrink-0" />
+          <p className="flex-1">
             {t.home.dataNote(meta.snapshotLabel || formatJalaliDate(`${meta.snapshotDate}T12:00:00Z`), meta.areas.join('، '))}
           </p>
           <IconButton
             icon="close"
             label={t.home.dismissNote}
+            className="-my-2 text-ink-soft"
             onClick={() => {
               writeFlag(NOTE_KEY, true);
               setNoteHidden(true);
