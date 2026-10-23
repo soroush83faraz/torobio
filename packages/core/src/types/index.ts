@@ -207,6 +207,11 @@ export interface Requirement {
   preference?: { acceptSuggestion?: boolean; allowAlternatives?: boolean };
   /** Questions answered with «فرقی نمی‌کند». */
   skippedQuestions?: QuestionKey[];
+  /**
+   * Every question already shown and answered for this item (an option or «فرقی نمی‌کند»), whatever it set. The
+   * question engine counts them against its per-item cap. Absent: counted from answer constraints and skips.
+   */
+  answeredQuestions?: QuestionKey[];
   /** Accepted listing conditions; absent = 'new' (see ConditionMode). */
   condition?: ConditionMode;
 }
@@ -462,6 +467,8 @@ export interface QuestionOption {
   /** Candidates (of the set the question splits) that this option keeps. */
   count: number;
   apply: { constraint?: Constraint; budget?: Budget };
+  /** Cheapest usable price among the models this option keeps (per unit), when any is priced. */
+  minPrice?: number;
 }
 
 export interface Question {
@@ -476,7 +483,14 @@ export interface Question {
   unknownCount: number;
   skipLabel: string;
   stopLabel: string;
-  score?: { entropy: number; coverage: number; value: number };
+  /**
+   * Information value (facet and budget questions). `narrowing`: share of the eligible models an answer separates
+   * (count-weighted, × coverage); `spread`: how much an answer narrows the eligible price spread (log max/min,
+   * count-weighted, × coverage); `value` = max of the two, the ranking key.
+   */
+  score?: { entropy: number; coverage: number; value: number; narrowing?: number; spread?: number };
+  /** One line «چرا می‌پرسم» (copy/fa.ts). Compat questions get theirs from the rule's copy. */
+  why?: string;
 }
 
 export type QuestionStopReason =
@@ -484,7 +498,11 @@ export type QuestionStopReason =
   | 'fits_one_screen'
   | 'no_discriminating_question'
   | 'no_candidates'
-  | 'pinned';
+  | 'pinned'
+  /** The item already had its share of questions (questions/next.ts MAX_QUESTIONS_PER_ITEM). */
+  | 'question_cap'
+  /** Questions exist, but none would narrow the models or their price spread enough to be worth asking. */
+  | 'low_value';
 
 export interface QuestionOutcome {
   question: Question | null;

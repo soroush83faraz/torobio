@@ -12,6 +12,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "llm:smoke": "tsx src/llm/smoke.ts",
     "audit:suggestions": "tsx scripts/audit-suggestions.ts",
+    "audit:questions": "tsx scripts/audit-questions.ts",
     "llm:smoke:cli": "tsx src/llm/smoke-cli.ts"
   },
   "dependencies": {

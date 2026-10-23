@@ -58,6 +58,7 @@ import {
   offerFlagReason,
   offerOwnFlags,
   offerAccepted,
+  questionOptionHint,
   type KindContext,
   type Offer,
   type AttrKey,
@@ -159,10 +160,13 @@ export function toEngineRequirement(dto: WireReq, state: WireState): Requirement
     if (c) constraints.push(c);
   }
   const skipped: QuestionKey[] = [];
+  const answered: QuestionKey[] = [];
   let budget = validBudget(dto.budget);
   for (const [qid, optionId] of Object.entries(state.answers[dto.id] ?? {})) {
     const d = Api.decodeOptionId(optionId);
     if (!d) continue;
+    // every question shown and answered counts against the engine's per-item question cap
+    if (isQuestionKey(qid) && !answered.includes(qid)) answered.push(qid);
     if (d.kind === 'skip') {
       if (isQuestionKey(qid)) skipped.push(qid);
     } else if (d.kind === 'constraint') constraints.push(d.constraint);
@@ -186,6 +190,7 @@ export function toEngineRequirement(dto: WireReq, state: WireState): Requirement
   if (pin && /^\d{1,12}$/.test(pin)) req.pinnedProductId = Number(pin);
   if (state.settled[dto.id]) req.preference = { acceptSuggestion: true };
   if (skipped.length) req.skippedQuestions = skipped;
+  if (answered.length) req.answeredQuestions = answered;
   return req;
 }
 
@@ -457,7 +462,8 @@ function questionDto(ri: ResolvedItem, brands: Map<string, string>): Api.Questio
       if (c.attr === 'sale_unit' && (c.value === 'roll' || c.value === 'meter')) label = Api.apiCopy.saleUnitOption[c.value];
       else label = attrDisplay(c.attr, c.attr === 'fits_models' ? [String(c.value)] : c.value, brands);
     }
-    options.push({ id, label, hint: Api.apiCopy.optionCount(o.count) });
+    // what the option leads to: models kept and the cheapest of them (a budget band's label already is its price)
+    options.push({ id, label, hint: q.source === 'budget' ? Api.apiCopy.optionCount(o.count) : questionOptionHint(o.count, o.minPrice) });
   }
   if (!mandatory) options.push({ id: Api.SKIP_OPTION_ID, label: q.skipLabel });
   const kind: Api.Question['kind'] =
@@ -466,9 +472,7 @@ function questionDto(ri: ResolvedItem, brands: Map<string, string>): Api.Questio
   const why =
     q.ruleId && q.ruleId in Api.apiCopy.questionWhy
       ? Api.apiCopy.questionWhy[q.ruleId as keyof typeof Api.apiCopy.questionWhy]
-      : q.source === 'budget'
-        ? Api.apiCopy.questionWhy.budget
-        : undefined;
+      : (q.why ?? (q.source === 'budget' ? Api.apiCopy.questionWhy.budget : undefined));
   if (why) dto.why = why;
   return dto;
 }

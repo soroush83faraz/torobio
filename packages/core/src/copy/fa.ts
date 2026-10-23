@@ -458,6 +458,40 @@ export function questionText(key: QuestionKey): string {
   return QUESTION_TEXT[key] ?? `${ATTR_LABEL[key as AttrKey]} چه باشد؟`;
 }
 
+/** One line «چرا می‌پرسم» per facet question: what the answer changes for the buyer. */
+const QUESTION_WHY: Partial<Record<QuestionKey, string>> = {
+  brand: 'برند هم کیفیت و گارانتی را عوض می‌کند و هم قیمت را.',
+  resolution_mp: 'مگاپیکسل بیشتر یعنی تصویر واضح‌تر و قیمت بالاتر.',
+  camera_signal: `نوع دوربین تعیین می‌کند چه ضبط‌کننده‌ای لازم داری: آنالوگ با ${ltr('XVR/DVR')}، تحت شبکه با ${ltr('NVR')}.`,
+  camera_form: 'شکل دوربین به جای نصبش بستگی دارد: بیرون ساختمان یا سقف داخل.',
+  recorder_kind: 'ضبط‌کننده باید با نوع دوربین‌ها جور باشد.',
+  channels: 'تعداد کانال یعنی چند دوربین را می‌شود به آن وصل کرد.',
+  capacity_tb: 'ظرفیت بیشتر یعنی تصویر و فایل بیشتر، و قیمت بالاتر.',
+  voltage_v: 'ولتاژ آداپتور باید با دستگاه یکی باشد؛ ولتاژ اشتباه به دستگاه آسیب می‌زند.',
+  current_a: 'آمپر آداپتور باید به اندازهٔ مصرف دستگاه یا بیشتر باشد.',
+  phone_model: 'قیمت و مشخصات هر مدل گوشی خیلی با هم فرق دارد.',
+  storage_gb: 'حافظهٔ بیشتر یعنی جای بیشتر برای عکس و برنامه، و قیمت بالاتر.',
+  ram_gb: 'رم بیشتر یعنی اجرای روان‌تر برنامه‌ها، و قیمت بالاتر.',
+  wire_section_mm2: 'سطح مقطع به مصرف بستگی دارد؛ سیم نازک‌تر از لازم داغ می‌کند.',
+  wire_cores: 'تعداد رشته به نوع سیم‌کشی بستگی دارد و قیمت را عوض می‌کند.',
+};
+
+/** «چرا می‌پرسم» of a facet question; the budget line quotes the real price spread of the eligible models. */
+export function questionWhy(key: QuestionKey, priceRange?: { min: number; max: number }): string | undefined {
+  if (key === 'budget') {
+    return priceRange && priceRange.max > priceRange.min
+      ? `قیمت این مدل‌ها ${budgetBandLabel(priceRange.min, priceRange.max)} تومان است؛ بازه‌ها از همین قیمت‌ها ساخته شده‌اند.`
+      : 'بازه‌ها از قیمت‌های واقعی همین مدل‌ها ساخته شده‌اند.';
+  }
+  return QUESTION_WHY[key];
+}
+
+/** Consequence hint under a question option: «۱۸۷ مدل · از ۱٫۲ میلیون» (the price only when one is known). */
+export function questionOptionHint(count: number, minPrice?: number): string {
+  const models = `${faNum(count, 0)} مدل`;
+  return minPrice !== undefined && minPrice > 0 ? `${models} · از ${formatAmountShort(minPrice)}` : models;
+}
+
 export const SALE_UNIT_OPTION_LABEL: Readonly<Record<string, string>> = {
   meter: 'متری',
   roll: 'حلقه‌ای (رول)',

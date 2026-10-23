@@ -18,7 +18,30 @@ import {
   ITEM_STATE_LABEL,
   ltr,
   planCopy,
+  questionOptionHint,
+  questionWhy,
 } from '../fa';
+import { ATTR_KEYS, ATTR_SCHEMA } from '../../types/index';
+
+describe('question copy', () => {
+  it('option hints say how many models an answer keeps and from what price', () => {
+    expect(questionOptionHint(187, 1_200_000)).toBe('۱۸۷ مدل · از ۱٫۲ میلیون');
+    expect(questionOptionHint(3, 250_000)).toBe('۳ مدل · از ۲۵۰ هزار');
+    expect(questionOptionHint(1_242)).toBe('۱٬۲۴۲ مدل');
+  });
+  it('every facet the engine may ask has a one-line why; the budget line quotes the real range', () => {
+    for (const k of ATTR_KEYS) {
+      const s = ATTR_SCHEMA[k];
+      if (!s.askable || s.kind === 'string_list' || k === 'sale_unit') continue; // sale unit: the compat rule's line
+      const why = questionWhy(k);
+      expect(why, k).toBeTruthy();
+      expect(why!.includes('\n'), k).toBe(false);
+    }
+    expect(questionWhy('budget', { min: 1_200_000, max: 13_200_000 })).toBe(
+      'قیمت این مدل‌ها ۱٫۲ تا ۱۳٫۲ میلیون تومان است؛ بازه‌ها از همین قیمت‌ها ساخته شده‌اند.',
+    );
+  });
+});
 
 describe('Persian formatting', () => {
   it('digits, separators, compact toman', () => {

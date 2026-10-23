@@ -304,16 +304,27 @@ under the label «چیزهایی که در این فهرست دارم», never a
 
 ## 7. Questions
 
-`questions/next.ts` returns at most one question per item, in this order; each is skippable («فرقی نمی‌کند»), and
-«کافیه، پیشنهاد بده» (`settled`) ends questioning:
+`questions/next.ts` returns at most one question per item per call; the client re-resolves after each answer. The
+policy is **few questions, each one worth asking** (audit: `docs/AUDIT-questions.md`). Each is skippable («فرقی
+نمی‌کند»), and «کافیه، پیشنهاد بده» (`settled`) ends questioning:
 
 1. **Mandatory rules** (only the wire sale unit): asked even after skip or settle, because roll and per-metre prices cannot be compared.
 2. If the item is settled, stop (`accepted_default`).
-3. **Compatibility-critical unknowns** (priority 1): the camera's signal type before a recorder, the adapter voltage, a phone model for an accessory.
+3. **Compatibility-critical unknowns** (priority 1): the camera's signal type before a recorder, the adapter voltage, a phone model for an accessory. Always asked, outside the cap below; an option that keeps no model is never offered.
 4. If the eligible list fits one phone screen (`maxListSize`, default 8), stop (`fits_one_screen`).
-5. **Facet** (priority 2): among askable attributes readable for at least 50 % of the eligible products, the one maximising `entropy x coverage`; at most 6 options, each with a count.
-6. **Budget bands** (priority 3): tertiles of the eligible products' real minimum prices when there are at least 9 (else the median), rounded to friendly numbers (`niceRound`: 1, 1.2, 1.5, 2, 2.5, 3, 3.5, 4, 5... times powers of ten), empty bands merged away.
+5. **Cap**: at most `MAX_QUESTIONS_PER_ITEM = 2` questions per item. Every question already shown counts (an answer, a «فرقی نمی‌کند», a budget band; the adapter passes the answered keys as `answeredQuestions`), compat ones included, so a third question only happens when a compatibility question becomes necessary later. Then stop (`question_cap`).
+6. **Candidates**: facets (priority 2) and budget bands (priority 3), never an attribute the user stated, a rule derived, or one already asked.
+   - A facet offers only **meaningful options** (each keeps at least 2 models and 2 % of the eligible pool), at most 6; fewer than two is no question. The offered options must cover at least 50 % of the eligible models (models a sibling rules out, such as IP cameras next to a stated DVR, are not counted; a key facet, below, has no coverage floor).
+   - Budget bands: tertiles of the eligible products' real minimum prices when there are at least 9 (else the median), rounded to friendly numbers (`niceRound`: 1, 1.2, 1.5, 2, 2.5, 3, 3.5, 4, 5... times powers of ten), empty bands merged away.
+7. **Information value** (`informationValue`), from the eligible models, weighting each option by its size:
+   - *pool narrowing* = (1 - Σ share²) x coverage: the expected share of models an answer separates;
+   - *spread narrowing* = (1 - Σ share x ln(max/min) of the option / ln(max/min) of the pool) x coverage: how much an answer tightens the price range.
+   Coverage (the share of eligible models the options cover) discounts both, so a split that only hides unreadable listings is not information. A question below **15 % pool narrowing and 20 % spread narrowing** is not asked (`low_value` when nothing else is left).
+8. **Order**: the **key facet** of the item's role first (`KEY_FACETS`: analog vs IP for a camera, recorder type, adapter voltage, wire section), kept even when it narrows little or half the listings do not state it, but still priority 2 (it does not block the suggestion); then by value = max(pool, spread narrowing), biggest first. The budget question competes on the same value.
 
+Every question carries one line **why** («چرا می‌پرسم»; `questionWhy` in `copy/fa.ts`; compat questions use their
+rule's line), and every option a **consequence hint**: the models it keeps and the cheapest eligible price among them
+(`QuestionOption.minPrice`, rendered by the adapter as «۱۸۷ مدل · از ۱٫۲ میلیون»; budget bands show the count only).
 Options that would contradict something the user already fixed on a related item are not offered
 (`answerAllowed`; for example a stated DVR removes the IP-camera option). Question text is templated Persian
 (`packages/core/src/copy/fa.ts`), not generated.
@@ -401,7 +412,8 @@ Request (against the running server and the real database): «۴ دوربین د
 `i3` hdd, `capacity_tb = 2`; `i4` adapter with no constraints.
 
 **Resolve** (about 50 ms): `i1` is "پیشنهاد" (cheapest eligible Dahua 2 MP camera) with an open question
-«دوربین آنالوگ باشد یا تحت شبکه؟» (HDCVI: 140 models, IP: 117, analog: 3); `i2` is "نیاز به اطلاعات" because the recorder
+«دوربین آنالوگ باشد یا تحت شبکه؟» (HDCVI: 140 models from 1.2 M, IP: 117 from 2.5 M; the 3 listings that only say
+«آنالوگ» are too few to be an option); `i2` is "نیاز به اطلاعات" because the recorder
 type depends on the camera type; `i3` is "پیشنهاد"; `i4` is "نیاز به اطلاعات" with the 12 V assumption question.
 Note how rules shaped this: `recorder_channels` already derived `channels >= 4` on the recorder from the stated camera quantity.
 
@@ -487,6 +499,7 @@ from about 310 KB to about 84 KB (brotli).
 | Real-data end-to-end (browser, 390 and 360 px) | `apps/web/e2e-real` | `npm run e2e:real -w @app/web` |
 | Conflict / honesty sweep | `apps/server/scripts/sweep-conflicts.ts` | `npx tsx apps/server/scripts/sweep-conflicts.ts`: 44 lists x 6 answer strategies x variants; exits non-zero if any must-be-zero counter rises (conflict beside a total without marker, auto-picked conflict, superlative beside a conflict, card != stop line, total != sum, absent item picked) |
 | Suggestion audit | `apps/server/scripts/audit-suggestions.ts` | `npm run audit:suggestions -w @app/server` (needs `DATABASE_PATH`); report in `docs/AUDIT-suggestions.md` |
+| Question audit | `apps/server/scripts/audit-questions.ts` | `npm run audit:questions -w @app/server` (needs `DATABASE_PATH`); report in `docs/AUDIT-questions.md` |
 | Data gates | `scripts/data` | `npm run data:check` (join integrity, no contact data, price and hours rules, size) and `npm run labels -w @app/data` (label precision) |
 | Deploy smoke | `deploy/smoke.sh` | `deploy/smoke.sh <base-url>` |
 
@@ -494,7 +507,8 @@ from about 310 KB to about 84 KB (brotli).
 
 ## 15. Known limitations
 
-- **The suggestion rule is "cheapest eligible".** It is visible and honest, but a cheapest model can be a poor one; the user is asked a brand and budget question first whenever the pool is wide.
+- **The suggestion rule is "cheapest eligible".** It is visible and honest, but a cheapest model can be a poor one; when the pool is wide the user is asked up to two questions (usually the budget and the strongest facet) first.
+- **Facets exist only where an extractor does**: outside CCTV, phones and wire most items can only be asked brand and budget (laptops have no RAM/storage facet; see `docs/AUDIT-questions.md`).
 - **The first-word plausibility rule has a trade-off.** It sets aside a few real 12 V power supplies titled «پاور آداپتور» and some «شارژر ۱۲ ولت» listings (they stay in the options list as alternatives).
 - **Compatibility rules are general assumptions** (CCTV and phone accessories only), written by hand and not reviewed by a domain expert; nothing outside those domains gets a compatibility claim.
 - **Attribute coverage is partial**: for example camera signal type is readable for about 50 % of cameras, wire sale unit for about 29 % of wire, brand for 28.8 % of all products. Unreadable means unknown, and unknown is never auto-picked where a rule needs the attribute.
