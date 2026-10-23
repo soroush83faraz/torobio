@@ -304,8 +304,8 @@ function AltCard({
           <span className="text-ink-soft">{t.plan.stops(stops)}</span>
         ) : (
           <>
-            {money && <span className={`rounded-lg px-1.5 font-bold ${deltaToman > 0 ? 'bg-saffron-soft text-saffron-ink' : 'bg-accent-soft text-accent-ink'}`}>{money}</span>}
-            {hops && <span className={`rounded-lg px-1.5 font-bold ${deltaStops < 0 ? 'bg-accent-soft text-accent-ink' : 'bg-sunken text-ink'}`}>{hops}</span>}
+            {money && <span className={`rounded-lg px-1.5 font-bold ${deltaToman > 0 ? 'bg-amber-soft text-amber-ink' : 'bg-good-soft text-good-ink'}`}>{money}</span>}
+            {hops && <span className={`rounded-lg px-1.5 font-bold ${deltaStops < 0 ? 'bg-good-soft text-good-ink' : 'bg-sunken text-ink'}`}>{hops}</span>}
           </>
         )}
       </span>

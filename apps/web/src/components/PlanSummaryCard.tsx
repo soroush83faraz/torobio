@@ -23,7 +23,7 @@ export function PlanSummaryCard({ plan, onNavigate }: { plan: SavedPlan; onNavig
       {...pressFeedbackSoft}
       className="card flex min-h-[76px] items-center gap-3 p-3 pe-4 transition-shadow duration-200 hover:shadow-raised"
     >
-      <ProgressRing value={ratio} size={52} stroke={4} trackClass="text-sunken" arcClass={ratio >= 1 ? 'text-accent' : 'text-saffron'}>
+      <ProgressRing value={ratio} size={52} stroke={4} trackClass="text-sunken" arcClass={ratio >= 1 ? 'text-good' : 'text-accent'}>
         <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-accent-ink">
           <Icon name="bag" size={20} />
         </span>

@@ -149,7 +149,7 @@ export function BottomSheet({ open, onClose, title, children, footer, initialFoc
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center" dir="rtl" lang="fa">
       <div
-        className="animate-fade-in absolute inset-0 bg-night/50 backdrop-blur-[2px]"
+        className="animate-fade-in absolute inset-0 bg-coal/50 backdrop-blur-[2px]"
         onClick={requestClose}
         aria-hidden="true"
         data-testid="sheet-backdrop"

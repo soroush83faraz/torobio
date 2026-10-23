@@ -136,8 +136,8 @@ export function ListView({
                 {t.list.notFoundStrip(missing.length)}
               </p>
             ) : (
-              <p data-testid="all-ready-strip" className="flex items-center gap-2 border-t border-accent/15 bg-accent-soft px-4 py-3 text-sm font-bold text-accent-ink">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-accent text-white">
+              <p data-testid="all-ready-strip" className="flex items-center gap-2 border-t border-good/15 bg-good-soft px-4 py-3 text-sm font-bold text-good-ink">
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-good text-white">
                   <AnimatedCheck size={14} delay={0.15} />
                 </span>
                 {t.list.allReady}

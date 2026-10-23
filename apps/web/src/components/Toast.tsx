@@ -44,8 +44,11 @@ function ToastView({ item }: { item: ToastItem }) {
     return () => clearTimeout(timer);
   }, [item.id, item.duration, dismiss]);
   return (
-    <div className="animate-toast-in surface-night pointer-events-auto relative flex items-center gap-2 overflow-hidden rounded-[18px] py-1.5 pe-1.5 ps-3 text-night-ink shadow-hero ring-1 ring-white/10">
-      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-saffron/20 text-saffron-bright" aria-hidden="true">
+    <div className="animate-toast-in surface-coal pointer-events-auto relative flex items-center gap-2 overflow-hidden rounded-[18px] py-1.5 pe-1.5 ps-3 text-coal-ink shadow-raised ring-1 ring-white/10">
+      <span
+        className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${item.onAction ? 'bg-good/25 text-good-bright' : 'bg-white/15 text-coal-ink'}`}
+        aria-hidden="true"
+      >
         {/* an undoable toast confirms something that happened; a plain one is information (it can be an error) */}
         <Icon name={item.onAction ? 'check' : 'info'} size={16} />
       </span>
@@ -57,7 +60,7 @@ function ToastView({ item }: { item: ToastItem }) {
             item.onAction?.();
             dismiss(item.id);
           }}
-          className="min-h-touch rounded-control px-3 text-sm font-extrabold text-saffron-bright transition-colors hover:bg-white/10 active:scale-95"
+          className="min-h-touch rounded-control bg-white/10 px-3 text-sm font-extrabold text-coal-ink transition-colors hover:bg-white/20 active:scale-95"
         >
           {item.actionLabel}
         </button>
@@ -66,7 +69,7 @@ function ToastView({ item }: { item: ToastItem }) {
         type="button"
         onClick={() => dismiss(item.id)}
         aria-label={t.common.dismiss}
-        className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-control text-night-soft transition-colors hover:bg-white/10"
+        className="inline-flex min-h-touch min-w-touch items-center justify-center rounded-control text-coal-soft transition-colors hover:bg-white/10"
       >
         <Icon name="close" size={16} />
       </button>

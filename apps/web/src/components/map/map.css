@@ -3,21 +3,26 @@
  * them on any ancestor (or on .hbm itself). Logical properties only: the map is never mirrored, its chrome is RTL.
  */
 .hbm {
-  --hbm-brand: #0a6b6b;
-  --hbm-brand-ink: #064848;
-  --hbm-accent: #e8a317;
-  --hbm-accent-ink: #4a2f00;
-  --hbm-ink: #142423;
+  /* selected mall, route, stop numbers: brand red. Recommended mall: green. Others: white pills, dark text. */
+  --hbm-brand: #d91e2b;
+  --hbm-brand-ink: #7a0f16;
+  --hbm-good: #14703b;
+  --hbm-good-dot: #1b8a4b;
+  --hbm-good-ink: #ffffff;
+  --hbm-cov: #14703b;
+  --hbm-ink: #1b1b1f;
   --hbm-paper: #ffffff;
-  --hbm-text: #231f1a;
-  --hbm-text-soft: #5e564b;
-  --hbm-muted: #8f8575;
-  --hbm-line: #e3dccf;
-  --hbm-underlay: #efe9df;
+  --hbm-text: #1b1b1f;
+  --hbm-text-soft: #5b5b66;
+  --hbm-muted: #8a8a93;
+  --hbm-muted-bg: #f2f2f4;
+  --hbm-line: #e7e7ea;
+  --hbm-underlay: #eeeef0;
   --hbm-route: var(--hbm-brand);
-  --hbm-user: #1d6fd6;
-  --hbm-tile-filter: grayscale(0.88) sepia(0.14) brightness(1.06) contrast(0.86);
-  --hbm-shadow: 0 1px 1px rgba(20, 36, 35, 0.12), 0 4px 14px rgba(20, 36, 35, 0.16);
+  --hbm-user: #1b1b1f;
+  /* a neutral, slightly faded grey base map so the red and green pins carry all the colour */
+  --hbm-tile-filter: grayscale(1) brightness(1.05) contrast(0.85);
+  --hbm-shadow: 0 1px 1px rgba(27, 27, 31, 0.12), 0 4px 14px rgba(27, 27, 31, 0.16);
   --hbm-ease: cubic-bezier(0.22, 1, 0.36, 1);
   position: relative;
   isolation: isolate;
@@ -49,7 +54,7 @@
   padding: 1px 7px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.78);
-  color: #4d463c;
+  color: #4a4a52;
   font-size: 11px;
   line-height: 1.6;
   backdrop-filter: blur(4px);
@@ -82,7 +87,7 @@
   height: 12px;
   border-radius: 50%;
   background: var(--hbm-brand);
-  box-shadow: 0 0 0 2.5px var(--hbm-paper), 0 1px 4px rgba(20, 36, 35, 0.35);
+  box-shadow: 0 0 0 2.5px var(--hbm-paper), 0 1px 4px rgba(27, 27, 31, 0.35);
   transition: transform 0.3s var(--hbm-ease), background-color 0.2s;
 }
 .hbm-pin__dot::before {
@@ -142,19 +147,19 @@
   opacity: 0.25;
 }
 .hbm-pin__cov {
-  color: var(--hbm-brand-ink);
+  color: var(--hbm-cov);
 }
 
-/* recommended mall */
+/* recommended mall: green */
 .hbm-pin--best .hbm-pin__body {
-  background: var(--hbm-accent);
-  color: var(--hbm-accent-ink);
+  background: var(--hbm-good);
+  color: var(--hbm-good-ink);
 }
 .hbm-pin--best .hbm-pin__cov {
   color: inherit;
 }
 .hbm-pin--best .hbm-pin__dot {
-  background: var(--hbm-accent);
+  background: var(--hbm-good-dot);
 }
 .hbm-pin__pulse {
   position: absolute;
@@ -163,7 +168,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--hbm-accent);
+  background: var(--hbm-good-dot);
   opacity: 0;
   pointer-events: none;
   animation: hbm-pulse 2.4s var(--hbm-ease) infinite;
@@ -184,7 +189,7 @@
 
 /* muted: closed or covers nothing */
 .hbm-pin--muted .hbm-pin__body {
-  background: #f6f3ee;
+  background: var(--hbm-muted-bg);
   color: var(--hbm-text-soft);
 }
 .hbm-pin--muted .hbm-pin__cov {
@@ -194,21 +199,25 @@
   background: var(--hbm-muted);
 }
 
-/* selected */
+/* selected: brand red */
 .hbm-pin.is-selected .hbm-pin__body {
-  background: var(--hbm-ink);
+  background: var(--hbm-brand);
   color: #fff;
   transform: translateX(50%) translateY(-3px) scale(1.08);
 }
 .hbm-pin.is-selected .hbm-pin__cov {
-  color: var(--hbm-accent);
+  color: inherit;
 }
 .hbm-pin.is-selected .hbm-pin__dot {
-  background: var(--hbm-ink);
+  background: var(--hbm-brand);
   transform: scale(1.25);
 }
+/* the recommended mall stays green when selected (it is selected first); the lift and scale mark the selection */
+.hbm-pin.is-selected.hbm-pin--best .hbm-pin__body {
+  background: var(--hbm-good);
+}
 .hbm-pin.is-selected.hbm-pin--best .hbm-pin__dot {
-  background: var(--hbm-accent);
+  background: var(--hbm-good-dot);
 }
 
 /* collapsed: a neighbour with a higher priority owns the space, only the dot remains */
@@ -221,11 +230,11 @@
   transform: scale(1.15);
 }
 .hbm-pin:focus-visible .hbm-pin__body {
-  outline: 3px solid var(--hbm-brand);
+  outline: 3px solid var(--hbm-ink);
   outline-offset: 2px;
 }
 .hbm-pin:hover .hbm-pin__body {
-  box-shadow: 0 1px 1px rgba(20, 36, 35, 0.14), 0 8px 20px rgba(20, 36, 35, 0.22);
+  box-shadow: 0 1px 1px rgba(27, 27, 31, 0.14), 0 8px 20px rgba(27, 27, 31, 0.22);
 }
 
 /* entrance: pins drop in once, staggered by rank */
@@ -298,7 +307,7 @@
   font-size: 0.875rem;
   font-weight: 800;
   line-height: 1;
-  box-shadow: 0 0 0 2.5px var(--hbm-paper), 0 2px 6px rgba(20, 36, 35, 0.3);
+  box-shadow: 0 0 0 2.5px var(--hbm-paper), 0 2px 6px rgba(27, 27, 31, 0.3);
   font-variant-numeric: tabular-nums;
 }
 
@@ -311,7 +320,7 @@
   height: 18px;
   border-radius: 50%;
   background: var(--hbm-user);
-  box-shadow: 0 0 0 3px #fff, 0 2px 8px rgba(29, 111, 214, 0.5);
+  box-shadow: 0 0 0 3px #fff, 0 2px 8px rgba(27, 27, 31, 0.45);
 }
 .hbm-me::before {
   content: '';
@@ -403,7 +412,7 @@
   inset: 0;
   z-index: 450;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0) 0, rgba(250, 247, 242, 0.55) 70%);
+  background: radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0) 0, rgba(251, 251, 251, 0.55) 70%);
 }
 .hbm-veil::before,
 .hbm-veil::after {

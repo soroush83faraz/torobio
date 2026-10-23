@@ -17,17 +17,17 @@ import { HomeMapSlot } from './home/HomeMapSlot';
 
 const NOTE_KEY = 'ui:home-note-dismissed';
 
-type Tint = 'teal' | 'saffron' | 'terracotta';
+type Tint = 'red' | 'green' | 'plain';
 const EXAMPLES: { label: string; text: string; icon: IconName; tint: Tint }[] = [
-  { label: t.home.exampleCctv, text: t.home.exampleCctvText, icon: 'cctv', tint: 'teal' },
-  { label: t.home.exampleElectric, text: t.home.exampleElectricText, icon: 'bolt', tint: 'saffron' },
-  { label: t.home.examplePhone, text: t.home.examplePhoneText, icon: 'phone', tint: 'terracotta' },
+  { label: t.home.exampleCctv, text: t.home.exampleCctvText, icon: 'cctv', tint: 'red' },
+  { label: t.home.exampleElectric, text: t.home.exampleElectricText, icon: 'bolt', tint: 'plain' },
+  { label: t.home.examplePhone, text: t.home.examplePhoneText, icon: 'phone', tint: 'green' },
 ];
 
 const TINT: Record<Tint, string> = {
-  teal: 'bg-accent-soft text-accent-ink',
-  saffron: 'bg-saffron-soft text-saffron-ink',
-  terracotta: 'bg-terracotta-soft text-terracotta-ink',
+  red: 'bg-accent-soft text-accent',
+  green: 'bg-good-soft text-good-strong',
+  plain: 'bg-sunken text-ink',
 };
 
 /** Splits the text at the last «،» / «و» so suggestions apply to the item being typed. */
@@ -162,7 +162,7 @@ export function Home() {
               initial={{ opacity: 0, y: 16, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.55, ease: ease.out, delay: 0.14 }}
-              className="relative rounded-[22px] bg-surface text-ink shadow-raised ring-1 ring-black/5 transition-shadow duration-300 focus-within:shadow-focus"
+              className="relative rounded-[22px] bg-surface text-ink shadow-raised ring-1 ring-black/5 transition-shadow duration-300 focus-within:shadow-focus-light"
             >
               <label htmlFor="shopping-text" className="sr-only">
                 {t.home.inputLabel}
@@ -190,7 +190,7 @@ export function Home() {
                   {...(ready && !busy ? pressFeedback : {})}
                   className={`inline-flex min-h-[52px] items-center gap-2 rounded-[16px] px-5 text-base font-extrabold transition-colors duration-200 disabled:cursor-not-allowed ${
                     ready || busy
-                      ? 'bg-saffron text-ink shadow-[0_8px_18px_-8px_rgba(232,163,23,0.9)] hover:bg-saffron-bright'
+                      ? 'bg-accent text-white shadow-[0_8px_18px_-8px_rgba(183,24,34,0.8)] hover:bg-accent-strong'
                       : 'bg-sunken text-ink-soft'
                   }`}
                 >
@@ -244,7 +244,7 @@ export function Home() {
             </AnimatePresence>
 
             {error && (
-              <p role="alert" data-testid="parse-error" className="mt-3 rounded-control bg-saffron-soft px-4 py-2 text-sm font-semibold text-saffron-ink">
+              <p role="alert" data-testid="parse-error" className="mt-3 rounded-control bg-danger-soft px-4 py-2 text-sm font-semibold text-danger">
                 {error}
               </p>
             )}
@@ -258,7 +258,7 @@ export function Home() {
       </section>
 
       {notice && notice.droppedLegacy > 0 && (
-        <aside role="note" data-testid="legacy-notice" className="mt-5 flex items-start gap-1 rounded-card bg-saffron-soft ps-4 text-sm text-saffron-ink">
+        <aside role="note" data-testid="legacy-notice" className="mt-5 flex items-start gap-1 rounded-card bg-amber-soft ps-4 text-sm text-amber-ink">
           <p className="flex-1 py-3">{t.notice.legacyDropped(notice.droppedLegacy)}</p>
           <IconButton icon="close" label={t.home.dismissNote} onClick={dismissNotice} />
         </aside>

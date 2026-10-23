@@ -259,9 +259,9 @@ function Banner({ full, headline, best }: { full: boolean; headline: string | nu
 
 const BADGE_CLASS: Record<PlaceBadge, string> = {
   one_stop: 'hb-badge--one',
-  cheapest: 'bg-amber-soft text-amber-ink',
+  cheapest: 'bg-good-soft text-good-ink',
   most_choice: 'bg-sunken text-ink-soft',
-  open_now: 'bg-accent-soft text-accent-ink',
+  open_now: 'bg-good-soft text-good-ink',
 };
 
 function MallCard({

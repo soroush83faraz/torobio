@@ -90,12 +90,12 @@ export function MarketView({ saved, plan, changed, onToggle, onShowSeller, onUna
               done={stopDone}
               intro={
                 currentStop?.id === stop.id ? (
-                  <p className="mt-1 inline-flex items-center gap-1 rounded-chip bg-saffron-soft px-3 text-sm font-bold text-saffron-ink">
+                  <p className="mt-1 inline-flex items-center gap-1 rounded-chip bg-accent-soft px-3 text-sm font-bold text-accent-ink">
                     <Icon name="pin" size={14} />
                     {t.market.currentStop}
                   </p>
                 ) : stopDone ? (
-                  <p className="mt-1 inline-flex items-center gap-1 rounded-chip bg-accent-soft px-3 text-sm font-bold text-accent-ink">
+                  <p className="mt-1 inline-flex items-center gap-1 rounded-chip bg-good-soft px-3 text-sm font-bold text-good-ink">
                     <Icon name="check" size={14} />
                     {t.market.stopDone}
                   </p>
@@ -202,7 +202,7 @@ function CheckButton({ checked, label, onClick, big = false }: { checked: boolea
       animate={checked ? { scale: [1, 1.14, 1] } : { scale: 1 }}
       transition={checked ? { duration: 0.42, ease: ease.out } : spring.press}
       className={`relative inline-flex shrink-0 items-center justify-center border-2 transition-colors duration-200 ${size} ${
-        checked ? 'animate-resolved border-accent bg-accent text-white' : 'border-line-strong/70 bg-surface text-transparent hover:border-accent'
+        checked ? 'animate-resolved border-good bg-good text-white' : 'border-line-strong bg-surface text-transparent hover:border-good'
       }`}
     >
       {checked ? <AnimatedCheck key="on" size={big ? 30 : 26} /> : <Icon name="check" size={big ? 30 : 26} strokeWidth={2.6} />}
@@ -244,7 +244,7 @@ function MarketRow({
       data-checked={checked}
       data-changed={changed || undefined}
       className={`rounded-2xl border p-3 transition-colors duration-300 ${
-        changed ? 'border-accent bg-accent-soft/60 ring-2 ring-accent/40' : checked ? 'border-accent/30 bg-accent-soft/40' : 'border-line bg-canvas'
+        changed ? 'border-accent bg-accent-soft/60 ring-2 ring-accent/40' : checked ? 'border-good/30 bg-good-soft/50' : 'border-line bg-canvas'
       }`}
     >
       {changed && (
@@ -255,7 +255,7 @@ function MarketRow({
       <div className="flex items-start gap-3">
         <CheckButton big checked={checked} label={t.market.checkLabel(line.productName)} onClick={onToggle} />
         <div className="min-w-0 flex-1">
-          <p className={`text-lg font-bold leading-snug transition-colors ${checked ? 'text-ink-soft line-through decoration-accent/60 decoration-2' : ''}`}>
+          <p className={`text-lg font-bold leading-snug transition-colors ${checked ? 'text-ink-soft line-through decoration-good/60 decoration-2' : ''}`}>
             <span className="num text-accent-ink">{formatCount(line.qty)} × </span>
             <BidiText text={line.productName} />
           </p>
@@ -353,10 +353,10 @@ function ProgressDock({ done, total, next }: { done: number; total: number; next
           role="status"
           aria-live="polite"
           data-testid="market-dock"
-          className="surface-night pointer-events-auto flex min-h-[60px] items-center gap-3 rounded-[20px] px-3 py-2 text-night-ink shadow-float"
+          className="surface-coal pointer-events-auto flex min-h-[60px] items-center gap-3 rounded-[20px] px-3 py-2 text-coal-ink shadow-raised"
         >
-          <ProgressRing value={total ? done / total : 0} size={44} stroke={4} trackClass="text-night-ink/20" arcClass="text-saffron">
-            {all ? <Icon name="check" size={20} className="text-saffron-bright" /> : null}
+          <ProgressRing value={total ? done / total : 0} size={44} stroke={4} trackClass="text-white/20" arcClass="text-good-bright">
+            {all ? <Icon name="check" size={20} className="text-good-bright" /> : null}
           </ProgressRing>
           <div className="min-w-0 flex-1">
             <AnimatePresence mode="wait" initial={false}>
@@ -372,7 +372,7 @@ function ProgressDock({ done, total, next }: { done: number; total: number; next
               </motion.p>
             </AnimatePresence>
             {!all && next && (
-              <p className="truncate text-sm text-night-soft">
+              <p className="truncate text-sm text-coal-soft">
                 <BidiText text={t.market.nextStop(next)} />
               </p>
             )}

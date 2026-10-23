@@ -1,15 +1,18 @@
 /* HomeMapHero. Colours are custom properties: redefine them on .hb-hero (or an ancestor) to re-theme. */
+/* default (dark) tone sits on the deep-red hero: white dots, green «hot» malls, light-red arcs with a white comet */
 .hb-hero {
-  --hero-dot: #9fd4cc;
-  --hero-hot: #f2b33d;
-  --hero-arc: #63d6c7;
-  --hero-label: #f4efe6;
-  --hero-halo: rgba(13, 30, 29, 0.88);
-  --hero-ring: rgba(159, 212, 204, 0.16);
-  --hero-glow: rgba(99, 214, 199, 0.16);
-  --hero-chip-bg: rgba(255, 255, 255, 0.09);
-  --hero-chip-text: #f4efe6;
-  --hero-chip-soft: rgba(244, 239, 230, 0.7);
+  --hero-dot: rgba(255, 255, 255, 0.78);
+  --hero-hot: #6bd49a;
+  /* a translucent green ring over red turns muddy: the pulse is white on the red hero */
+  --hero-pulse: #ffffff;
+  --hero-arc: #ff9aa1;
+  --hero-label: #ffffff;
+  --hero-halo: rgba(110, 12, 20, 0.9);
+  --hero-ring: rgba(255, 255, 255, 0.18);
+  --hero-glow: rgba(255, 120, 128, 0.2);
+  --hero-chip-bg: rgba(255, 255, 255, 0.12);
+  --hero-chip-text: #ffffff;
+  --hero-chip-soft: rgba(255, 255, 255, 0.78);
   --hero-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --hx: 0;
   --hy: 0;
@@ -18,16 +21,17 @@
   -webkit-user-select: none;
 }
 .hb-hero[data-tone='light'] {
-  --hero-dot: #0a6b6b;
-  --hero-hot: #d48a00;
-  --hero-arc: #0a6b6b;
-  --hero-label: #231f1a;
-  --hero-halo: rgba(250, 247, 242, 0.92);
-  --hero-ring: rgba(10, 107, 107, 0.13);
-  --hero-glow: rgba(232, 163, 23, 0.13);
-  --hero-chip-bg: rgba(255, 255, 255, 0.78);
-  --hero-chip-text: #231f1a;
-  --hero-chip-soft: #5e564b;
+  --hero-dot: #d91e2b;
+  --hero-hot: #1b8a4b;
+  --hero-pulse: #1b8a4b;
+  --hero-arc: #d91e2b;
+  --hero-label: #1b1b1f;
+  --hero-halo: rgba(251, 251, 251, 0.92);
+  --hero-ring: rgba(217, 30, 43, 0.13);
+  --hero-glow: rgba(27, 138, 75, 0.12);
+  --hero-chip-bg: rgba(255, 255, 255, 0.85);
+  --hero-chip-text: #1b1b1f;
+  --hero-chip-soft: #5b5b66;
 }
 
 .hb-hero__layer {
@@ -71,7 +75,7 @@
 
 .hb-hero__pulse {
   fill: none;
-  stroke: var(--hero-hot);
+  stroke: var(--hero-pulse);
   stroke-width: 1.4;
   opacity: 0;
   transform-box: fill-box;
@@ -218,7 +222,7 @@
   -webkit-mask-image: linear-gradient(to bottom, #000 64%, transparent 98%);
   mask-image: linear-gradient(to bottom, #000 64%, transparent 98%);
 }
-/* the chip sits over mall labels: an opaque night pill keeps it legible */
+/* the chip sits over mall labels: an opaque deep-red pill keeps it legible */
 .hb-home-map .hb-hero {
-  --hero-chip-bg: rgba(11, 36, 34, 0.82);
+  --hero-chip-bg: rgba(94, 10, 17, 0.85);
 }

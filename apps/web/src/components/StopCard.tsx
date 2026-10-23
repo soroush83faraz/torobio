@@ -32,14 +32,14 @@ interface Props {
   className?: string;
 }
 
-/** The stop's number disc: teal, the current stop in saffron, a finished stop as a check. */
+/** The stop's number disc: charcoal, the current stop in brand red, a finished stop as a green check. */
 export function StopMarker({ number, current, done, className = '' }: { number: number; current?: boolean; done?: boolean; className?: string }) {
   return (
     <span
       aria-hidden="true"
       data-testid="stop-number"
       className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-extrabold ring-4 ring-canvas ${
-        done ? 'bg-accent-soft text-accent-ink' : current ? 'bg-saffron text-ink shadow-[0_6px_16px_-6px_rgba(232,163,23,0.9)]' : 'surface-night text-night-ink shadow-card'
+        done ? 'bg-good-soft text-good-ink' : current ? 'bg-accent text-white shadow-[0_6px_16px_-6px_rgba(183,24,34,0.8)]' : 'surface-coal text-coal-ink shadow-card'
       } ${className}`}
     >
       {done ? <Icon name="check" size={20} strokeWidth={2.6} /> : new Intl.NumberFormat('fa-IR').format(number)}
@@ -62,7 +62,7 @@ export function StopCard({ stop, number, visitActive, current, done, intro, rend
       data-shop-count={shops.length}
       data-current={current || undefined}
       aria-label={t.plan.stopLabel(number)}
-      className={`relative rounded-card border bg-surface shadow-card ${current ? 'border-saffron/70 ring-2 ring-saffron/30' : 'border-line'} ${className}`}
+      className={`relative rounded-card border bg-surface shadow-card ${current ? 'border-accent/60 ring-2 ring-accent/20' : 'border-line'} ${className}`}
     >
       {timeline && <StopMarker number={number} current={current} done={done} className="absolute -start-11 top-3.5 !h-9 !w-9 !text-sm" />}
       <header className="flex items-start gap-3 px-4 pt-4">
@@ -123,10 +123,10 @@ function OpenStatus({ shop, visitActive }: { shop: StopShop; visitActive: boolea
       {known && (
         <span
           className={`inline-flex items-center gap-1.5 rounded-chip px-2.5 font-semibold ${
-            shop.open === 'open' ? 'bg-accent-soft text-accent-ink' : 'bg-amber-soft text-amber-ink'
+            shop.open === 'open' ? 'bg-good-soft text-good-ink' : 'bg-amber-soft text-amber-ink'
           }`}
         >
-          <span className={`h-2 w-2 rounded-full ${shop.open === 'open' ? 'bg-accent' : 'bg-amber'}`} aria-hidden="true" />
+          <span className={`h-2 w-2 rounded-full ${shop.open === 'open' ? 'bg-good' : 'bg-amber'}`} aria-hidden="true" />
           {shop.open === 'open' ? t.plan.openAtTime : t.plan.closedAtTime}
         </span>
       )}

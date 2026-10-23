@@ -125,7 +125,7 @@ export function CoverageTotal({ covered, total, amount, usesSuggestions, missing
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-lg font-bold">
           <span>
             {label ? `${label} · ${dropLeadingTotalWord(t.total.complete(total))}` : t.total.complete(total)}
-            <span className="text-accent-ink">
+            <span className="text-good-strong">
               {': '}
               {money}
             </span>

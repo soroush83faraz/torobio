@@ -65,8 +65,8 @@ export function ProgressRing({ value, size = 44, stroke = 4, className = '', tra
 
 /** Segmented progress for a short sequence («سؤال ۱ از ۳»): one pill per step, the current one stretches. */
 export function StepDots({ current, total, tone = 'accent' }: { current: number; total: number; tone?: 'accent' | 'light' }) {
-  const on = tone === 'light' ? 'bg-saffron' : 'bg-accent';
-  const off = tone === 'light' ? 'bg-night-ink/25' : 'bg-accent/20';
+  const on = tone === 'light' ? 'bg-white' : 'bg-accent';
+  const off = tone === 'light' ? 'bg-white/30' : 'bg-accent/20';
   return (
     <span aria-hidden="true" className="inline-flex items-center gap-1">
       {Array.from({ length: Math.max(1, total) }, (_, i) => (

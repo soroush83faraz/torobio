@@ -3,7 +3,7 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { Icon, type IconName } from './Icon';
 import { pressFeedback } from './motion/Press';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'saffron';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 type Size = 'md' | 'lg';
 
 /** Handlers motion owns (it redefines their signatures) are not part of the public props. */
@@ -20,12 +20,11 @@ interface Props extends NativeProps {
 
 const VARIANT: Record<Variant, string> = {
   primary:
-    'bg-accent text-white shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_6px_16px_-8px_rgba(7,85,85,0.7)] hover:bg-accent-strong active:bg-accent-strong disabled:bg-line-strong disabled:text-white disabled:shadow-none',
+    'bg-accent text-white shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_6px_16px_-8px_rgba(183,24,34,0.7)] hover:bg-accent-strong active:bg-accent-strong disabled:bg-line disabled:text-ink-soft disabled:shadow-none',
   secondary:
     'bg-surface text-ink border border-line-strong/70 shadow-card hover:bg-sunken active:bg-sunken disabled:text-ink-soft disabled:border-line disabled:shadow-none',
   ghost: 'bg-transparent text-accent-ink hover:bg-accent-soft active:bg-accent-soft disabled:text-ink-soft',
   danger: 'bg-surface text-danger border border-danger/60 hover:bg-danger-soft active:bg-danger-soft',
-  saffron: 'bg-saffron text-ink hover:bg-saffron-bright active:bg-saffron-bright disabled:bg-line disabled:text-ink-soft',
 };
 
 const SIZE: Record<Size, string> = {

@@ -6,7 +6,7 @@ import { motion, useReducedMotion } from 'motion/react';
  */
 export function TypingDots({ className = '', tone = 'ink' }: { className?: string; tone?: 'ink' | 'light' }) {
   const reduced = useReducedMotion();
-  const color = tone === 'light' ? 'bg-night-ink' : 'bg-accent';
+  const color = tone === 'light' ? 'bg-white' : 'bg-accent';
   return (
     <span aria-hidden="true" className={`inline-flex items-center gap-1 ${className}`}>
       {[0, 1, 2].map((i) => (

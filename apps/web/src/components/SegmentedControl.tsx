@@ -58,14 +58,14 @@ export function SegmentedControl<T extends string>({ value, onChange, options, l
               onClick={() => onChange(o.value)}
               onKeyDown={(e) => onKeyDown(e, i)}
               className={`relative flex min-h-touch flex-1 items-center justify-center gap-1.5 rounded-control px-2 text-sm font-bold transition-colors duration-200 ${
-                selected ? 'text-night-ink' : 'text-ink-soft hover:text-ink'
+                selected ? 'text-white' : 'text-ink-soft hover:text-ink'
               }`}
             >
               {selected && (
                 <motion.span
                   layoutId="seg-pill"
                   aria-hidden="true"
-                  className="absolute inset-0 rounded-control surface-night shadow-[0_6px_14px_-8px_rgba(11,36,34,0.8)]"
+                  className="absolute inset-0 rounded-control bg-accent shadow-[0_6px_14px_-8px_rgba(183,24,34,0.8)]"
                   transition={spring.layout}
                 />
               )}
@@ -73,7 +73,7 @@ export function SegmentedControl<T extends string>({ value, onChange, options, l
               {o.badge && (
                 <span
                   className={`num relative inline-flex min-w-6 items-center justify-center rounded-full px-1.5 text-xs font-bold ${
-                    selected ? 'bg-saffron text-ink' : 'bg-saffron-soft text-saffron-ink'
+                    selected ? 'bg-white text-accent-ink' : 'bg-accent-soft text-accent-ink'
                   }`}
                 >
                   {o.badge}

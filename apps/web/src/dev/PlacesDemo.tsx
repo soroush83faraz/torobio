@@ -47,7 +47,7 @@ export default function PlacesDemo() {
       )}
       {scene === 'hero' ? (
         <div className="flex-1 space-y-4 overflow-y-auto p-4">
-          <div className="overflow-hidden rounded-[28px]" style={{ background: '#142423' }}>
+          <div className="surface-night overflow-hidden rounded-[28px]">
             <HomeMapHero tone="dark" />
           </div>
           <div className="overflow-hidden rounded-[28px] border border-line bg-canvas">

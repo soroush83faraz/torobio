@@ -153,7 +153,7 @@ export function AssistantSheet({ open, state, context, contextLabel, autoText, o
             <div
               data-testid="assist-result"
               data-kind={!result.supported ? 'unsupported' : 'unchanged'}
-              className={`flex items-start gap-2 rounded-xl px-4 py-3 text-base ${result.supported ? 'bg-accent-soft' : 'bg-amber-soft'}`}
+              className={`flex items-start gap-2 rounded-xl px-4 py-3 text-base ${result.supported ? 'bg-good-soft' : 'bg-amber-soft'}`}
             >
               <Icon name={result.supported ? 'info' : 'alert'} size={18} className="mt-1 shrink-0" />
               <p className="min-w-0 [overflow-wrap:anywhere]">

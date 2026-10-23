@@ -4,10 +4,10 @@ import { Icon, type IconName } from './Icon';
 
 /** The six item states. Always icon + text, never colour alone. */
 const STYLE: Record<ItemState, { icon: IconName; cls: string }> = {
-  exact: { icon: 'badge-check', cls: 'bg-accent text-white border-transparent' },
-  suggested: { icon: 'spark', cls: 'bg-accent-soft text-accent-ink border-accent/30' },
+  exact: { icon: 'badge-check', cls: 'bg-good-strong text-white border-transparent' },
+  suggested: { icon: 'spark', cls: 'bg-good-soft text-good-ink border-good/30' },
   alternative: { icon: 'swap', cls: 'bg-sunken text-ink border-transparent' },
-  needs_info: { icon: 'question', cls: 'bg-saffron-soft text-saffron-ink border-saffron/50' },
+  needs_info: { icon: 'question', cls: 'bg-amber-soft text-amber-ink border-amber/60' },
   not_found: { icon: 'x-circle', cls: 'bg-danger-soft text-danger border-transparent' },
   no_price: { icon: 'tag-off', cls: 'bg-sunken text-ink-soft border-dashed border-line-strong' },
 };

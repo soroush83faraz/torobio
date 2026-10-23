@@ -171,7 +171,7 @@ function AnswerCard({
   const dimmed = !!picked && !chosen;
   const disabled = busy || !!picked;
   const tone = chosen
-    ? 'border-accent bg-accent text-white shadow-[0_8px_18px_-10px_rgba(7,85,85,0.9)]'
+    ? 'border-accent bg-accent text-white shadow-[0_8px_18px_-10px_rgba(183,24,34,0.8)]'
     : skip || unsure
       ? 'border-dashed border-line-strong/60 bg-transparent text-ink-soft hover:border-accent/60 hover:bg-accent-soft/40'
       : 'border-line bg-canvas text-ink hover:border-accent/70 hover:bg-accent-soft/50';

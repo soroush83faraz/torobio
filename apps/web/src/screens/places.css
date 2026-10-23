@@ -3,42 +3,47 @@
  * Tailwind with the existing tokens. Logical properties only.
  */
 .hb-places {
-  --hb-brand: #0a6b6b;
-  --hb-brand-strong: #085555;
-  --hb-brand-soft: #dff0ee;
-  --hb-accent: #e8a317;
-  --hb-accent-ink: #4a2f00;
-  --hb-hero: #142423;
+  --hb-brand: #d91e2b;
+  --hb-brand-strong: #b71822;
+  --hb-brand-soft: #fdecee;
+  --hb-good: #1b8a4b;
+  --hb-good-strong: #14703b;
+  --hb-good-bright: #6bd49a;
+  --hb-hero: #1b1b1f;
+  --hb-hero-2: #2b2b32;
   --hb-hero-text: #ffffff;
-  --hb-hero-soft: #b9cfcb;
-  --hb-ring-track: #ece6dc;
-  --hb-ring-partial: #c58a00;
-  --hb-open: #1f8a5b;
-  --hb-closed: #9b2f28;
-  --hb-unknown: #8f8575;
+  --hb-hero-soft: #c8c8ce;
+  --hb-ring-track: #ececef;
+  /* a deeper amber than the token so the partial arc keeps 3:1 against white */
+  --hb-ring-partial: #b8890a;
+  --hb-open: #1b8a4b;
+  --hb-open-ink: #14703b;
+  --hb-closed: #a3121b;
+  --hb-unknown: #8a8a93;
+  --hb-unknown-ink: #5b5b66;
   --hb-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hb-sheet [data-sheet-header] + div {
   scrollbar-width: thin;
-  scrollbar-color: rgba(143, 133, 117, 0.45) transparent;
+  scrollbar-color: rgba(138, 138, 147, 0.45) transparent;
 }
 .hb-sheet {
   box-shadow:
-    0 -1px 0 rgba(35, 31, 26, 0.06),
-    0 -10px 34px rgba(20, 36, 35, 0.2);
+    0 -1px 0 rgba(27, 27, 31, 0.06),
+    0 -10px 34px rgba(27, 27, 31, 0.2);
 }
 
-/* ---- banner ---- */
+/* ---- banner: charcoal, the green check is the good news ---- */
 .hb-banner {
   background: var(--hb-hero);
-  background-image: radial-gradient(120% 140% at 100% 0%, rgba(232, 163, 23, 0.18) 0%, transparent 55%);
+  background-image: linear-gradient(165deg, var(--hb-hero-2) 0%, var(--hb-hero) 70%);
   color: var(--hb-hero-text);
 }
 .hb-banner__mark {
-  background: var(--hb-accent);
-  color: var(--hb-hero);
-  box-shadow: 0 0 0 5px rgba(232, 163, 23, 0.18);
+  background: var(--hb-good);
+  color: #fff;
+  box-shadow: 0 0 0 5px rgba(107, 212, 154, 0.18);
 }
 .hb-banner__check {
   stroke-dasharray: 22;
@@ -64,8 +69,8 @@
 .hb-card.is-selected {
   box-shadow:
     0 0 0 2px var(--hb-brand),
-    0 2px 4px rgba(20, 36, 35, 0.06),
-    0 12px 28px rgba(20, 36, 35, 0.12);
+    0 2px 4px rgba(27, 27, 31, 0.06),
+    0 12px 28px rgba(27, 27, 31, 0.12);
 }
 .hb-card > button:first-child:focus-visible {
   outline-offset: -3px;
@@ -83,27 +88,28 @@
 .hb-badge {
   line-height: 1.75;
 }
+/* «همه‌چیز یک‌جا»: the one solid green badge */
 .hb-badge--one {
-  background: var(--hb-hero);
+  background: var(--hb-good-strong);
   color: #fff;
 }
 .hb-badge--one svg {
-  color: var(--hb-accent);
+  color: #fff;
 }
 .hb-live-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--hb-open);
-  box-shadow: 0 0 0 0 rgba(31, 138, 91, 0.5);
+  box-shadow: 0 0 0 0 rgba(27, 138, 75, 0.5);
   animation: hb-live 1.8s ease-out infinite;
 }
 @keyframes hb-live {
   70% {
-    box-shadow: 0 0 0 6px rgba(31, 138, 91, 0);
+    box-shadow: 0 0 0 6px rgba(27, 138, 75, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(31, 138, 91, 0);
+    box-shadow: 0 0 0 0 rgba(27, 138, 75, 0);
   }
 }
 
@@ -114,7 +120,7 @@
   background: var(--hb-unknown);
 }
 .hb-open--open {
-  color: #17603f;
+  color: var(--hb-open-ink);
 }
 .hb-open--open .hb-open__dot {
   background: var(--hb-open);
@@ -126,7 +132,7 @@
   background: var(--hb-closed);
 }
 .hb-open--unknown {
-  color: #5e564b;
+  color: var(--hb-unknown-ink);
 }
 
 /* coverage ring: the arc sweeps in once */
@@ -139,7 +145,7 @@
   animation: hb-ring 0.9s var(--hb-ease) 0.15s backwards;
 }
 .hb-ring.is-full .hb-ring__arc {
-  stroke: var(--hb-brand);
+  stroke: var(--hb-good);
 }
 @keyframes hb-ring {
   from {
@@ -163,13 +169,13 @@
   visibility: visible;
 }
 .hb-thumb {
-  box-shadow: inset 0 0 0 1px rgba(35, 31, 26, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(27, 27, 31, 0.08);
 }
 
 .hb-pick {
   background: var(--hb-brand);
   color: #fff;
-  box-shadow: 0 1px 1px rgba(8, 85, 85, 0.3), 0 8px 18px rgba(10, 107, 107, 0.28);
+  box-shadow: 0 1px 1px rgba(183, 24, 34, 0.3), 0 8px 18px rgba(217, 30, 43, 0.26);
   animation: hb-pick-in 0.36s var(--hb-ease);
   transition:
     background-color 0.15s ease,
@@ -190,7 +196,7 @@
 
 /* skeleton shimmer */
 .hb-shimmer {
-  background: linear-gradient(90deg, #efe9df 0%, #f7f3ec 40%, #efe9df 80%) 0 0 / 300% 100%;
+  background: linear-gradient(90deg, #efeff2 0%, #f8f8fa 40%, #efeff2 80%) 0 0 / 300% 100%;
   animation: hb-shimmer 1.4s ease-in-out infinite;
 }
 @keyframes hb-shimmer {

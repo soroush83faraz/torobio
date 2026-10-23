@@ -441,12 +441,12 @@ export function Workspace() {
         {isStorageAvailable() ? (
           <p
             data-testid="saved-indicator"
-            className={`inline-flex items-center rounded-lg px-1 text-sm text-ink-soft transition-colors ${pulse ? 'animate-saved text-accent-ink' : ''}`}
+            className={`inline-flex items-center rounded-lg px-1 text-sm text-ink-soft transition-colors ${pulse ? 'animate-saved text-good-ink' : ''}`}
           >
             {t.workspace.saved}
           </p>
         ) : (
-          <p role="status" className="rounded-control bg-saffron-soft px-4 py-2 text-sm text-saffron-ink" data-testid="storage-notice">
+          <p role="status" className="rounded-control bg-amber-soft px-4 py-2 text-sm text-amber-ink" data-testid="storage-notice">
             {t.workspace.storageUnavailable}
           </p>
         )}
@@ -506,10 +506,10 @@ export function Workspace() {
               onClick={action.run}
               disabled={!data.resolve || !data.plan || busy}
               data-testid="primary-action"
-              className="pointer-events-auto !min-h-[58px] justify-between rounded-[20px] !bg-night-2 pe-2 ps-5 text-lg font-extrabold !shadow-float hover:!bg-night disabled:!bg-night-2 disabled:opacity-80"
+              className="pointer-events-auto !min-h-[58px] justify-between rounded-[20px] pe-2 ps-5 text-lg font-extrabold !shadow-float disabled:!shadow-none"
             >
               {action.label}
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-[14px] bg-saffron text-ink">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-[14px] bg-white text-accent">
                 <Icon name="arrow-forward" size={22} />
               </span>
             </Button>

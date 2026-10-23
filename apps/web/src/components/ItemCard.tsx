@@ -73,11 +73,11 @@ export function ItemCard({ req, res, active, onChange, onRemove, onActivate, onD
         data-dead-end={dead || undefined}
         data-item={req.id}
         className={`relative rounded-card border bg-surface p-4 transition-[box-shadow,border-color] duration-300 ${
-          waiting ? 'border-saffron/45' : 'border-line'
-        } ${active ? 'shadow-raised ring-2 ring-saffron/35' : 'shadow-card'} ${flash ? 'animate-resolved' : ''}`}
+          waiting ? 'border-amber/60' : 'border-line'
+        } ${active ? 'shadow-raised ring-2 ring-amber/40' : 'shadow-card'} ${flash ? 'animate-resolved' : ''}`}
       >
         <div className="flex items-start gap-3">
-          <ProductThumb src={hasProduct ? imageOf(res.product) : undefined} icon={thumbIcon} tone={waiting ? 'saffron' : 'neutral'} size={60} />
+          <ProductThumb src={hasProduct ? imageOf(res.product) : undefined} icon={thumbIcon} tone={waiting ? 'amber' : 'neutral'} size={60} />
           <div className="min-w-0 flex-1">
             <h3 className="text-base font-extrabold leading-snug [overflow-wrap:anywhere]">
               <BidiText text={req.text} />
@@ -86,7 +86,7 @@ export function ItemCard({ req, res, active, onChange, onRemove, onActivate, onD
               {dead ? (
                 <span
                   data-testid="dead-end-badge"
-                  className="inline-flex items-center gap-1 rounded-chip border border-saffron/60 bg-saffron-soft px-2.5 py-0.5 text-sm font-bold leading-6 text-saffron-ink"
+                  className="inline-flex items-center gap-1 rounded-chip border border-danger/30 bg-danger-soft px-2.5 py-0.5 text-sm font-bold leading-6 text-danger"
                 >
                   <Icon name="x-circle" size={16} />
                   {t.item.notFoundBadge}

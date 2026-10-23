@@ -99,26 +99,48 @@ const ratio = (a: string, b: string) => {
 describe('WCAG AA contrast of design tokens', () => {
   // keep in sync with tailwind.config.js
   const pairs: [string, string, string][] = [
-    ['ink on canvas', '#1E1A15', '#F8F3EB'],
-    ['ink-soft on canvas', '#5A5146', '#F8F3EB'],
-    ['ink-soft on sunken', '#5A5146', '#F0E8DB'],
-    ['ink-soft on surface', '#5A5146', '#FFFFFF'],
-    ['white on accent', '#FFFFFF', '#0A6B6B'],
-    ['accent-ink on accent-soft', '#064848', '#DDEFEC'],
-    ['accent-ink on canvas', '#064848', '#F8F3EB'],
-    ['amber/saffron-ink on saffron-soft', '#6B4300', '#FCEFD0'],
-    ['danger on danger-soft', '#9B2F28', '#FBE9E7'],
-    ['danger on surface', '#9B2F28', '#FFFFFF'],
-    ['ink on saffron-soft', '#1E1A15', '#FCEFD0'],
-    ['ink on saffron (hero send button)', '#1E1A15', '#E8A317'],
-    ['terracotta-ink on terracotta-soft', '#8A3818', '#F8E5DA'],
-    ['night-ink on night (hero)', '#F7EFE2', '#0B2422'],
-    ['night-soft on night-3 (lightest hero gradient stop)', '#BCD2CD', '#165A55'],
-    ['white on night-2 (floating action)', '#FFFFFF', '#0F3A37'],
-    ['saffron-bright on night (toast action)', '#F4C155', '#0B2422'],
+    ['ink on canvas', '#1B1B1F', '#FBFBFB'],
+    ['ink-soft on canvas', '#5B5B66', '#FBFBFB'],
+    ['ink-soft on sunken', '#5B5B66', '#F2F2F4'],
+    ['ink-soft on surface', '#5B5B66', '#FFFFFF'],
+    ['ink-soft on line (disabled primary button)', '#5B5B66', '#E7E7EA'],
+    ['placeholder on surface', '#6B6B75', '#FFFFFF'],
+    ['white on accent (primary button, tab pill, send)', '#FFFFFF', '#D91E2B'],
+    ['white on accent-strong (hover)', '#FFFFFF', '#B71822'],
+    ['accent on canvas (red text)', '#D91E2B', '#FBFBFB'],
+    ['accent on surface (red text)', '#D91E2B', '#FFFFFF'],
+    ['accent-ink on accent-soft', '#7A0F16', '#FDECEE'],
+    ['accent-ink on canvas', '#7A0F16', '#FBFBFB'],
+    ['white on good-strong (exact badge, recommended pin, one-stop badge)', '#FFFFFF', '#14703B'],
+    ['good-ink on good-soft', '#0E4A27', '#E3F4EA'],
+    ['good-strong on surface (complete total)', '#14703B', '#FFFFFF'],
+    ['good-strong on good-soft', '#14703B', '#E3F4EA'],
+    ['amber-ink on amber-soft', '#5E4600', '#FBF3DC'],
+    ['ink on amber-soft', '#1B1B1F', '#FBF3DC'],
+    ['danger on danger-soft', '#A3121B', '#FBE9EA'],
+    ['danger on surface', '#A3121B', '#FFFFFF'],
+    ['night-ink on night (hero)', '#FFFFFF', '#7E0F18'],
+    ['night-ink on night-3 (lightest hero gradient stop)', '#FFFFFF', '#B71822'],
+    ['night-soft on night-3 (lightest hero gradient stop)', '#FFD6D9', '#B71822'],
+    ['coal-ink on coal (toast, dock)', '#FFFFFF', '#1B1B1F'],
+    ['coal-soft on coal-2 (lightest charcoal stop)', '#C8C8CE', '#2B2B32'],
+    ['good-bright on coal-2 (green news on charcoal)', '#6BD49A', '#2B2B32'],
   ];
   for (const [name, fg, bg] of pairs) {
     it(`${name} >= 4.5:1`, () => expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5));
   }
-  it('non-text outline (line-strong on canvas) >= 3:1', () => expect(ratio('#8C8172', '#F8F3EB')).toBeGreaterThanOrEqual(3));
+  // non-text: control outlines, icons, focus rings, check-marks
+  const shapes: [string, string, string][] = [
+    ['line-strong on canvas (input/chip outline)', '#8A8A93', '#FBFBFB'],
+    ['line-strong on surface', '#8A8A93', '#FFFFFF'],
+    ['line-strong on sunken', '#8A8A93', '#F2F2F4'],
+    ['white check on good (checked box)', '#FFFFFF', '#1B8A4B'],
+    ['good on surface (dots, unchecked hover)', '#1B8A4B', '#FFFFFF'],
+    ['focus ring (ink) on canvas', '#1B1B1F', '#FBFBFB'],
+    ['focus ring (white) on night-3', '#FFFFFF', '#B71822'],
+    ['partial ring arc on surface', '#B8890A', '#FFFFFF'],
+  ];
+  for (const [name, fg, bg] of shapes) {
+    it(`${name} >= 3:1`, () => expect(ratio(fg, bg)).toBeGreaterThanOrEqual(3));
+  }
 });

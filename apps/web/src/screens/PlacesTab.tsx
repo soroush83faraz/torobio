@@ -130,7 +130,8 @@ function progressText(s: number): string {
 
 /**
  * The list's teaser: once nothing is left to answer and the server named a best mall, «همهٔ ۴ مورد یک‌جا پیدا
- * می‌شود: پاساژ …» with a way to the map. A dusk card: one of the screen's few dark surfaces, so it reads as news.
+ * می‌شود: پاساژ …» with a way to the map. A charcoal card with a green mark: one of the screen's few dark surfaces,
+ * so it reads as (good) news.
  */
 export function PlacesTeaser({ mall, onOpen }: { mall: PlaceMall; onOpen: () => void }) {
   const full = mall.covered >= mall.total;
@@ -143,19 +144,19 @@ export function PlacesTeaser({ mall, onOpen }: { mall: PlaceMall; onOpen: () => 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: ease.out, delay: 0.15 }}
       data-testid="places-teaser"
-      className="surface-night group relative mt-4 flex w-full items-center gap-3 overflow-hidden rounded-card p-4 text-start shadow-hero"
+      className="surface-coal group relative mt-4 flex w-full items-center gap-3 overflow-hidden rounded-card p-4 text-start shadow-raised"
     >
       <span className="girih" aria-hidden="true" />
-      <span className="relative grid h-12 w-12 shrink-0 place-items-center rounded-full bg-saffron text-ink shadow-[0_6px_16px_-6px_rgba(232,163,23,0.8)]" aria-hidden="true">
+      <span className="relative grid h-12 w-12 shrink-0 place-items-center rounded-full bg-good text-white shadow-[0_6px_16px_-6px_rgba(27,138,75,0.8)]" aria-hidden="true">
         <Icon name={full ? 'check' : 'pin'} size={24} />
       </span>
       <span className="relative min-w-0 flex-1">
-        <span className="block text-base font-extrabold leading-snug text-night-ink">
+        <span className="block text-base font-extrabold leading-snug text-coal-ink">
           {teaserLine(mall)}: <BidiText text={buildingName(mall.name)} />
         </span>
-        <span className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-night-soft">
+        <span className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-coal-soft">
           {mall.totalToman != null && <span className="num">{formatTomanCompact(mall.totalToman)}</span>}
-          <span className="inline-flex items-center gap-1 font-bold text-saffron-bright">
+          <span className="inline-flex items-center gap-1 font-bold text-good-bright">
             {t.places.teaserCta}
             <Icon name="arrow-forward" size={16} className="transition-transform duration-200 group-hover:-translate-x-1" />
           </span>
