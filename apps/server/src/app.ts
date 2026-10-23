@@ -93,7 +93,7 @@ export async function buildApp(opts: BuildOptions): Promise<{ app: FastifyInstan
     reply.header('Referrer-Policy', 'no-referrer');
     reply.header('Cross-Origin-Opener-Policy', 'same-origin');
     reply.header('Cross-Origin-Resource-Policy', 'same-origin');
-    reply.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+    reply.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self), payment=()');
     reply.header('Content-Security-Policy', CSP);
     if (config.nodeEnv === 'production') reply.header('Strict-Transport-Security', 'max-age=15552000');
     if (req.url.startsWith('/api/')) reply.header('Cache-Control', 'no-store');
