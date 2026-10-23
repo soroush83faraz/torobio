@@ -1,0 +1,214 @@
+/*
+ * PlacesView skin. Colours are custom properties on .hb-places (re-themable by the design system); the rest is
+ * Tailwind with the existing tokens. Logical properties only.
+ */
+.hb-places {
+  --hb-brand: #0a6b6b;
+  --hb-brand-strong: #085555;
+  --hb-brand-soft: #dff0ee;
+  --hb-accent: #e8a317;
+  --hb-accent-ink: #4a2f00;
+  --hb-hero: #142423;
+  --hb-hero-text: #ffffff;
+  --hb-hero-soft: #b9cfcb;
+  --hb-ring-track: #ece6dc;
+  --hb-ring-partial: #c58a00;
+  --hb-open: #1f8a5b;
+  --hb-closed: #9b2f28;
+  --hb-unknown: #8f8575;
+  --hb-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hb-sheet [data-sheet-header] + div {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(143, 133, 117, 0.45) transparent;
+}
+.hb-sheet {
+  box-shadow:
+    0 -1px 0 rgba(35, 31, 26, 0.06),
+    0 -10px 34px rgba(20, 36, 35, 0.2);
+}
+
+/* ---- banner ---- */
+.hb-banner {
+  background: var(--hb-hero);
+  background-image: radial-gradient(120% 140% at 100% 0%, rgba(232, 163, 23, 0.18) 0%, transparent 55%);
+  color: var(--hb-hero-text);
+}
+.hb-banner__mark {
+  background: var(--hb-accent);
+  color: var(--hb-hero);
+  box-shadow: 0 0 0 5px rgba(232, 163, 23, 0.18);
+}
+.hb-banner__check {
+  stroke-dasharray: 22;
+  stroke-dashoffset: 22;
+  animation: hb-draw 0.6s var(--hb-ease) 0.25s forwards;
+}
+.hb-banner__sub {
+  color: var(--hb-hero-soft);
+}
+@keyframes hb-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---- cards ---- */
+.hb-card {
+  transition:
+    box-shadow 0.3s var(--hb-ease),
+    border-color 0.2s ease,
+    transform 0.3s var(--hb-ease);
+}
+.hb-card.is-selected {
+  box-shadow:
+    0 0 0 2px var(--hb-brand),
+    0 2px 4px rgba(20, 36, 35, 0.06),
+    0 12px 28px rgba(20, 36, 35, 0.12);
+}
+.hb-card > button:first-child:focus-visible {
+  outline-offset: -3px;
+}
+.hb-card-in {
+  animation: hb-card-in 0.5s var(--hb-ease) both;
+}
+@keyframes hb-card-in {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+.hb-badge {
+  line-height: 1.75;
+}
+.hb-badge--one {
+  background: var(--hb-hero);
+  color: #fff;
+}
+.hb-badge--one svg {
+  color: var(--hb-accent);
+}
+.hb-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--hb-open);
+  box-shadow: 0 0 0 0 rgba(31, 138, 91, 0.5);
+  animation: hb-live 1.8s ease-out infinite;
+}
+@keyframes hb-live {
+  70% {
+    box-shadow: 0 0 0 6px rgba(31, 138, 91, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(31, 138, 91, 0);
+  }
+}
+
+.hb-open__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hb-unknown);
+}
+.hb-open--open {
+  color: #17603f;
+}
+.hb-open--open .hb-open__dot {
+  background: var(--hb-open);
+}
+.hb-open--closed {
+  color: var(--hb-closed);
+}
+.hb-open--closed .hb-open__dot {
+  background: var(--hb-closed);
+}
+.hb-open--unknown {
+  color: #5e564b;
+}
+
+/* coverage ring: the arc sweeps in once */
+.hb-ring__track {
+  stroke: var(--hb-ring-track);
+}
+.hb-ring__arc {
+  stroke: var(--hb-ring-partial);
+  stroke-dashoffset: var(--hb-ring-off);
+  animation: hb-ring 0.9s var(--hb-ease) 0.15s backwards;
+}
+.hb-ring.is-full .hb-ring__arc {
+  stroke: var(--hb-brand);
+}
+@keyframes hb-ring {
+  from {
+    stroke-dashoffset: var(--hb-ring-len);
+  }
+}
+
+/* expandable items: grid rows 0fr -> 1fr animates the real height */
+.hb-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.38s var(--hb-ease),
+    opacity 0.25s ease;
+  visibility: hidden;
+}
+.hb-collapse.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+}
+.hb-thumb {
+  box-shadow: inset 0 0 0 1px rgba(35, 31, 26, 0.08);
+}
+
+.hb-pick {
+  background: var(--hb-brand);
+  color: #fff;
+  box-shadow: 0 1px 1px rgba(8, 85, 85, 0.3), 0 8px 18px rgba(10, 107, 107, 0.28);
+  animation: hb-pick-in 0.36s var(--hb-ease);
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+.hb-pick:hover {
+  background: var(--hb-brand-strong);
+}
+.hb-pick:active {
+  transform: scale(0.985);
+}
+@keyframes hb-pick-in {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+}
+
+/* skeleton shimmer */
+.hb-shimmer {
+  background: linear-gradient(90deg, #efe9df 0%, #f7f3ec 40%, #efe9df 80%) 0 0 / 300% 100%;
+  animation: hb-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes hb-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hb-banner__check {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .hb-live-dot,
+  .hb-shimmer {
+    animation: none;
+  }
+}
