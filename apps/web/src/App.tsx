@@ -1,4 +1,4 @@
-import { Component, useEffect, useState, type ReactNode } from 'react';
+import { Component, lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { AppHeader } from './components/AppHeader';
 import { Button } from './components/Button';
@@ -12,6 +12,9 @@ import { ShareImport } from './screens/ShareImport';
 import { Workspace } from './screens/Workspace';
 import { AboutSheet } from './sheets/AboutSheet';
 import { ResumeSheet } from './sheets/ResumeSheet';
+
+/** Dev-only map harness (#/dev/places); compiled out of production builds. */
+const PlacesDemo = import.meta.env.DEV ? lazy(() => import('./dev/PlacesDemo')) : null;
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -90,6 +93,7 @@ export function App() {
             <Route path="/" element={<Home />} />
             <Route path="/plan/:id" element={<Workspace />} />
             <Route path="/s/:data" element={<ShareImport />} />
+            {PlacesDemo && <Route path="/dev/places" element={<Suspense fallback={null}><PlacesDemo /></Suspense>} />}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

@@ -1,0 +1,208 @@
+/* HomeMapHero. Colours are custom properties: redefine them on .hb-hero (or an ancestor) to re-theme. */
+.hb-hero {
+  --hero-dot: #9fd4cc;
+  --hero-hot: #f2b33d;
+  --hero-arc: #63d6c7;
+  --hero-label: #f4efe6;
+  --hero-halo: rgba(13, 30, 29, 0.88);
+  --hero-ring: rgba(159, 212, 204, 0.16);
+  --hero-glow: rgba(99, 214, 199, 0.16);
+  --hero-chip-bg: rgba(255, 255, 255, 0.09);
+  --hero-chip-text: #f4efe6;
+  --hero-chip-soft: rgba(244, 239, 230, 0.7);
+  --hero-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --hx: 0;
+  --hy: 0;
+  isolation: isolate;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.hb-hero[data-tone='light'] {
+  --hero-dot: #0a6b6b;
+  --hero-hot: #d48a00;
+  --hero-arc: #0a6b6b;
+  --hero-label: #231f1a;
+  --hero-halo: rgba(250, 247, 242, 0.92);
+  --hero-ring: rgba(10, 107, 107, 0.13);
+  --hero-glow: rgba(232, 163, 23, 0.13);
+  --hero-chip-bg: rgba(255, 255, 255, 0.78);
+  --hero-chip-text: #231f1a;
+  --hero-chip-soft: #5e564b;
+}
+
+.hb-hero__layer {
+  transform: translate(calc(var(--hx) * var(--depth) * 7px), calc(var(--hy) * var(--depth) * 6px));
+  will-change: transform;
+}
+
+.hb-hero__ring {
+  fill: none;
+  stroke: var(--hero-ring);
+  stroke-width: 1;
+  stroke-dasharray: 2 5;
+  animation: hb-hero-fade 1.6s ease both;
+}
+
+.hb-hero__dot {
+  fill: var(--hero-dot);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hb-hero-wake 0.9s var(--hero-ease) backwards;
+}
+.hb-hero__hot {
+  fill: var(--hero-hot);
+  stroke: var(--hero-halo);
+  stroke-width: 1.2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hb-hero-wake 0.9s var(--hero-ease) backwards;
+}
+@keyframes hb-hero-wake {
+  from {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+}
+@keyframes hb-hero-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.hb-hero__pulse {
+  fill: none;
+  stroke: var(--hero-hot);
+  stroke-width: 1.4;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hb-hero-pulse 3.4s var(--hero-ease) infinite;
+}
+@keyframes hb-hero-pulse {
+  0% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(3.4);
+  }
+}
+
+.hb-hero__arc {
+  fill: none;
+  stroke: var(--hero-arc);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: var(--len) var(--len);
+  stroke-dashoffset: var(--len);
+  animation: hb-hero-arc 7.5s var(--hero-ease) var(--delay, 0s) infinite;
+}
+@keyframes hb-hero-arc {
+  0% {
+    stroke-dashoffset: var(--len);
+    opacity: 1;
+  }
+  30% {
+    stroke-dashoffset: 0;
+  }
+  64% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92%,
+  100% {
+    stroke-dashoffset: calc(var(--len) * -1);
+    opacity: 0.4;
+  }
+}
+.hb-hero__comet {
+  fill: #fff;
+  filter: drop-shadow(0 0 3px var(--hero-arc));
+  offset-rotate: 0deg;
+  offset-distance: 0%;
+  opacity: 0;
+  animation: hb-hero-comet 7.5s var(--hero-ease) var(--delay, 0s) infinite;
+}
+.hb-hero[data-tone='light'] .hb-hero__comet {
+  fill: var(--hero-hot);
+}
+@keyframes hb-hero-comet {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  30% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  36%,
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+.hb-hero__label {
+  fill: var(--hero-label);
+  font-size: 15px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--hero-halo);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  animation: hb-hero-fade 0.8s ease backwards;
+}
+
+.hb-hero__chip {
+  background: var(--hero-chip-bg);
+  color: var(--hero-chip-text);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.hb-hero__count {
+  color: var(--hero-chip-soft);
+}
+.hb-hero__live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hero-hot);
+  box-shadow: 0 0 0 0 var(--hero-hot);
+  animation: hb-hero-live 2s ease-out infinite;
+}
+@keyframes hb-hero-live {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--hero-hot) 60%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+
+.hb-hero.is-paused *,
+.hb-hero.is-paused *::before {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hb-hero__arc {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 0.8;
+  }
+  .hb-hero__comet,
+  .hb-hero__pulse {
+    animation: none;
+    opacity: 0;
+  }
+  .hb-hero__layer {
+    transform: none;
+  }
+}
