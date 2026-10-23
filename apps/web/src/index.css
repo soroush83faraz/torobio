@@ -2,12 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* «Bazaar at dusk» — see docs/DESIGN.md. Colours mirror tailwind.config.js. */
+:root {
+  --canvas: #f8f3eb;
+  --night: #0b2422;
+  --accent: #0a6b6b;
+  --saffron: #e8a317;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* khatam (8-point star) lattice, used sparingly: hero surfaces, the assistant avatar, image placeholders */
+  --girih-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23F7EFE2' stroke-width='1'%3E%3Cpath d='M16 16h24v24H16z'/%3E%3Cpath d='M28 11l17 17-17 17-17-17z'/%3E%3Cpath d='M28 0v11M28 45v11M0 28h11M45 28h11'/%3E%3C/g%3E%3C/svg%3E");
+  --girih-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%238C8172' stroke-width='1.2'%3E%3Cpath d='M16 16h24v24H16z'/%3E%3Cpath d='M28 11l17 17-17 17-17-17z'/%3E%3Cpath d='M28 0v11M28 45v11M0 28h11M45 28h11'/%3E%3C/g%3E%3C/svg%3E");
+}
+
 @layer base {
   html {
     font-family: 'Vazirmatn Variable', Vazirmatn, system-ui, sans-serif;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    background: #faf7f2;
+    background: var(--canvas);
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-color: #c9bca8 transparent;
   }
   body {
     @apply bg-canvas text-ink antialiased;
@@ -16,12 +30,23 @@
     line-height: 1.7;
     font-feature-settings: 'kern', 'liga';
     overflow-x: hidden;
+    /* a faint warm light from the top, like a skylight in a bazaar vault */
+    background-image: radial-gradient(120% 60% at 50% -10%, rgba(232, 163, 23, 0.07), transparent 60%);
+    background-repeat: no-repeat;
   }
   h1,
   h2,
   h3 {
     @apply font-bold text-ink;
     line-height: 1.5;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: rgba(232, 163, 23, 0.32);
+    color: inherit;
   }
   button,
   [role='button'],
@@ -38,11 +63,12 @@
   textarea,
   input {
     font: inherit;
+    caret-color: var(--accent);
   }
   :focus-visible {
-    outline: 3px solid #0a6b6b;
+    outline: 3px solid var(--accent);
     outline-offset: 2px;
-    border-radius: 6px;
+    border-radius: 8px;
   }
   /* Latin runs (model codes, brands) stay left-to-right and isolated. */
   bdi {
@@ -61,6 +87,7 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }
@@ -74,6 +101,52 @@
   }
   .tap {
     @apply min-h-touch min-w-touch;
+  }
+  /* prices and counts: digits line up and do not jitter while counting */
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum', 'kern';
+  }
+  /* dark hero surface: deep teal-ink with a saffron glow and the khatam lattice fading out */
+  .surface-night {
+    @apply bg-night text-night-ink;
+    background-image: radial-gradient(90% 70% at 85% 0%, rgba(232, 163, 23, 0.28), transparent 60%),
+      radial-gradient(80% 80% at 0% 100%, rgba(22, 90, 85, 0.9), transparent 70%),
+      linear-gradient(160deg, #0f3a37 0%, #0b2422 70%);
+  }
+  .girih {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: var(--girih-light);
+    background-size: 56px 56px;
+    background-position: center top;
+    opacity: 0.09;
+    -webkit-mask-image: radial-gradient(120% 90% at 100% 0%, #000 10%, transparent 75%);
+    mask-image: radial-gradient(120% 90% at 100% 0%, #000 10%, transparent 75%);
+  }
+  .girih-soft {
+    background-image: var(--girih-dark);
+    background-size: 40px 40px;
+    background-position: center;
+  }
+  /* frosted bars (header, floating action bar, sheets) */
+  .glass {
+    background-color: rgba(248, 243, 235, 0.82);
+    -webkit-backdrop-filter: saturate(1.4) blur(18px);
+    backdrop-filter: saturate(1.4) blur(18px);
+  }
+  /* sheets sit over a dark scrim: nearly opaque so text keeps its contrast, still frosted at the edges */
+  .glass-sheet {
+    background-color: rgba(248, 243, 235, 0.96);
+    -webkit-backdrop-filter: saturate(1.3) blur(24px);
+    backdrop-filter: saturate(1.3) blur(24px);
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -96,32 +169,63 @@
 @keyframes toast-in {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 @keyframes saved-pulse {
   0% {
-    background-color: #dff0ee;
+    background-color: #ddefec;
   }
   100% {
     background-color: transparent;
   }
 }
+@keyframes resolved-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(10, 107, 107, 0.45), 0 1px 1px rgba(64, 44, 20, 0.04);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(10, 107, 107, 0), 0 1px 1px rgba(64, 44, 20, 0.04);
+  }
+}
+@keyframes breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(232, 163, 23, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(232, 163, 23, 0);
+  }
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
 .animate-sheet-in {
-  animation: sheet-in 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: sheet-in 0.42s var(--ease-out);
 }
 .animate-fade-in {
-  animation: fade-in 0.2s ease-out;
+  animation: fade-in 0.24s ease-out;
 }
 .animate-toast-in {
-  animation: toast-in 0.22s ease-out;
+  animation: toast-in 0.32s var(--ease-out);
 }
 .animate-saved {
   animation: saved-pulse 1.2s ease-out;
+}
+.animate-resolved {
+  animation: resolved-glow 0.9s var(--ease-out);
+}
+.animate-breathe {
+  animation: breathe 2.4s ease-in-out infinite;
 }
 
 /* Visually hidden but available to screen readers. */

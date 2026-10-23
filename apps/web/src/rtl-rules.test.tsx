@@ -97,21 +97,28 @@ const ratio = (a: string, b: string) => {
 };
 
 describe('WCAG AA contrast of design tokens', () => {
+  // keep in sync with tailwind.config.js
   const pairs: [string, string, string][] = [
-    ['ink on canvas', '#231F1A', '#FAF7F2'],
-    ['ink-soft on canvas', '#5E564B', '#FAF7F2'],
-    ['ink-soft on sunken', '#5E564B', '#F1ECE3'],
-    ['ink-soft on surface', '#5E564B', '#FFFFFF'],
+    ['ink on canvas', '#1E1A15', '#F8F3EB'],
+    ['ink-soft on canvas', '#5A5146', '#F8F3EB'],
+    ['ink-soft on sunken', '#5A5146', '#F0E8DB'],
+    ['ink-soft on surface', '#5A5146', '#FFFFFF'],
     ['white on accent', '#FFFFFF', '#0A6B6B'],
-    ['accent-ink on accent-soft', '#064848', '#DFF0EE'],
-    ['accent-ink on canvas', '#064848', '#FAF7F2'],
-    ['amber-ink on amber-soft', '#6E4300', '#FFF1D0'],
+    ['accent-ink on accent-soft', '#064848', '#DDEFEC'],
+    ['accent-ink on canvas', '#064848', '#F8F3EB'],
+    ['amber/saffron-ink on saffron-soft', '#6B4300', '#FCEFD0'],
     ['danger on danger-soft', '#9B2F28', '#FBE9E7'],
     ['danger on surface', '#9B2F28', '#FFFFFF'],
-    ['ink on amber-soft', '#231F1A', '#FFF1D0'],
+    ['ink on saffron-soft', '#1E1A15', '#FCEFD0'],
+    ['ink on saffron (hero send button)', '#1E1A15', '#E8A317'],
+    ['terracotta-ink on terracotta-soft', '#8A3818', '#F8E5DA'],
+    ['night-ink on night (hero)', '#F7EFE2', '#0B2422'],
+    ['night-soft on night-3 (lightest hero gradient stop)', '#BCD2CD', '#165A55'],
+    ['white on night-2 (floating action)', '#FFFFFF', '#0F3A37'],
+    ['saffron-bright on night (toast action)', '#F4C155', '#0B2422'],
   ];
   for (const [name, fg, bg] of pairs) {
     it(`${name} >= 4.5:1`, () => expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5));
   }
-  it('non-text outline (line-strong on canvas) >= 3:1', () => expect(ratio('#8F8575', '#FAF7F2')).toBeGreaterThanOrEqual(3));
+  it('non-text outline (line-strong on canvas) >= 3:1', () => expect(ratio('#8C8172', '#F8F3EB')).toBeGreaterThanOrEqual(3));
 });

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { t } from '../copy/fa';
 import { formatToman, formatTomanCompact } from '../lib/format';
 import { BidiText } from './Bdi';
+import { CountUp } from './motion/CountUp';
 
 interface Props {
   amount: number;
@@ -10,13 +11,15 @@ interface Props {
   suffix?: string;
   size?: 'md' | 'lg';
   className?: string;
+  /** Count up to the compact amount when it first appears / changes (list cards). */
+  countUp?: boolean;
 }
 
 /**
  * Compact in lists («۳٫۲ میلیون تومان»), exact on tap («۳٬۲۰۰٬۰۰۰ تومان»).
  * The date next to a price is rendered by the caller identically on every row.
  */
-export function PriceBlock({ amount, prefix, suffix, size = 'md', className = '' }: Props) {
+export function PriceBlock({ amount, prefix, suffix, size = 'md', className = '', countUp = false }: Props) {
   const [exact, setExact] = useState(false);
   const compact = formatTomanCompact(amount);
   const full = formatToman(amount);
@@ -32,7 +35,7 @@ export function PriceBlock({ amount, prefix, suffix, size = 'md', className = ''
       } ${same ? 'cursor-default' : 'underline decoration-dotted decoration-line-strong underline-offset-4'} ${className}`}
     >
       {prefix && <span className="text-sm font-medium text-ink-soft">{prefix}</span>}
-      <span>{exact ? full : compact}</span>
+      {countUp && !exact ? <CountUp value={amount} format={(n) => formatTomanCompact(Math.round(n))} /> : <span className="num">{exact ? full : compact}</span>}
       {suffix && (
         <span className="text-sm font-medium text-ink-soft">
           <BidiText text={suffix} />

@@ -149,7 +149,7 @@ export function BottomSheet({ open, onClose, title, children, footer, initialFoc
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center" dir="rtl" lang="fa">
       <div
-        className="animate-fade-in absolute inset-0 bg-ink/45"
+        className="animate-fade-in absolute inset-0 bg-night/50 backdrop-blur-[2px]"
         onClick={requestClose}
         aria-hidden="true"
         data-testid="sheet-backdrop"
@@ -167,19 +167,19 @@ export function BottomSheet({ open, onClose, title, children, footer, initialFoc
           bottom: inset.bottom,
           maxHeight: `min(92dvh, ${Math.max(240, inset.height - 12)}px)`,
         }}
-        className="animate-sheet-in absolute inset-x-0 mx-auto flex w-full max-w-[480px] flex-col rounded-t-3xl bg-canvas shadow-sheet outline-none"
+        className="glass-sheet animate-sheet-in absolute inset-x-0 mx-auto flex w-full max-w-[480px] flex-col rounded-t-sheet border-t border-white/70 shadow-sheet outline-none"
       >
         <div
-          className="flex shrink-0 cursor-grab touch-none select-none flex-col items-center px-4 pt-2"
+          className="flex shrink-0 cursor-grab touch-none select-none flex-col items-center px-4 pt-2.5"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           aria-label={t.common.dragHandle}
         >
-          <span className="h-1.5 w-12 rounded-full bg-line-strong/60" aria-hidden="true" />
-          <div className="flex w-full items-center justify-between gap-2 pb-1 pt-1">
-            <h2 id={titleId} className="text-lg">
+          <span className="h-1.5 w-11 rounded-full bg-ink/20" aria-hidden="true" />
+          <div className="flex w-full items-center justify-between gap-2 pb-1 pt-1.5">
+            <h2 id={titleId} className="text-xl font-extrabold">
               {title}
             </h2>
             <IconButton icon="close" label={t.common.close} onClick={requestClose} onPointerDown={(e) => e.stopPropagation()} />
@@ -187,7 +187,7 @@ export function BottomSheet({ open, onClose, title, children, footer, initialFoc
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4">{children}</div>
         {footer && (
-          <div className="shrink-0 border-t border-line bg-canvas px-4 pt-3" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+          <div className="shrink-0 border-t border-line/70 bg-canvas/60 px-4 pt-3" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
             {footer}
           </div>
         )}

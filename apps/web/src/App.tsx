@@ -3,6 +3,7 @@ import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { AppHeader } from './components/AppHeader';
 import { Button } from './components/Button';
 import { EmptyState } from './components/States';
+import { MotionRoot } from './components/motion';
 import { ToastHost } from './components/Toast';
 import { t } from './copy/fa';
 import { useServiceWorkerControlled } from './lib/serviceWorker';
@@ -81,6 +82,7 @@ function OfflineNotice() {
 
 export function App() {
   return (
+    <MotionRoot>
     <HashRouter>
       <ErrorBoundary>
         <AppHeader />
@@ -98,5 +100,6 @@ export function App() {
       </ErrorBoundary>
       <ToastHost />
     </HashRouter>
+    </MotionRoot>
   );
 }
