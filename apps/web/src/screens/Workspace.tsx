@@ -405,31 +405,34 @@ export function Workspace() {
         <IconButton icon="more" label={t.header.more} onClick={() => setMenuOpen(true)} data-testid="plan-menu" />
       </div>
 
-      {isStorageAvailable() ? (
-        <p
-          data-testid="saved-indicator"
-          className={`-mt-1 inline-flex items-center rounded-lg px-1 text-sm text-ink-soft ${pulse ? 'animate-saved' : ''}`}
-        >
-          {t.workspace.saved}
-        </p>
-      ) : (
+      {!isStorageAvailable() && (
         <p role="status" className="rounded-xl bg-amber-soft px-4 py-2 text-sm text-amber-ink" data-testid="storage-notice">
           {t.workspace.storageUnavailable}
         </p>
       )}
 
-      {view !== 'market' && (
-        <button
-          type="button"
-          onClick={() => setTimeOpen(true)}
-          data-testid="visit-chip"
-          className="mt-2 inline-flex min-h-touch items-center gap-2 rounded-chip border border-line-strong bg-surface px-4 text-sm font-semibold"
-        >
-          <Icon name="clock" size={18} />
-          {visitChipLabel(saved.visit)}
-          <Icon name="chevron-down" size={16} />
-        </button>
-      )}
+      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+        {view !== 'market' && (
+          <button
+            type="button"
+            onClick={() => setTimeOpen(true)}
+            data-testid="visit-chip"
+            className="inline-flex min-h-touch items-center gap-2 rounded-chip border border-line-strong bg-surface px-4 text-sm font-semibold"
+          >
+            <Icon name="clock" size={18} />
+            {visitChipLabel(saved.visit)}
+            <Icon name="chevron-down" size={16} />
+          </button>
+        )}
+        {isStorageAvailable() && (
+          <p
+            data-testid="saved-indicator"
+            className={`inline-flex items-center rounded-lg px-1 text-sm text-ink-soft ${pulse ? 'animate-saved' : ''}`}
+          >
+            {t.workspace.saved}
+          </p>
+        )}
+      </div>
 
       <div className="mt-4 space-y-4" style={{ paddingBottom: barVisible ? '88px' : 0 }}>
         {data.slow && (

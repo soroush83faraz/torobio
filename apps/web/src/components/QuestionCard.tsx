@@ -37,37 +37,50 @@ export function QuestionCard({ question, answered, pending, busy, onAnswer, onEn
           </span>
         </p>
       )}
-      <div role="radiogroup" aria-labelledby={labelId} className="mt-3 flex flex-wrap gap-2">
-        {question.options.map((o) => {
-          const skip = o.id === 'any';
-          const unsure = o.id === 'unsure';
-          return (
-            <button
-              key={o.id}
-              type="button"
-              role="radio"
-              aria-checked={false}
-              disabled={busy}
-              onClick={() => (unsure && onUnsure ? onUnsure() : onAnswer(o.id))}
-              className={`inline-flex min-h-touch flex-col items-center justify-center rounded-2xl border px-4 py-1 text-sm font-semibold leading-tight transition-colors disabled:opacity-60 ${
-                o.label.length > 16 ? 'w-full' : ''
-              } ${
-                skip
-                  ? 'border-transparent bg-transparent text-ink-soft underline decoration-dotted underline-offset-4 hover:bg-white/60'
-                  : 'border-line-strong bg-surface text-ink hover:border-accent hover:bg-accent-soft active:bg-accent-soft'
-              }`}
-            >
-              <span>
-                <BidiText text={o.label} />
-              </span>
-              {o.hint && (
-                <span className="text-xs font-normal text-ink-soft">
-                  <BidiText text={o.hint} />
+      <div role="radiogroup" aria-labelledby={labelId} className="mt-3">
+        <div className="grid grid-cols-2 gap-2">
+          {question.options
+            .filter((o) => o.id !== 'any' && o.id !== 'unsure')
+            .map((o) => (
+              <button
+                key={o.id}
+                type="button"
+                role="radio"
+                aria-checked={false}
+                disabled={busy}
+                onClick={() => onAnswer(o.id)}
+                className={`inline-flex min-h-touch flex-col items-center justify-center rounded-2xl border border-line-strong bg-surface px-3 py-2 text-sm font-semibold leading-tight text-ink transition-colors hover:border-accent hover:bg-accent-soft active:bg-accent-soft disabled:opacity-60 ${
+                  o.label.length > 16 ? 'col-span-2' : ''
+                }`}
+              >
+                <span>
+                  <BidiText text={o.label} />
                 </span>
-              )}
-            </button>
-          );
-        })}
+                {o.hint && (
+                  <span className="text-xs font-normal text-ink-soft">
+                    <BidiText text={o.hint} />
+                  </span>
+                )}
+              </button>
+            ))}
+        </div>
+        <div className="mt-1 flex flex-wrap gap-x-1">
+          {question.options
+            .filter((o) => o.id === 'any' || o.id === 'unsure')
+            .map((o) => (
+              <button
+                key={o.id}
+                type="button"
+                role="radio"
+                aria-checked={false}
+                disabled={busy}
+                onClick={() => (o.id === 'unsure' && onUnsure ? onUnsure() : onAnswer(o.id))}
+                className="inline-flex min-h-touch items-center rounded-xl px-3 text-sm font-semibold text-ink-soft underline decoration-dotted underline-offset-4 hover:bg-white/60 disabled:opacity-60"
+              >
+                <BidiText text={o.label} />
+              </button>
+            ))}
+        </div>
       </div>
       {question.skippable !== false && (
         <div className="mt-3 border-t border-accent/20 pt-2">

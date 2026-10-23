@@ -72,11 +72,9 @@ export function ListView({
 
   return (
     <section aria-labelledby="list-h">
-      <div className="flex items-center justify-between gap-2">
-        <h2 id="list-h" className="text-lg">
-          {t.list.heading}
-        </h2>
-      </div>
+      <h2 id="list-h" className="sr-only">
+        {t.list.heading}
+      </h2>
 
       {pending.length > 0 ? (
         <div
