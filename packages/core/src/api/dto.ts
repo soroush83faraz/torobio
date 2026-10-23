@@ -345,6 +345,8 @@ export interface ProductRef {
   /** Listing title (may contain Latin runs). */
   name: string;
   modelCode?: string;
+  /** First product image from the dataset (additive). */
+  imageUrl?: string;
 }
 
 export type SaleUnitDto = 'roll' | 'meter';
@@ -482,6 +484,8 @@ export interface ModelOption {
   flags?: ConditionFlag[];
   /** Persian labels of `flags` (core copy CONDITION_FLAG_LABEL). */
   flagLabels?: string[];
+  /** First product image from the dataset (additive). */
+  imageUrl?: string;
 }
 
 export interface SellerOption {
@@ -577,6 +581,8 @@ export interface StopLine {
   /** Listing condition flags of the bought product (only possible when the user allowed or pinned it). */
   flags?: ConditionFlag[];
   flagLabels?: string[];
+  /** First product image from the dataset (additive). */
+  imageUrl?: string;
 }
 
 /** One shop inside a stop (building). */
@@ -594,6 +600,9 @@ export interface StopShop {
   open: 'open' | 'closed' | 'unknown';
   /** The lines bought at this shop. */
   lines: StopLine[];
+  /** Shop coordinates (additive). */
+  lat?: number;
+  lon?: number;
 }
 
 /**
@@ -626,6 +635,61 @@ export interface Stop {
   shopCount?: number;
   /** Sum of the priced line totals at this stop (toman). */
   subtotal?: number;
+  /** Building centre (mean of its shops), additive. */
+  lat?: number;
+  lon?: number;
+}
+
+/* ---- Places: "where should I go" (additive endpoint POST /api/places) ---- */
+
+export type PlaceBadge = 'one_stop' | 'cheapest' | 'most_choice' | 'open_now';
+
+/** What one mall offers for one requirement. */
+export interface PlaceItemLine {
+  itemId: string;
+  itemName: string;
+  covered: boolean;
+  productName?: string;
+  imageUrl?: string;
+  /** Cheapest usable price at this mall for the item's current pick rule (toman), null when unpriced. */
+  unitPrice?: number | null;
+  qty?: number;
+  shopName?: string;
+  floor?: string;
+  unit?: string;
+  /** How many shops in this mall sell a matching product. */
+  shopsWithItem?: number;
+}
+
+/** A building (mall / market) ranked for the whole shopping list. */
+export interface PlaceMall {
+  /** Building key (same as Stop.buildingKey). */
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  areaLabel?: string;
+  /** Distinct floors of relevant shops, e.g. ['طبقهٔ ۲','طبقهٔ ۶']. */
+  floors: string[];
+  /** Relevant shops (sell at least one item of the list). */
+  shopCount: number;
+  covered: number;
+  total: number;
+  /** Sum of priced cheapest lines for covered items, null when none priced. */
+  totalToman: number | null;
+  open: 'open' | 'closed' | 'unknown';
+  hoursText?: string;
+  badges: PlaceBadge[];
+  items: PlaceItemLine[];
+}
+
+export interface PlacesResponse {
+  /** Best first; at most 8. */
+  malls: PlaceMall[];
+  /** The one-line recommendation target (a mall id) or null when nothing covers 2+ items. */
+  bestId: string | null;
+  /** Persian one-liner explaining the recommendation, e.g. «همهٔ ۴ مورد در پاساژ علاءالدین ۲ هست». */
+  headline?: string;
 }
 
 export interface PlanCoverage {
