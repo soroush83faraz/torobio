@@ -43,7 +43,7 @@ describe('POST /api/places', () => {
     expect(top.lat).toBeCloseTo(35.692, 6);
     expect(top.lon).toBeCloseTo(51.421, 6);
     const rec = top.items.find((i) => i.itemId === 'rec')!;
-    expect(rec).toMatchObject({ covered: true, unitPrice: 5_500_000, qty: 1, shopName: 'فروشگاه ب', floor: 'طبقهٔ منفی ۱', unit: 'واحد ⁦A4⁩', shopsWithItem: 1 });
+    expect(rec).toMatchObject({ covered: true, unitPrice: 5_500_000, qty: 1, shopName: 'فروشگاه ب', shopId: SHOPS.b1, floor: 'طبقهٔ منفی ۱', unit: 'واحد ⁦A4⁩', shopsWithItem: 1 });
     expect(top.items.find((i) => i.itemId === 'cam')).toMatchObject({ unitPrice: 1_450_000, qty: 4, imageUrl: fixtureImage(1) });
     for (const i of top.items) expect(i.imageUrl).toMatch(IMG);
     expect(p.bestId).toBe('m:ب');

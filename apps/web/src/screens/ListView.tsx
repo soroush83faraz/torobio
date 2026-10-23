@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { ItemResolution, Requirement } from '../api/types';
 import { AssistantAvatar } from '../components/AssistantAvatar';
 import { Button } from '../components/Button';
@@ -32,6 +32,8 @@ interface Props {
   marker?: string;
   /** Not-found item: the user picked suggested category `index` (re-sends the item with that category). */
   onPickNearby: (itemId: string, index: number) => void;
+  /** Shown under the assistant's opening message (the «کجا برم؟» teaser when every question is settled). */
+  teaser?: ReactNode;
 }
 
 /**
@@ -58,6 +60,7 @@ export function ListView({
   onUnsure,
   marker,
   onPickNearby,
+  teaser,
 }: Props) {
   const pending = resolutions.filter((r) => r.state === 'needs_info');
   const missing = resolutions.filter((r) => r.state === 'not_found' || isDeadEnd(r));
@@ -143,6 +146,8 @@ export function ListView({
           </motion.div>
         </div>
       </div>
+
+      {teaser}
 
       {/* ---------- the items ---------- */}
       <div className="mt-7 flex items-baseline justify-between gap-2">

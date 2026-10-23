@@ -173,6 +173,20 @@ export function distanceM(a: LatLon, b: LatLon): number {
 }
 
 /**
+ * The points that frame a first view: those within `maxM` metres of the median point. One far-away building (a
+ * branch across the city) would otherwise zoom the whole bazaar belt out to dots. Never returns an empty list when
+ * some point has coordinates; points without coordinates are dropped.
+ */
+export function framingPoints<T extends Partial<LatLon>>(points: readonly T[], maxM = 2500): (T & LatLon)[] {
+  const pts = points.filter(hasCoords);
+  if (pts.length <= 2) return pts;
+  const mid = (xs: number[]) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)]!;
+  const m = { lat: mid(pts.map((p) => p.lat)), lon: mid(pts.map((p) => p.lon)) };
+  const near = pts.filter((p) => distanceM(p, m) <= maxM);
+  return near.length ? near : pts;
+}
+
+/**
  * A quadratic arc from a to b (SVG path data) bowed sideways by `bend` of the chord length. Used by the hero's
  * route arcs; the control point is perpendicular to the chord so short hops get small arcs.
  */

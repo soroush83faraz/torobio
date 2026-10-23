@@ -194,7 +194,7 @@ export const httpAdapter: ApiAdapter = {
     need(await call<PlanResponse>('POST', '/api/plan', { state: toWireState(req.state) }, { key: 'plan', timeoutMs: 12_000, retries: 1 }), 'stops', 'coverage'),
   places: async (req: PlacesRequest) =>
     need(
-      await call<PlacesResponse>('POST', '/api/places', { state: toWireState(req.state) }, { key: 'places', timeoutMs: 12_000, retries: 1 }),
+      await call<PlacesResponse>('POST', '/api/places', { state: toWireState(req.state) }, { key: 'places', timeoutMs: 25_000, retries: 1 }),
       'malls',
       'bestId',
     ),

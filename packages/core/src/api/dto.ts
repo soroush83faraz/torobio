@@ -655,6 +655,8 @@ export interface PlaceItemLine {
   unitPrice?: number | null;
   qty?: number;
   shopName?: string;
+  /** Id of the shop selling the cheapest line (`shopName`): pin it with `shopPins[itemId]` to plan this mall. Additive. */
+  shopId?: string;
   floor?: string;
   unit?: string;
   /** How many shops in this mall sell a matching product. */

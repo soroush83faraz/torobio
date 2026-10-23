@@ -1,6 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import centroids from '../../assets/mallCentroids.json';
-import { arcPath, boundsCenter, cdf, boundsOf, distanceM, hasCoords, projectFisheye, projectToBox, quadLength, sheetAwarePadding } from './geo';
+import { arcPath, boundsCenter, cdf, boundsOf, distanceM, framingPoints, hasCoords, projectFisheye, projectToBox, quadLength, sheetAwarePadding } from './geo';
+
+describe('framingPoints', () => {
+  const core = { lat: 35.6935, lon: 51.4158 };
+  const far = { lat: 35.76, lon: 51.33 };
+  it('leaves out a far-away building so the bazaar core is framed', () => {
+    const out = framingPoints([{ lat: 35.6948, lon: 51.4115 }, { lat: 35.69, lon: 51.4229 }, core, far]);
+    expect(out).toHaveLength(3);
+    expect(out).not.toContainEqual(far);
+  });
+  it('keeps everything when the points are close or too few to judge', () => {
+    expect(framingPoints([core, far])).toHaveLength(2);
+    expect(framingPoints([core, { lat: 35.6948, lon: 51.4115 }, { lat: 35.69, lon: 51.4229 }])).toHaveLength(3);
+    expect(framingPoints([{ lat: 1 }])).toEqual([]);
+  });
+});
 
 const ALADDIN = { lat: 35.6948, lon: 51.4115 };
 const BOUSHEHRI = { lat: 35.69, lon: 51.4229 };
