@@ -1,6 +1,6 @@
 /** Mock adapter: realistic Persian data with a small latency so loading states are real. */
 import type { ApiAdapter } from '../client';
-import { mockAssist, mockMeta, mockOptions, mockParse, mockPlan, mockResolve } from './engine';
+import { mockAssist, mockMeta, mockOptions, mockParse, mockPlaces, mockPlan, mockResolve } from './engine';
 
 const delay = (ms = 140) => new Promise<void>((r) => setTimeout(r, ms));
 
@@ -20,6 +20,10 @@ export const mockAdapter: ApiAdapter = {
   async plan(req) {
     await delay(180);
     return mockPlan(req.state);
+  },
+  async places(req) {
+    await delay(180);
+    return mockPlaces(req.state);
   },
   async assist(req) {
     await delay(200);

@@ -165,6 +165,9 @@ export const PRODUCTS: P[] = [
 
 const DOMAIN: Record<number, string | null> = Object.fromEntries(CATEGORIES.map(([id, , d]) => [id, d]));
 
+/** products.image_url of a fixture product (the real build keeps the first image URL of the listing). */
+export const fixtureImage = (productId: number) => `https://image.torob.com/fixture/${productId}.jpg`;
+
 /** `benign`: the same market with product 6's instruction-like texts replaced by a plain title. */
 export function buildFixtureMarket(file: string, opts: { benign?: boolean } = {}): string {
   const products = opts.benign
@@ -204,7 +207,7 @@ export function buildFixtureMarket(file: string, opts: { benign?: boolean } = {}
   for (const p of products) {
     const priced = p.offers.map((o) => o[1]).filter((x): x is number => x !== null);
     const codes = modelCodeKeys(extractModelCodes(p.title));
-    prod.run(p.id, `ext${p.id}`, p.title, p.cat, p.brand ?? null, null, JSON.stringify(p.attrs), JSON.stringify(codes),
+    prod.run(p.id, `ext${p.id}`, p.title, p.cat, p.brand ?? null, fixtureImage(p.id), JSON.stringify(p.attrs), JSON.stringify(codes),
       priced.length ? Math.min(...priced) : null, p.offers.length, new Set(p.offers.map((o) => o[0])).size, DOMAIN[p.cat] ?? null);
     for (const [shopId, price, sellerTitle] of p.offers) {
       off.run(offerId++, `o${offerId}`, p.id, shopId, price, price === null ? 'placeholder' : null, sellerTitle ?? null,

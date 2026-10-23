@@ -76,6 +76,11 @@ export type {
   UnpricedItem,
   PlanAlternative,
   ReplacedStopNote,
+  // places («کجا بروم»: POST /api/places)
+  PlaceBadge,
+  PlaceItemLine,
+  PlaceMall,
+  PlacesResponse,
 } from '@app/core/src/api/dto';
 
 /* ------------------------------------------------------------------------------------------------
@@ -135,6 +140,10 @@ export interface ResolveRequest {
   state: RequirementState;
 }
 export interface PlanRequest {
+  state: RequirementState;
+}
+/** Same body as /api/plan. */
+export interface PlacesRequest {
   state: RequirementState;
 }
 export interface OptionsRequest {

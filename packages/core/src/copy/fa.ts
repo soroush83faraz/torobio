@@ -5,6 +5,7 @@
  * so they never reorder inside RTL text.
  */
 import { brandByKey } from '../extract/brands';
+import { toPersianDigits } from '../normalize/index';
 import type {
   AttrKey,
   AttrValue,
@@ -776,4 +777,29 @@ export const planCopy = {
     else if (stops < 0) parts.push(`${faCount(-stops)} توقف کمتر`);
     return parts.join('، ');
   },
+} as const;
+
+// ---------------------------------------------------------------------------
+// Places («کجا بروم»: buildings ranked for the whole list)
+// ---------------------------------------------------------------------------
+
+/** A mall / building name inside a sentence: Persian digits («پاساژ علاالدین ۲»), Latin names isolated. */
+export function placeNameFa(name: string): string {
+  return LATIN.test(name) ? ltr(name) : toPersianDigits(name);
+}
+
+export const placesCopy = {
+  /** One building has every item that is available anywhere. */
+  allIn: (n: number, name: string, total: number) =>
+    `${n === 2 ? 'هر دو مورد' : `همهٔ ${faNum(n, 0)} مورد`} در ${placeNameFa(name)} هست (جمع ${formatTomanCompact(total)}).`,
+  /** The best building has several items, not all. */
+  mostIn: (covered: number, n: number, name: string) =>
+    `${faNum(covered, 0)} از ${faNum(n, 0)} مورد در ${placeNameFa(name)} هست؛ بقیه را باید از جای دیگری بخری.`,
+  /** A one-item list: where it is cheapest. */
+  single: (places: number, name: string) =>
+    places > 1 ? `این مورد در ${faNum(places, 0)} جا پیدا شد؛ ارزان‌ترین در ${placeNameFa(name)}.` : `این مورد فقط در ${placeNameFa(name)} پیدا شد.`,
+  /** No building has two items of the list. */
+  scattered: () => 'هیچ جایی بیش از یک مورد از فهرست را ندارد؛ باید از چند جا بخری.',
+  /** Nothing of the list has a price and a seller yet. */
+  nothing: () => 'هنوز هیچ موردی قیمت و فروشنده ندارد؛ جایی برای پیشنهاد نیست.',
 } as const;

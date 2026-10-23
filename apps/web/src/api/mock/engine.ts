@@ -14,6 +14,9 @@ import type {
   ModelOption,
   OptionsResponse,
   ParseResponse,
+  PlaceItemLine,
+  PlaceMall,
+  PlacesResponse,
   PlanAlternative,
   PlanResponse,
   Question,
@@ -1051,4 +1054,85 @@ export function mockAssist(req: AssistRequest, now: Date = new Date()): AssistRe
 
 export function mockMeta() {
   return { ...META };
+}
+
+/* =============================== places =============================== */
+
+/** Mock planar metres -> lat/lon around Ferdowsi (map pins only). */
+const MOCK_ORIGIN = { lat: 35.6955, lon: 51.415 };
+const toLatLon = (s: MockShop) => ({ lat: MOCK_ORIGIN.lat + s.y / 111_320, lon: MOCK_ORIGIN.lon + s.x / 90_400 });
+
+/**
+ * «کجا بروم» from the mock data: every mall scored on its own (cheapest valid offer per item), ranked by
+ * coverage, total, then shops. Same shape and badge rules as the server's POST /api/places.
+ */
+export function mockPlaces(state: RequirementState, now: Date = new Date()): PlacesResponse {
+  const evs = evalAll(state);
+  const offers = evs.map((e) => ({ e, valid: validOffers(e, state, now, false) })).filter((x) => x.valid.length > 0);
+  const total = offers.length;
+  const mallNames = [...new Set(offers.flatMap((x) => x.valid.map((v) => v.shop.mall)))];
+  const malls: PlaceMall[] = mallNames.map((mall) => {
+    const shops = SHOPS.filter((s) => s.mall === mall);
+    const pickIds = new Set<string>();
+    const items: PlaceItemLine[] = offers.map(({ e, valid }) => {
+      const here = valid.filter((v) => v.shop.mall === mall);
+      const base = { itemId: e.req.id, itemName: itemName(e.req), covered: here.length > 0 };
+      if (!here.length) return base;
+      const best = here.reduce((a, b) => (b.offer.price! < a.offer.price! ? b : a));
+      pickIds.add(best.shop.id);
+      return {
+        ...base,
+        productName: e.product?.name,
+        unitPrice: best.offer.price,
+        qty: e.lineQty,
+        shopName: best.shop.name,
+        floor: best.shop.floor,
+        unit: best.shop.unit,
+        shopsWithItem: new Set(here.map((v) => v.shop.id)).size,
+      };
+    });
+    const covered = items.filter((i) => i.covered);
+    const pickShops = shops.filter((s) => pickIds.has(s.id));
+    const relevant = shops.filter((s) => offers.some(({ valid }) => valid.some((v) => v.shop.id === s.id)));
+    const pos = relevant.map(toLatLon);
+    const statuses = pickShops.map((s) => openStatus(s, state.visit, now));
+    return {
+      id: `m:${mall}`,
+      name: mall,
+      lat: pos.reduce((s, p) => s + p.lat, 0) / pos.length,
+      lon: pos.reduce((s, p) => s + p.lon, 0) / pos.length,
+      areaLabel: relevant[0]?.address.split('،')[0],
+      floors: [...new Set(relevant.map((s) => s.floor).filter((f): f is string => !!f))],
+      shopCount: relevant.length,
+      covered: covered.length,
+      total,
+      totalToman: covered.length ? covered.reduce((s, i) => s + i.unitPrice! * (i.qty ?? 1), 0) : null,
+      open: statuses.includes('closed') ? 'closed' : statuses.includes('unknown') ? 'unknown' : 'open',
+      hoursText: pickShops[0] ? hoursText(pickShops[0], state.visit, now) : undefined,
+      badges: [],
+      items,
+    };
+  });
+  malls.sort((a, b) => b.covered - a.covered || (a.totalToman ?? 0) - (b.totalToman ?? 0) || b.shopCount - a.shopCount);
+  malls.splice(8);
+  const choice = (m: PlaceMall) => m.items.reduce((s, i) => s + (i.shopsWithItem ?? 0), 0);
+  const mostChoice = [...malls].sort((a, b) => choice(b) - choice(a))[0];
+  for (const m of malls) {
+    if (total >= 2 && m.covered === total) m.badges.push('one_stop');
+    if (m === malls[0] && m.covered > 0) m.badges.push('cheapest');
+    if (m === mostChoice && choice(m) > m.covered) m.badges.push('most_choice');
+    if (m.open === 'open') m.badges.push('open_now');
+  }
+  const top = malls[0];
+  const best = top && top.covered >= 2 ? top : null;
+  const headline = !top
+    ? 'هنوز هیچ موردی قیمت و فروشنده ندارد؛ جایی برای پیشنهاد نیست.'
+    : best
+      ? best.covered === total
+        ? `${total === 2 ? 'هر دو مورد' : `همهٔ ${faN(total)} مورد`} در ${best.name} هست (جمع ${formatTomanCompact(best.totalToman ?? 0)}).`
+        : `${faN(best.covered)} از ${faN(total)} مورد در ${best.name} هست؛ بقیه را باید از جای دیگری بخری.`
+      : total === 1
+        ? `این مورد در ${faN(malls.length)} جا پیدا شد؛ ارزان‌ترین در ${top.name}.`
+        : 'هیچ جایی بیش از یک مورد از فهرست را ندارد؛ باید از چند جا بخری.';
+  return { malls, bestId: best?.id ?? null, headline };
 }

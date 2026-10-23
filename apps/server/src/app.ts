@@ -12,6 +12,7 @@ import { assistRoutes } from './routes/assist.js';
 import { healthRoutes } from './routes/health.js';
 import { metaRoutes } from './routes/meta.js';
 import { optionsRoutes } from './routes/options.js';
+import { placesRoutes } from './routes/places.js';
 import { planRoutes } from './routes/plan.js';
 import { resolveRoutes } from './routes/resolve.js';
 import { parseRoutes } from './routes/parse.js';
@@ -124,6 +125,7 @@ export async function buildApp(opts: BuildOptions): Promise<{ app: FastifyInstan
   resolveRoutes(app, ctx);
   planRoutes(app, ctx, opts.now ? { now: opts.now } : {});
   optionsRoutes(app, ctx, opts.now ? { now: opts.now } : {});
+  placesRoutes(app, ctx, opts.now ? { now: opts.now } : {});
   parseRoutes(app, ctx);
   assistRoutes(app, ctx, opts.now ? { now: opts.now } : {});
   stubRoutes(app, ctx);

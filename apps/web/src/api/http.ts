@@ -19,6 +19,8 @@ import type {
   OptionsResponse,
   ParseRequest,
   ParseResponse,
+  PlacesRequest,
+  PlacesResponse,
   PlanRequest,
   PlanResponse,
   ResolveRequest,
@@ -190,6 +192,12 @@ export const httpAdapter: ApiAdapter = {
     ),
   plan: async (req: PlanRequest) =>
     need(await call<PlanResponse>('POST', '/api/plan', { state: toWireState(req.state) }, { key: 'plan', timeoutMs: 12_000, retries: 1 }), 'stops', 'coverage'),
+  places: async (req: PlacesRequest) =>
+    need(
+      await call<PlacesResponse>('POST', '/api/places', { state: toWireState(req.state) }, { key: 'places', timeoutMs: 12_000, retries: 1 }),
+      'malls',
+      'bestId',
+    ),
   options: async (req: OptionsRequest) =>
     need(
       await call<OptionsResponse>(

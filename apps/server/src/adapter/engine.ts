@@ -358,10 +358,18 @@ export function displayModelCode(title: string): string | undefined {
   return extractModelCodes(title)[0]?.raw;
 }
 
+/** The product's first image from the dataset (products.image_url), if any. */
+export function imageOf(c: MarketCandidate | undefined): string | undefined {
+  const u = c?.product.imageUrl;
+  return typeof u === 'string' && u.length > 0 ? u : undefined;
+}
+
 export function productRef(c: MarketCandidate): Api.ProductRef {
   const ref: Api.ProductRef = { id: String(c.product.id), name: c.product.title };
   const code = displayModelCode(c.product.title);
   if (code) ref.modelCode = code;
+  const img = imageOf(c);
+  if (img) ref.imageUrl = img;
   return ref;
 }
 
@@ -701,7 +709,16 @@ export interface PlannedState {
   conflictingPlans?: Set<Plan>;
 }
 
-function planInputs(rs: ResolvedState, state: WireState): { inputs: PlanItemInput[]; overflow: Set<string> } {
+export interface PlanInputOptions {
+  /** No MAX_PLAN_ITEMS cap (only the exact planner has one). */
+  uncapped?: boolean;
+}
+
+/**
+ * Planner inputs from the resolved list (core buildPlanItems): sale-unit quantities, per-item seller exclusions and
+ * seller pins applied; items past the planner's item cap lose their offers (`overflow`) unless `uncapped`.
+ */
+export function planInputs(rs: ResolvedState, state: WireState, opts: PlanInputOptions = {}): { inputs: PlanItemInput[]; overflow: Set<string> } {
   const base = buildPlanItems(
     rs.list.items,
     rs.items.map((ri) => ri.result.resolution),
@@ -726,7 +743,7 @@ function planInputs(rs: ResolvedState, state: WireState): { inputs: PlanItemInpu
     }
     const qty = ri.item.kind === 'wire' ? saleQty(ri.dto, itemSaleUnit(ri) ?? saleUnitOf(ri.byId.get(pi.chosenProductId ?? -1))) : pi.qty;
     const hasPriced = offers.some((o) => o.price !== null) && pi.state !== 'needs_info' && pi.state !== 'not_found';
-    if (hasPriced) {
+    if (hasPriced && !opts.uncapped) {
       plannable++;
       if (plannable > MAX_PLAN_ITEMS) {
         overflow.add(pi.itemId);
@@ -911,18 +928,18 @@ export function askSellerFor(lines: readonly Api.CompatLine[], itemId: string): 
   return out;
 }
 
-function openOf(shop: Shop, visit: Visit): OpenStatus {
+export function openOf(shop: Shop, visit: Visit): OpenStatus {
   return openStatusAt(shop.hours, visit);
 }
 
 /** The least open status of a stop's shops: closed > unknown > open. */
-function leastOpen(list: readonly OpenStatus[]): OpenStatus {
+export function leastOpen(list: readonly OpenStatus[]): OpenStatus {
   if (list.includes('closed')) return 'closed';
   if (list.includes('unknown')) return 'unknown';
   return 'open';
 }
 
-function shopPlace(shop: Shop): { mall: string; floor?: string; unit?: string } {
+export function shopPlace(shop: Shop): { mall: string; floor?: string; unit?: string } {
   const out: { mall: string; floor?: string; unit?: string } = { mall: shop.mallName ?? shop.areaLabel ?? '' };
   const f = Api.apiCopy.floorLabel(shop.floor);
   const u = Api.apiCopy.unitLabel(shop.unit);
@@ -976,9 +993,11 @@ export function planResponse(ps: PlannedState & { activeVariant: string | null }
             line.flags = f;
             line.flagLabels = flagLabels(f);
           }
+          const img = imageOf(cand);
+          if (img) line.imageUrl = img;
           return line;
         });
-        return {
+        const out: Api.StopShop = {
           shopId: shop.id,
           shopName: shop.name,
           ...shopPlace(shop),
@@ -987,6 +1006,11 @@ export function planResponse(ps: PlannedState & { activeVariant: string | null }
           open: openOf(shop, ctx.displayVisit),
           lines: stopLines,
         };
+        if (hasCoords(shop)) {
+          out.lat = shop.lat;
+          out.lon = shop.lon;
+        }
+        return out;
       });
       const first = shops[0];
       if (!first) continue;
@@ -1010,6 +1034,12 @@ export function planResponse(ps: PlannedState & { activeVariant: string | null }
       if (first.floor) stop.floor = first.floor;
       if (first.unit) stop.unit = first.unit;
       if (st.distanceToNextM !== null) stop.distanceToNext = Math.round(st.distanceToNextM);
+      // building centre: mean of its shops' coordinates
+      const located = shops.filter((x): x is Api.StopShop & { lat: number; lon: number } => x.lat !== undefined && x.lon !== undefined);
+      if (located.length) {
+        stop.lat = located.reduce((s, x) => s + x.lat, 0) / located.length;
+        stop.lon = located.reduce((s, x) => s + x.lon, 0) / located.length;
+      }
       stops.push(stop);
     }
   }
@@ -1196,6 +1226,8 @@ function modelOptionDto(
     m.flags = f;
     m.flagLabels = flagLabels(f);
   }
+  const img = imageOf(c);
+  if (img) m.imageUrl = img;
   return m;
 }
 

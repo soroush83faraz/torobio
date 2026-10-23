@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { emptyState } from '../../store/plans';
-import { mockOptions, mockParse, mockPlan, mockResolve } from './engine';
+import { mockOptions, mockParse, mockPlaces, mockPlan, mockResolve } from './engine';
 import type { RequirementState } from '../types';
 
 const CCTV = '۴ دوربین داهوا ۲ مگاپیکسل، ضبط‌کننده ۴ کانال، هارد ۲ ترابایت و آداپتور';
@@ -144,5 +144,27 @@ describe('plan totals and coverage', () => {
     const s = stateFor('گوشی سامسونگ Galaxy A56، قاب و گلس');
     const opts = mockOptions(s, s.requirements[1]!.id, NOW);
     expect(opts.models.find((m) => m.conflict)).toBeTruthy();
+  });
+});
+
+describe('mock places', () => {
+  it('ranks malls for the whole list with the server shape (coverage first, badges, headline, coordinates)', () => {
+    const p = mockPlaces(stateFor(CCTV), NOW);
+    expect(p.malls.length).toBeGreaterThan(0);
+    expect(p.malls.length).toBeLessThanOrEqual(8);
+    for (const [i, m] of p.malls.entries()) {
+      expect(typeof m.lat).toBe('number');
+      expect(typeof m.lon).toBe('number');
+      expect(m.items).toHaveLength(m.total);
+      expect(m.covered).toBe(m.items.filter((x) => x.covered).length);
+      expect(m.badges.includes('one_stop')).toBe(m.total >= 2 && m.covered === m.total);
+      const next = p.malls[i + 1];
+      if (next) expect(m.covered).toBeGreaterThanOrEqual(next.covered);
+    }
+    const top = p.malls[0]!;
+    expect(p.bestId).toBe(top.covered >= 2 ? top.id : null);
+    expect(p.headline).toBeTruthy();
+    // the two shops of «پاساژ علاءالدین» are one mall
+    expect(p.malls.filter((m) => m.name === 'پاساژ علاءالدین')).toHaveLength(1);
   });
 });

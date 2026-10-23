@@ -74,14 +74,18 @@ function reason(code: string, params: Record<string, string | number>, text: str
   return { code, params, text };
 }
 
-export function planRun(input: PlanInput): PlanResult {
-  const shopsById = new Map<string, Shop>();
-  for (const s of [...input.shops].sort((a, b) => cmpStr(a.id, b.id))) if (!shopsById.has(s.id)) shopsById.set(s.id, s);
+/** A usable plan price: a finite positive number (null / 0 / placeholder prices never count). */
+export const isPlanPrice = (p: number | null): p is number => p !== null && Number.isFinite(p) && p > 0;
+
+/**
+ * Which shops an offer may be bought at (shared by the planner and the places ranking): not excluded (shop, mall
+ * or building) and not closed at the visit time. Shops without hours are never closed; without a visit nothing is.
+ */
+export function shopGate(input: Pick<PlanInput, 'exclusions' | 'visit'>): { isExcluded: (s: Shop) => boolean; isClosed: (s: Shop) => boolean } {
   const exShops = new Set(input.exclusions?.shopIds ?? []);
   const exMalls = new Set(input.exclusions?.mallKeys ?? []);
   const exBuildings = new Set(input.exclusions?.buildingKeys ?? []);
   const visit = input.visit;
-
   const isExcluded = (s: Shop) => exShops.has(s.id) || (!!s.mallKey && exMalls.has(s.mallKey)) || exBuildings.has(s.buildingKey);
   const closedCache = new Map<string, boolean>();
   const isClosed = (s: Shop) => {
@@ -93,6 +97,14 @@ export function planRun(input: PlanInput): PlanResult {
     }
     return c;
   };
+  return { isExcluded, isClosed };
+}
+
+export function planRun(input: PlanInput): PlanResult {
+  const shopsById = new Map<string, Shop>();
+  for (const s of [...input.shops].sort((a, b) => cmpStr(a.id, b.id))) if (!shopsById.has(s.id)) shopsById.set(s.id, s);
+  const visit = input.visit;
+  const { isExcluded, isClosed } = shopGate(input);
   const statusOf = (s: Shop) => (visit ? openStatusAt(s.hours, visit) : null);
 
   // ---- classify items -------------------------------------------------------------------------------
@@ -119,7 +131,7 @@ export function planRun(input: PlanInput): PlanResult {
     for (const o of item.offers) {
       const shop = shopsById.get(o.shopId);
       if (!shop) continue;
-      const priced = o.price !== null && Number.isFinite(o.price) && o.price > 0;
+      const priced = isPlanPrice(o.price);
       if (isExcluded(shop)) {
         if (priced) pricedSeen = true;
         continue;

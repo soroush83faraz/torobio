@@ -1,5 +1,5 @@
 /**
- * Wire DTOs for the decision API (POST /api/parse, /api/resolve, /api/options, /api/plan; GET /api/meta).
+ * Wire DTOs for the decision API (POST /api/parse, /api/resolve, /api/options, /api/plan, /api/places; GET /api/meta).
  * This file is the ONE definition of the request/response contract; apps/web/src/api/types.ts re-exports it.
  *
  * Shapes are extended ADDITIVELY (new fields optional, old names kept), so older clients keep working.

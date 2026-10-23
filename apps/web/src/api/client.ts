@@ -15,8 +15,11 @@ import type {
   OptionsResponse,
   ParseRequest,
   ParseResponse,
+  PlacesRequest,
+  PlacesResponse,
   PlanRequest,
   PlanResponse,
+  RequirementState,
   ResolveRequest,
   ResolveResponse,
 } from './types';
@@ -29,6 +32,7 @@ export interface ApiAdapter {
   resolve(req: ResolveRequest): Promise<ResolveResponse>;
   options(req: OptionsRequest): Promise<OptionsResponse>;
   plan(req: PlanRequest): Promise<PlanResponse>;
+  places(req: PlacesRequest): Promise<PlacesResponse>;
   assist(req: AssistRequest): Promise<AssistResponse>;
   meta(): Promise<MetaResponse>;
 }
@@ -67,6 +71,7 @@ export const lazyMockAdapter: ApiAdapter = {
   resolve: async (r) => (await loadMock()).resolve(r),
   options: async (r) => (await loadMock()).options(r),
   plan: async (r) => (await loadMock()).plan(r),
+  places: async (r) => (await loadMock()).places(r),
   assist: async (r) => (await loadMock()).assist(r),
   meta: async () => (await loadMock()).meta(),
 };
@@ -87,6 +92,11 @@ export const api = {
   resolve: (req: ResolveRequest) => adapter.resolve(req),
   options: (req: OptionsRequest) => adapter.options(req),
   plan: (req: PlanRequest) => adapter.plan(req),
+  /**
+   * «کجا بروم»: buildings ranked for the whole list (best first, at most 8) and a one-line recommendation.
+   * Items still waiting on a question are evaluated with their default pick. A newer call aborts the previous one.
+   */
+  places: (state: RequirementState) => adapter.places({ state }),
   /** Always resolves with the state after the action (`newState`) and whether anything changed. */
   assist: async (req: AssistRequest): Promise<AssistResult> => {
     const clean = req.text === undefined ? req : { ...req, text: sanitizeText(req.text) };
