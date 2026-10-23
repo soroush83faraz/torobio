@@ -394,47 +394,46 @@ export function Workspace() {
 
   return (
     <div className="page pb-8">
-      <div className="sticky top-14 z-20 -mx-4 bg-canvas/95 px-4 py-2 backdrop-blur">
+      <div className="glass sticky top-14 z-20 -mx-4 px-4 py-2">
         <SegmentedControl<View> label={t.workspace.viewsLabel} value={view ?? 'list'} onChange={setView} options={viewOptions} />
       </div>
 
-      <div className="mt-2 flex items-start gap-1">
-        <h1 className="line-clamp-2 min-w-0 flex-1 pt-2 text-xl font-extrabold leading-snug [overflow-wrap:anywhere]" title={sanitizeText(saved.name)} data-testid="plan-name">
+      <div className="mt-3 flex items-start gap-1">
+        <h1 className="line-clamp-2 min-w-0 flex-1 pt-1.5 text-2xl font-black leading-snug [overflow-wrap:anywhere]" title={sanitizeText(saved.name)} data-testid="plan-name">
           <BidiText text={saved.name} />
         </h1>
         <IconButton icon="more" label={t.header.more} onClick={() => setMenuOpen(true)} data-testid="plan-menu" />
       </div>
 
-      {!isStorageAvailable() && (
-        <p role="status" className="rounded-xl bg-amber-soft px-4 py-2 text-sm text-amber-ink" data-testid="storage-notice">
-          {t.workspace.storageUnavailable}
-        </p>
-      )}
+      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2">
+        {isStorageAvailable() ? (
+          <p
+            data-testid="saved-indicator"
+            className={`inline-flex items-center rounded-lg px-1 text-sm text-ink-soft transition-colors ${pulse ? 'animate-saved text-accent-ink' : ''}`}
+          >
+            {t.workspace.saved}
+          </p>
+        ) : (
+          <p role="status" className="rounded-control bg-saffron-soft px-4 py-2 text-sm text-saffron-ink" data-testid="storage-notice">
+            {t.workspace.storageUnavailable}
+          </p>
+        )}
 
-      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
         {view !== 'market' && (
           <button
             type="button"
             onClick={() => setTimeOpen(true)}
             data-testid="visit-chip"
-            className="inline-flex min-h-touch items-center gap-2 rounded-chip border border-line-strong bg-surface px-4 text-sm font-semibold"
+            className="inline-flex min-h-touch items-center gap-2 rounded-chip border border-line bg-surface px-4 text-sm font-bold shadow-card transition-colors hover:border-line-strong/60 active:scale-[0.98]"
           >
-            <Icon name="clock" size={18} />
+            <Icon name="clock" size={18} className="text-accent" />
             {visitChipLabel(saved.visit)}
-            <Icon name="chevron-down" size={16} />
+            <Icon name="chevron-down" size={16} className="text-ink-soft" />
           </button>
-        )}
-        {isStorageAvailable() && (
-          <p
-            data-testid="saved-indicator"
-            className={`inline-flex items-center rounded-lg px-1 text-sm text-ink-soft ${pulse ? 'animate-saved' : ''}`}
-          >
-            {t.workspace.saved}
-          </p>
         )}
       </div>
 
-      <div className="mt-4 space-y-4" style={{ paddingBottom: barVisible ? '88px' : 0 }}>
+      <div className="mt-5 space-y-4" style={{ paddingBottom: barVisible ? '96px' : 0 }}>
         {data.slow && (
           <p role="status" data-testid="slow-notice" className="rounded-xl bg-sunken px-4 py-2 text-sm text-ink-soft">
             {t.notice.slow}
@@ -461,14 +460,24 @@ export function Workspace() {
 
       {barVisible && action && (
         <div
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-canvas/95 backdrop-blur"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-canvas via-canvas/85 to-transparent pt-6"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
           data-testid="action-bar"
         >
-          <div className="page flex items-center gap-3 py-3">
-            <Button variant="primary" size="lg" block onClick={action.run} disabled={!data.resolve || !data.plan || busy} data-testid="primary-action">
+          <div className="page pb-3">
+            <Button
+              variant="primary"
+              size="lg"
+              block
+              onClick={action.run}
+              disabled={!data.resolve || !data.plan || busy}
+              data-testid="primary-action"
+              className="pointer-events-auto !min-h-[58px] justify-between rounded-[20px] !bg-night-2 pe-2 ps-5 text-lg font-extrabold !shadow-float hover:!bg-night disabled:!bg-night-2 disabled:opacity-80"
+            >
               {action.label}
-              <Icon name="arrow-forward" size={20} />
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-[14px] bg-saffron text-ink">
+                <Icon name="arrow-forward" size={22} />
+              </span>
             </Button>
           </div>
         </div>
